@@ -20,6 +20,8 @@ interface PortalContextType {
   setScrollProgress: (progress: number) => void;
   cameraTargetX: number;
   setCameraTargetX: (x: number) => void;
+  carouselIndex: number;
+  setCarouselIndex: (idx: number) => void;
   isReducedMotion: boolean;
   toggleReducedMotion: () => void;
   notifications: NotificationItem[];
@@ -29,6 +31,24 @@ interface PortalContextType {
   setSihStep: (step: number) => void;
   advanceSihStep: () => void;
 }
+
+export const CAROUSEL_MODULES_LIST: {
+  id: ModuleId;
+  category: string;
+  title: string;
+  subtitle: string;
+}[] = [
+  { id: 'institutions', category: 'Institutional Oversight', title: 'Institution Management', subtitle: 'Approved technical institutions, programmes & statutory capacity' },
+  { id: 'submissions', category: 'Student Data Ops', title: 'Student Data Submission', subtitle: 'Batch CSV ingestion, Verhoeff checksum & quota pre-check' },
+  { id: 'apaar', category: 'Verification & Integrity', title: 'APAAR ID Validation', subtitle: '12-digit Verhoeff structural verification & ABC gateway' },
+  { id: 'admissions', category: 'Institutional Oversight', title: 'Admission Monitoring', subtitle: 'Approved capacity sanctions vs real-time actual student enrolments' },
+  { id: 'duplicates', category: 'Verification & Integrity', title: 'Duplicate Record Detection', subtitle: 'Cross-institution concurrent enrolment & fuzzy identity conflicts' },
+  { id: 'compliance', category: 'Regulatory Compliance', title: 'Compliance Monitoring', subtitle: 'APH 2024-25 regulatory discrepancies, hearings & sanctions' },
+  { id: 'verification', category: 'Attestation Bureau', title: 'Student Record Verification', subtitle: 'Zero-knowledge verification & SHA-256 QR attestation checking' },
+  { id: 'reports', category: 'Assurance & Integration', title: 'Reports and Analytics', subtitle: 'National data quality index & longitudinal enrolment analytics' },
+  { id: 'audit', category: 'Security Assurance', title: 'Audit and Security', subtitle: 'Cryptographically chained SHA-256 tamper-evident security ledger' },
+  { id: 'integration', category: 'System Gateways', title: 'System Integration', subtitle: 'Government registry gateways (DigiLocker, ABC) & API specs' },
+];
 
 // Module coordinates mapped horizontally along X axis with generous negative space
 export const MODULE_COORDINATES: Record<ModuleId, number> = {
@@ -57,6 +77,7 @@ export const PortalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [scrollProgress, setScrollProgress] = useState<number>(0.5); // centered at overview initially
   const [cameraTargetX, setCameraTargetX] = useState<number>(0);
   const [isReducedMotion, setIsReducedMotion] = useState<boolean>(false);
+  const [carouselIndex, setCarouselIndexState] = useState<number>(0);
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const [sihStep, setSihStep] = useState<number>(1);
@@ -93,11 +114,21 @@ export const PortalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     return () => clearInterval(interval);
   }, [token]);
 
+  const setCarouselIndex = (idx: number) => {
+    const total = CAROUSEL_MODULES_LIST.length;
+    const normalized = ((idx % total) + total) % total;
+    setCarouselIndexState(normalized);
+  };
+
   const openWorkspace = (mod: ModuleId) => {
     setActiveModule(mod);
+    const foundIdx = CAROUSEL_MODULES_LIST.findIndex((m) => m.id === mod);
+    if (foundIdx !== -1) {
+      setCarouselIndexState(foundIdx);
+    }
     const targetX = MODULE_COORDINATES[mod] ?? 0;
     setCameraTargetX(targetX);
-    setIsWorkspaceOpen(true);
+    setIsWorkspaceOpen(mod !== 'overview');
   };
 
   const closeWorkspace = () => {
@@ -145,6 +176,8 @@ export const PortalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setScrollProgress,
         cameraTargetX,
         setCameraTargetX,
+        carouselIndex,
+        setCarouselIndex,
         isReducedMotion,
         toggleReducedMotion,
         notifications,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { usePortal, MODULE_COORDINATES } from '../../context/PortalContext';
+import { usePortal, CAROUSEL_MODULES_LIST } from '../../context/PortalContext';
 import { ModuleId } from '../../types';
 import {
   Compass,
@@ -16,7 +16,13 @@ import {
 } from 'lucide-react';
 
 export const SpatialBottomDock: React.FC = () => {
-  const { activeModule, setActiveModule, openWorkspace, setCameraTargetX, setScrollProgress } = usePortal();
+  const {
+    activeModule,
+    setActiveModule,
+    openWorkspace,
+    carouselIndex,
+    setCarouselIndex,
+  } = usePortal();
 
   // 10 Functional CREDEN Application Launcher Modules in Material OS Colors
   const dockItems: {
@@ -102,20 +108,32 @@ export const SpatialBottomDock: React.FC = () => {
       >
         {dockItems.map((item) => {
           const Icon = item.icon;
-          const isActive = activeModule === item.id;
+          const isCurrentInCarousel =
+            activeModule === 'overview' &&
+            item.id !== 'overview' &&
+            CAROUSEL_MODULES_LIST[carouselIndex]?.id === item.id;
+          const isActive = activeModule === item.id || isCurrentInCarousel;
+
           return (
             <button
               key={item.id}
               onClick={() => {
                 if (item.id === 'overview') {
                   setActiveModule('overview');
-                  setCameraTargetX(0);
-                  setScrollProgress(0.5);
+                } else if (activeModule === 'overview') {
+                  const targetIdx = CAROUSEL_MODULES_LIST.findIndex(
+                    (m) => m.id === item.id
+                  );
+                  if (targetIdx !== -1) {
+                    if (targetIdx === carouselIndex) {
+                      openWorkspace(item.id);
+                    } else {
+                      setCarouselIndex(targetIdx);
+                    }
+                  } else {
+                    openWorkspace(item.id);
+                  }
                 } else {
-                  // In 3D space, focus on the card and then open
-                  const targetX = MODULE_COORDINATES[item.id] ?? 0;
-                  setCameraTargetX(targetX);
-                  setScrollProgress((targetX + 18) / 36);
                   openWorkspace(item.id);
                 }
               }}
@@ -133,7 +151,7 @@ export const SpatialBottomDock: React.FC = () => {
 
               {/* Active Indicator Dot */}
               {isActive && (
-                <span className="absolute -bottom-1.5 w-1.5 h-1.5 rounded-full bg-blue-600" />
+                <span className="absolute -bottom-1.5 w-1.5 h-1.5 rounded-full bg-blue-600 shadow-xs" />
               )}
 
               {/* Front-Facing Sharp Tooltip */}

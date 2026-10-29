@@ -1,145 +1,58 @@
 import React, { useEffect, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import { usePortal, MODULE_COORDINATES } from '../../context/PortalContext';
-import { ModuleId } from '../../types';
+import { usePortal } from '../../context/PortalContext';
 
-interface CameraControllerProps {
-  onSelectClosest?: () => void;
-}
+export const CameraController: React.FC = () => {
+  const { camera } = useThree();
+  const { activeModule, isReducedMotion } = usePortal();
 
-export const CameraController: React.FC<CameraControllerProps> = () => {
-  const { camera, gl } = useThree();
-  const {
-    activeModule,
-    openWorkspace,
-    cameraTargetX,
-    setCameraTargetX,
-    setScrollProgress,
-    isReducedMotion,
-  } = usePortal();
-
-  const currentX = useRef(cameraTargetX || 0);
-  const targetX = useRef(cameraTargetX || 0);
-  const isDragging = useRef(false);
-  const startPointerX = useRef(0);
-  const startTargetX = useRef(0);
-
-  // Pointer Parallax coordinates (-1 to 1)
+  // Subtle pointer parallax coordinates (-1 to 1)
   const pointerX = useRef(0);
   const pointerY = useRef(0);
   const targetPointerX = useRef(0);
   const targetPointerY = useRef(0);
 
-  // Sync external cameraTargetX updates (e.g. from sidebar clicks or search)
   useEffect(() => {
-    targetX.current = cameraTargetX;
-  }, [cameraTargetX]);
-
-  // Handle Wheel, Keyboard, Pointer Parallax, and Touch/Pointer Panning
-  useEffect(() => {
-    // 1. Mouse Wheel & Trackpad Horizontal Navigation
-    const handleWheel = (e: WheelEvent) => {
-      if (activeModule !== 'overview') return;
-      const rawDelta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      const step = rawDelta * 0.012;
-      const newTarget = Math.max(-19, Math.min(19, targetX.current + step));
-      targetX.current = newTarget;
-      setCameraTargetX(newTarget);
-      setScrollProgress((newTarget + 18) / 36);
-    };
-
-    // 2. Keyboard Navigation: Arrow Keys to Pan, Enter/Space to Open
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (activeModule !== 'overview') return;
-
-      if (e.key === 'ArrowRight') {
-        const nextTarget = Math.min(18, targetX.current + 4);
-        targetX.current = nextTarget;
-        setCameraTargetX(nextTarget);
-        setScrollProgress((nextTarget + 18) / 36);
-      } else if (e.key === 'ArrowLeft') {
-        const prevTarget = Math.max(-18, targetX.current - 4);
-        targetX.current = prevTarget;
-        setCameraTargetX(prevTarget);
-        setScrollProgress((prevTarget + 18) / 36);
-      } else if (e.key === 'Enter' || e.key === ' ') {
-        const entries = Object.entries(MODULE_COORDINATES) as [ModuleId, number][];
-        let closestMod: ModuleId = 'institutions';
-        let minDistance = Infinity;
-
-        entries.forEach(([modId, coordX]) => {
-          if (modId === 'overview' || modId === 'settings') return;
-          const dist = Math.abs(coordX - targetX.current);
-          if (dist < minDistance) {
-            minDistance = dist;
-            closestMod = modId;
-          }
-        });
-
-        if (minDistance < 3.0) {
-          e.preventDefault();
-          openWorkspace(closestMod);
-        }
-      } else if (e.key === 'Home') {
-        targetX.current = -18;
-        setCameraTargetX(-18);
-        setScrollProgress(0);
-      } else if (e.key === 'End') {
-        targetX.current = 18;
-        setCameraTargetX(18);
-        setScrollProgress(1);
-      }
-    };
-
-    // 3. Pointer Drag Panning across the 3D Canvas
-    const dom = gl.domElement;
-    const handlePointerDown = (e: PointerEvent) => {
-      if (activeModule !== 'overview') return;
-      isDragging.current = true;
-      startPointerX.current = e.clientX;
-      startTargetX.current = targetX.current;
-    };
-
     const handlePointerMove = (e: PointerEvent) => {
-      if (!isDragging.current || activeModule !== 'overview') return;
-      const delta = (e.clientX - startPointerX.current) * 0.016;
-      const newTarget = Math.max(-21, Math.min(21, startTargetX.current - delta));
-      targetX.current = newTarget;
-      setCameraTargetX(newTarget);
-      setScrollProgress((newTarget + 21) / 42);
+      if (activeModule !== 'overview') return;
+      // Convert to normalized coordinates [-1, 1]
+      targetPointerX.current = (e.clientX / window.innerWidth) * 2 - 1;
+      targetPointerY.current = -(e.clientY / window.innerHeight) * 2 + 1;
     };
 
-    const handlePointerUp = () => {
-      isDragging.current = false;
-    };
-
-    window.addEventListener('wheel', handleWheel, { passive: true });
-    window.addEventListener('keydown', handleKeyDown);
-    dom.addEventListener('pointerdown', handlePointerDown);
-    window.addEventListener('pointermove', handlePointerMove);
-    window.addEventListener('pointerup', handlePointerUp);
-
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
     return () => {
-      window.removeEventListener('wheel', handleWheel);
-      window.removeEventListener('keydown', handleKeyDown);
-      dom.removeEventListener('pointerdown', handlePointerDown);
       window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerup', handlePointerUp);
     };
-  }, [gl, activeModule, setCameraTargetX, setScrollProgress, openWorkspace, isReducedMotion]);
+  }, [activeModule]);
 
-  // Smooth, damped camera frame updates - rock solid, no back-and-forth wobble
+  // Smooth camera frame updates centered on the circular 3D carousel
   useFrame(() => {
-    const lerpFactor = isReducedMotion ? 1 : 0.075;
-    currentX.current = THREE.MathUtils.lerp(currentX.current, targetX.current, lerpFactor);
+    const lerpFactor = isReducedMotion ? 1 : 0.05;
 
-    camera.position.x = currentX.current;
-    camera.position.y = 0.35;
-    camera.position.z = 8.2;
+    // Smooth damp pointer parallax
+    pointerX.current = THREE.MathUtils.lerp(
+      pointerX.current,
+      targetPointerX.current,
+      lerpFactor
+    );
+    pointerY.current = THREE.MathUtils.lerp(
+      pointerY.current,
+      targetPointerY.current,
+      lerpFactor
+    );
 
-    // Direct lookahead target aligned with architectural slabs
-    camera.lookAt(currentX.current, 0.1, 0);
+    // Camera sits comfortably in front of circular launcher
+    const parallaxX = isReducedMotion ? 0 : pointerX.current * 0.35;
+    const parallaxY = isReducedMotion ? 0 : pointerY.current * 0.18;
+
+    camera.position.x = parallaxX;
+    camera.position.y = 0.42 + parallaxY;
+    camera.position.z = 7.6;
+
+    // Camera gently looks at the front active floating icon
+    camera.lookAt(parallaxX * 0.25, 0.38, 0);
   });
 
   return null;

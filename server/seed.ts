@@ -3,6 +3,44 @@ import prisma from './prisma.js';
 import { AuditService } from './services/auditService.js';
 import { ComplianceEngine } from './services/complianceEngine.js';
 
+// Verhoeff algorithm helper to generate valid 12-digit Indian APAAR IDs
+function generateVerhoeffApaar(prefix11: string): string {
+  const digits = prefix11.replace(/\D/g, '').padEnd(11, '7').slice(0, 11);
+  const dTable = [
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    [1, 2, 3, 4, 0, 6, 7, 8, 9, 5],
+    [2, 3, 4, 0, 1, 7, 8, 9, 5, 6],
+    [3, 4, 0, 1, 2, 8, 9, 5, 6, 7],
+    [4, 0, 1, 2, 3, 9, 5, 6, 7, 8],
+    [5, 9, 8, 7, 6, 0, 4, 3, 2, 1],
+    [6, 5, 9, 8, 7, 1, 0, 4, 3, 2],
+    [7, 6, 5, 9, 8, 2, 1, 0, 4, 3],
+    [8, 7, 6, 5, 9, 3, 2, 1, 0, 4],
+    [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+  ];
+  const pTable = [
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    [1, 5, 7, 6, 2, 8, 3, 0, 9, 4],
+    [5, 8, 0, 3, 7, 9, 6, 1, 4, 2],
+    [8, 9, 1, 6, 0, 4, 3, 5, 2, 7],
+    [9, 4, 5, 3, 1, 2, 6, 8, 7, 0],
+    [4, 2, 8, 6, 5, 7, 3, 9, 0, 1],
+    [2, 7, 9, 3, 8, 0, 6, 4, 1, 5],
+    [7, 0, 4, 6, 9, 1, 3, 2, 5, 8]
+  ];
+  const invTable = [0, 4, 3, 2, 1, 5, 6, 7, 8, 9];
+
+  let c = 0;
+  const reversed = digits.split('').reverse();
+  for (let i = 0; i < reversed.length; i++) {
+    const digit = parseInt(reversed[i], 10);
+    c = dTable[c][pTable[(i + 1) % 8][digit]];
+  }
+  const checkDigit = invTable[c];
+  const full12 = digits + checkDigit.toString();
+  return `${full12.slice(0, 4)}-${full12.slice(4, 8)}-${full12.slice(8, 12)}`;
+}
+
 export async function seedDatabase() {
   console.log('[SEED] Clearing existing records for clean reproducible state...');
   
@@ -21,7 +59,7 @@ export async function seedDatabase() {
   await prisma.user.deleteMany();
   await prisma.institution.deleteMany();
 
-  console.log('[SEED] Creating institutions...');
+  console.log('[SEED] Creating institutions (10 diverse national technical institutions)...');
   const passwordHash = await bcrypt.hash('CredenSecure#2024', 10);
 
   // 1. DTU
@@ -96,6 +134,114 @@ export async function seedDatabase() {
     },
   });
 
+  // 5. IIT Roorkee
+  const iitr = await prisma.institution.create({
+    data: {
+      code: '1-10928375',
+      name: 'Indian Institute of Technology Roorkee',
+      state: 'Uttarakhand',
+      district: 'Haridwar',
+      type: 'CENTRAL_UNIVERSITY',
+      establishedYear: 1847,
+      approvalStatus: 'APPROVED',
+      address: 'Roorkee, Haridwar District, Uttarakhand 247667',
+      website: 'http://iitr.ac.in',
+      contactEmail: 'admin@iitr.ac.in',
+      contactPhone: '+91-1332-285311',
+      accreditedBy: 'Institute of National Importance, NIRF #5',
+    },
+  });
+
+  // 6. BITS Pilani
+  const bits = await prisma.institution.create({
+    data: {
+      code: '1-10928376',
+      name: 'Birla Institute of Technology and Science, Pilani',
+      state: 'Rajasthan',
+      district: 'Jhunjhunu',
+      type: 'PRIVATE_UNAIDED',
+      establishedYear: 1964,
+      approvalStatus: 'APPROVED',
+      address: 'Vidya Vihar, Pilani, Rajasthan 333031',
+      website: 'http://bits-pilani.ac.in',
+      contactEmail: 'admin@bits-pilani.ac.in',
+      contactPhone: '+91-1596-242207',
+      accreditedBy: 'NAAC A, Institute of Eminence',
+    },
+  });
+
+  // 7. Jadavpur University
+  const ju = await prisma.institution.create({
+    data: {
+      code: '1-10928377',
+      name: 'Jadavpur University (Faculty of Engineering & Tech)',
+      state: 'West Bengal',
+      district: 'Kolkata',
+      type: 'GOVERNMENT',
+      establishedYear: 1955,
+      approvalStatus: 'APPROVED',
+      address: '188 Raja S.C. Mallick Rd, Jadavpur, Kolkata 700032',
+      website: 'http://jaduniv.edu.in',
+      contactEmail: 'admin@jadavpuruniversity.in',
+      contactPhone: '+91-33-24146666',
+      accreditedBy: 'NAAC A++, NIRF Top-10',
+    },
+  });
+
+  // 8. PSG College of Technology
+  const psg = await prisma.institution.create({
+    data: {
+      code: '1-10928378',
+      name: 'PSG College of Technology',
+      state: 'Tamil Nadu',
+      district: 'Coimbatore',
+      type: 'GOVERNMENT_AIDED',
+      establishedYear: 1951,
+      approvalStatus: 'APPROVED',
+      address: 'Avinashi Rd, Peelamedu, Coimbatore, Tamil Nadu 641004',
+      website: 'http://psgtech.edu',
+      contactEmail: 'admin@psgtech.ac.in',
+      contactPhone: '+91-422-2572177',
+      accreditedBy: 'NBA Tier-1, NAAC A+',
+    },
+  });
+
+  // 9. Thapar Institute
+  const thapar = await prisma.institution.create({
+    data: {
+      code: '1-10928379',
+      name: 'Thapar Institute of Engineering and Technology',
+      state: 'Punjab',
+      district: 'Patiala',
+      type: 'PRIVATE_UNAIDED',
+      establishedYear: 1956,
+      approvalStatus: 'APPROVED',
+      address: 'Bhadson Rd, Adarsh Nagar, Prem Nagar, Patiala, Punjab 147004',
+      website: 'http://thapar.edu',
+      contactEmail: 'admin@thapar.edu',
+      contactPhone: '+91-175-2393021',
+      accreditedBy: 'NAAC A+, ABET Accredited',
+    },
+  });
+
+  // 10. Government Polytechnic Mumbai
+  const gpm = await prisma.institution.create({
+    data: {
+      code: '1-10928380',
+      name: 'Government Polytechnic Mumbai',
+      state: 'Maharashtra',
+      district: 'Mumbai Suburban',
+      type: 'GOVERNMENT',
+      establishedYear: 1960,
+      approvalStatus: 'APPROVED',
+      address: '49 Kherwadi, Ali Yavar Jung Marg, Bandra East, Mumbai 400051',
+      website: 'http://gpmumbai.ac.in',
+      contactEmail: 'admin@gpmumbai.ac.in',
+      contactPhone: '+91-22-26474587',
+      accreditedBy: 'NBA Accredited Diploma Institute',
+    },
+  });
+
   console.log('[SEED] Creating role-based users...');
   // 1. AICTE Administrator
   const aicteAdmin = await prisma.user.create({
@@ -107,7 +253,7 @@ export async function seedDatabase() {
     },
   });
 
-  // 2. DTU Institution Admin
+  // 2. DTU Institution Admin & Operator
   const dtuAdmin = await prisma.user.create({
     data: {
       email: 'admin@dtu.ac.in',
@@ -118,7 +264,6 @@ export async function seedDatabase() {
     },
   });
 
-  // 3. DTU Data Entry Operator
   const dtuOperator = await prisma.user.create({
     data: {
       email: 'operator@dtu.ac.in',
@@ -129,8 +274,8 @@ export async function seedDatabase() {
     },
   });
 
-  // 4. COEP Institution Admin
-  const coepAdmin = await prisma.user.create({
+  // 3. COEP Institution Admin
+  await prisma.user.create({
     data: {
       email: 'admin@coep.ac.in',
       passwordHash,
@@ -140,7 +285,29 @@ export async function seedDatabase() {
     },
   });
 
-  // 5. Verification Officer
+  // 4. IIT Roorkee Admin
+  await prisma.user.create({
+    data: {
+      email: 'admin@iitr.ac.in',
+      passwordHash,
+      fullName: 'Prof. Rajeshwar Sahai (IIT Roorkee Dean)',
+      role: 'INSTITUTION_ADMIN',
+      institutionId: iitr.id,
+    },
+  });
+
+  // 5. BITS Pilani Admin
+  await prisma.user.create({
+    data: {
+      email: 'admin@bits-pilani.ac.in',
+      passwordHash,
+      fullName: 'Dr. Sudhir Chandra (BITS Pilani Admissions Dean)',
+      role: 'INSTITUTION_ADMIN',
+      institutionId: bits.id,
+    },
+  });
+
+  // 6. Verification Officer
   const verifOfficer = await prisma.user.create({
     data: {
       email: 'officer@aicte.gov.in',
@@ -150,8 +317,8 @@ export async function seedDatabase() {
     },
   });
 
-  // 6. Auditor
-  const auditor = await prisma.user.create({
+  // 7. Auditor
+  await prisma.user.create({
     data: {
       email: 'auditor@cag.gov.in',
       passwordHash,
@@ -160,7 +327,7 @@ export async function seedDatabase() {
     },
   });
 
-  // 7. External Verifier
+  // 8. External Verifier
   await prisma.user.create({
     data: {
       email: 'hr@tcs.com',
@@ -171,6 +338,7 @@ export async function seedDatabase() {
   });
 
   console.log('[SEED] Creating courses & approved intake configurations...');
+
   // DTU Courses
   const dtuCse = await prisma.course.create({
     data: {
@@ -194,9 +362,9 @@ export async function seedDatabase() {
       scSeats: 18,
       stSeats: 9,
       ewsSeats: 13,
-      tfwQuota: 6, // 5% supernumerary
+      tfwQuota: 6,
       pmsssQuota: 5,
-      nriQuota: 18, // 15% supernumerary
+      nriQuota: 18,
       policyVersion: 'AICTE-APH-2024-V2.1',
     },
   });
@@ -272,6 +440,22 @@ export async function seedDatabase() {
     },
   });
 
+  await prisma.intakeConfig.create({
+    data: {
+      institutionId: vit.id,
+      courseId: vitCse.id,
+      academicSession: '2024-2025',
+      generalSeats: 120,
+      obcSeats: 64,
+      scSeats: 36,
+      stSeats: 18,
+      ewsSeats: 2,
+      tfwQuota: 12,
+      pmsssQuota: 0,
+      nriQuota: 36,
+    },
+  });
+
   // NITK Course
   const nitkCse = await prisma.course.create({
     data: {
@@ -285,11 +469,203 @@ export async function seedDatabase() {
     },
   });
 
-  console.log('[SEED] Seeding representative students with real AICTE problem scenarios...');
-  // 1. Verified student (Aarav Sharma)
-  const aarav = await prisma.student.create({
+  await prisma.intakeConfig.create({
     data: {
-      apaarId: '9874-5612-3450',
+      institutionId: nitk.id,
+      courseId: nitkCse.id,
+      academicSession: '2024-2025',
+      generalSeats: 48,
+      obcSeats: 32,
+      scSeats: 18,
+      stSeats: 9,
+      ewsSeats: 13,
+      tfwQuota: 6,
+      pmsssQuota: 4,
+      nriQuota: 18,
+    },
+  });
+
+  // IIT Roorkee Course
+  const iitrDs = await prisma.course.create({
+    data: {
+      institutionId: iitr.id,
+      courseCode: 'IITR-DSAI-501',
+      courseName: 'B.Tech Data Science & Artificial Intelligence',
+      degreeLevel: 'UG',
+      durationYears: 4,
+      approvedIntake: 60,
+      academicSession: '2024-2025',
+    },
+  });
+
+  await prisma.intakeConfig.create({
+    data: {
+      institutionId: iitr.id,
+      courseId: iitrDs.id,
+      academicSession: '2024-2025',
+      generalSeats: 24,
+      obcSeats: 16,
+      scSeats: 9,
+      stSeats: 5,
+      ewsSeats: 6,
+      tfwQuota: 0,
+      pmsssQuota: 2,
+      nriQuota: 0,
+    },
+  });
+
+  // BITS Pilani Course
+  const bitsCs = await prisma.course.create({
+    data: {
+      institutionId: bits.id,
+      courseCode: 'BITS-CS-601',
+      courseName: 'B.E. Computer Science',
+      degreeLevel: 'UG',
+      durationYears: 4,
+      approvedIntake: 180,
+      academicSession: '2024-2025',
+    },
+  });
+
+  await prisma.intakeConfig.create({
+    data: {
+      institutionId: bits.id,
+      courseId: bitsCs.id,
+      academicSession: '2024-2025',
+      generalSeats: 150,
+      obcSeats: 0,
+      scSeats: 0,
+      stSeats: 0,
+      ewsSeats: 0,
+      tfwQuota: 9,
+      pmsssQuota: 0,
+      nriQuota: 27,
+    },
+  });
+
+  // Jadavpur University Course
+  const juIt = await prisma.course.create({
+    data: {
+      institutionId: ju.id,
+      courseCode: 'JU-IT-701',
+      courseName: 'B.E. Information Technology',
+      degreeLevel: 'UG',
+      durationYears: 4,
+      approvedIntake: 60,
+      academicSession: '2024-2025',
+    },
+  });
+
+  await prisma.intakeConfig.create({
+    data: {
+      institutionId: ju.id,
+      courseId: juIt.id,
+      academicSession: '2024-2025',
+      generalSeats: 28,
+      obcSeats: 14,
+      scSeats: 12,
+      stSeats: 4,
+      ewsSeats: 2,
+      tfwQuota: 3,
+      pmsssQuota: 2,
+      nriQuota: 0,
+    },
+  });
+
+  // PSG Tech Course
+  const psgRa = await prisma.course.create({
+    data: {
+      institutionId: psg.id,
+      courseCode: 'PSG-RA-801',
+      courseName: 'B.Tech Robotics and Automation',
+      degreeLevel: 'UG',
+      durationYears: 4,
+      approvedIntake: 60,
+      academicSession: '2024-2025',
+    },
+  });
+
+  await prisma.intakeConfig.create({
+    data: {
+      institutionId: psg.id,
+      courseId: psgRa.id,
+      academicSession: '2024-2025',
+      generalSeats: 24,
+      obcSeats: 16,
+      scSeats: 9,
+      stSeats: 5,
+      ewsSeats: 6,
+      tfwQuota: 3,
+      pmsssQuota: 0,
+      nriQuota: 9,
+    },
+  });
+
+  // Thapar Course
+  const thaparCoe = await prisma.course.create({
+    data: {
+      institutionId: thapar.id,
+      courseCode: 'TIET-COE-901',
+      courseName: 'B.E. Computer Engineering',
+      degreeLevel: 'UG',
+      durationYears: 4,
+      approvedIntake: 180,
+      academicSession: '2024-2025',
+    },
+  });
+
+  await prisma.intakeConfig.create({
+    data: {
+      institutionId: thapar.id,
+      courseId: thaparCoe.id,
+      academicSession: '2024-2025',
+      generalSeats: 90,
+      obcSeats: 36,
+      scSeats: 27,
+      stSeats: 14,
+      ewsSeats: 13,
+      tfwQuota: 9,
+      pmsssQuota: 0,
+      nriQuota: 27,
+    },
+  });
+
+  // Government Polytechnic Mumbai Course
+  const gpmDip = await prisma.course.create({
+    data: {
+      institutionId: gpm.id,
+      courseCode: 'GPM-DIP-101',
+      courseName: 'Diploma in Computer Engineering',
+      degreeLevel: 'DIPLOMA',
+      durationYears: 3,
+      approvedIntake: 60,
+      academicSession: '2024-2025',
+    },
+  });
+
+  await prisma.intakeConfig.create({
+    data: {
+      institutionId: gpm.id,
+      courseId: gpmDip.id,
+      academicSession: '2024-2025',
+      generalSeats: 24,
+      obcSeats: 16,
+      scSeats: 9,
+      stSeats: 5,
+      ewsSeats: 6,
+      tfwQuota: 3,
+      pmsssQuota: 0,
+      nriQuota: 0,
+    },
+  });
+
+  console.log('[SEED] Seeding representative students with real AICTE problem scenarios...');
+
+  // 1. Verified student (Aarav Sharma)
+  const aaravApaar = generateVerhoeffApaar('98745612345');
+  await prisma.student.create({
+    data: {
+      apaarId: aaravApaar,
       studentRollNumber: '2024-DTU-CSE-001',
       institutionId: dtu.id,
       courseId: dtuCse.id,
@@ -320,9 +696,10 @@ export async function seedDatabase() {
   });
 
   // 2. Verified student with TFW supernumerary quota (Diya Patel)
+  const diyaApaar = generateVerhoeffApaar('87634521987');
   await prisma.student.create({
     data: {
-      apaarId: '8763-4521-9872',
+      apaarId: diyaApaar,
       studentRollNumber: '2024-DTU-CSE-002',
       institutionId: dtu.id,
       courseId: dtuCse.id,
@@ -341,9 +718,9 @@ export async function seedDatabase() {
     },
   });
 
-  // 3. Problem Scenario: CROSS-INSTITUTION CONCURRENT ENROLMENT
-  // Priya Sharma enrolled concurrently in DTU and COEP for session 2024-2025
-  const priyaApaar = '7652-3410-8761';
+  // 3. Problem Scenario 1: CROSS-INSTITUTION CONCURRENT ENROLMENT
+  // Priya Sharma enrolled concurrently in DTU and COEP
+  const priyaApaar = generateVerhoeffApaar('76523410876');
   const priyaDtu = await prisma.student.create({
     data: {
       apaarId: priyaApaar,
@@ -384,7 +761,6 @@ export async function seedDatabase() {
     },
   });
 
-  // Duplicate Case for Priya Sharma
   await prisma.duplicateCase.create({
     data: {
       caseReference: 'DUP-2024-0042',
@@ -395,15 +771,14 @@ export async function seedDatabase() {
       matchingFieldsJson: JSON.stringify(['apaarId', 'dateOfBirth', 'academicSession', 'firstName', 'lastName']),
       status: 'OPEN',
       assignedToUserId: verifOfficer.id,
-      evidenceNotes: 'CRITICAL CONCURRENT ENROLMENT: Student Priya Sharma (APAAR 7652-3410-8761) is concurrently admitted to B.Tech CSE at Delhi Technological University and College of Engineering Pune for the identical academic session 2024-2025.',
+      evidenceNotes: 'CRITICAL CONCURRENT ENROLMENT: Student Priya Sharma is concurrently admitted to B.Tech CSE at Delhi Technological University and College of Engineering Pune for academic session 2024-2025.',
     },
   });
 
-  // 4. Problem Scenario: FUZZY IDENTITY DUPLICATE CANDIDATE
-  // Rohan Gupta vs Rohan K. Gupta with identical DOB and Gender
+  // 4. Problem Scenario 2: FUZZY IDENTITY DUPLICATE CANDIDATE
   const rohanA = await prisma.student.create({
     data: {
-      apaarId: '6541-2309-7650',
+      apaarId: generateVerhoeffApaar('65412309765'),
       studentRollNumber: '2024-DTU-AI-011',
       institutionId: dtu.id,
       courseId: dtuAi.id,
@@ -421,7 +796,7 @@ export async function seedDatabase() {
 
   const rohanB = await prisma.student.create({
     data: {
-      apaarId: '5430-1298-6549',
+      apaarId: generateVerhoeffApaar('54301298654'),
       studentRollNumber: '2024-DTU-AI-019',
       institutionId: dtu.id,
       courseId: dtuAi.id,
@@ -447,11 +822,65 @@ export async function seedDatabase() {
       matchingFieldsJson: JSON.stringify(['name_similarity', 'dateOfBirth', 'gender', 'institutionId']),
       status: 'OPEN',
       assignedToUserId: verifOfficer.id,
-      evidenceNotes: 'Fuzzy Match (92% confidence): Same DOB (2005-02-18), same gender (MALE), and near-identical names ("Rohan Gupta" vs "Rohan K Gupta") admitted to same course. Suspected dual APAAR registration.',
+      evidenceNotes: 'Fuzzy Match (92% confidence): Same DOB (2005-02-18), same gender (MALE), and near-identical names ("Rohan Gupta" vs "Rohan K Gupta") admitted to same course.',
     },
   });
 
-  // 5. Problem Scenario: INVALID APAAR SYNTAX NEEDING CORRECTION
+  // 5. Problem Scenario 3: CROSS-STATE CONCURRENT ENROLMENT (IIT Roorkee & BITS Pilani)
+  const arjunApaar = generateVerhoeffApaar('43210987654');
+  const arjunIitr = await prisma.student.create({
+    data: {
+      apaarId: arjunApaar,
+      studentRollNumber: '2024-IITR-DSAI-007',
+      institutionId: iitr.id,
+      courseId: iitrDs.id,
+      firstName: 'Arjun',
+      lastName: 'Mathur',
+      dateOfBirth: '2005-09-30',
+      gender: 'MALE',
+      category: 'GENERAL',
+      admissionCategory: 'MERIT',
+      academicSession: '2024-2025',
+      admissionDate: '2024-07-19',
+      recordStatus: 'UNDER_REVIEW',
+      provenance: 'JOSAA_CENTRAL_COUNSELLING',
+    },
+  });
+
+  const arjunBits = await prisma.student.create({
+    data: {
+      apaarId: arjunApaar,
+      studentRollNumber: '2024-BITS-CS-028',
+      institutionId: bits.id,
+      courseId: bitsCs.id,
+      firstName: 'Arjun',
+      lastName: 'Mathur',
+      dateOfBirth: '2005-09-30',
+      gender: 'MALE',
+      category: 'GENERAL',
+      admissionCategory: 'MERIT',
+      academicSession: '2024-2025',
+      admissionDate: '2024-07-26',
+      recordStatus: 'UNDER_REVIEW',
+      provenance: 'BITS_DIRECT_COUNSELLING',
+    },
+  });
+
+  await prisma.duplicateCase.create({
+    data: {
+      caseReference: 'DUP-2024-0125',
+      studentIdA: arjunIitr.id,
+      studentIdB: arjunBits.id,
+      matchType: 'CONCURRENT_ENROLMENT',
+      confidenceScore: 1.0,
+      matchingFieldsJson: JSON.stringify(['apaarId', 'firstName', 'lastName', 'dateOfBirth']),
+      status: 'OPEN',
+      assignedToUserId: verifOfficer.id,
+      evidenceNotes: 'Concurrent Enrolment Alert: Student Arjun Mathur holds active admission in B.Tech Data Science (IIT Roorkee) and B.E. Computer Science (BITS Pilani) for academic session 2024-2025.',
+    },
+  });
+
+  // 6. Problem Scenario 4: CORRECTION REQUIRED (Repetitive APAAR Sequence)
   const correctionStudent = await prisma.student.create({
     data: {
       apaarId: '0000-0000-0000',
@@ -483,18 +912,29 @@ export async function seedDatabase() {
     },
   });
 
-  // Seed 30 more students into DTU CSE to demonstrate intake utilization and +4 excess
-  console.log('[SEED] Populating batch of students to demonstrate intake rules...');
-  const firstNames = ['Ananya', 'Aditya', 'Ishaan', 'Kavya', 'Manish', 'Neha', 'Pranav', 'Riya', 'Siddharth', 'Tanvi', 'Varun', 'Zoya', 'Nikhil', 'Pooja', 'Rahul', 'Sneha', 'Tushar', 'Akash', 'Bhavna', 'Chetan', 'Devika', 'Gaurav', 'Harini', 'Jatin', 'Kiran', 'Lata', 'Madhav', 'Nandini', 'Omkar', 'Pallavi'];
-  const lastNames = ['Verma', 'Kumar', 'Iyer', 'Reddy', 'Mehta', 'Nair', 'Bose', 'Chopra', 'Das', 'Gill', 'Joshi', 'Kulkarni', 'Malhotra', 'Pandey', 'Rao', 'Sen', 'Thakur', 'Bhat', 'Dutta', 'Garg', 'Hegde', 'Kaul', 'Mishra', 'Pillai', 'Saxena', 'Tiwari', 'Uppal', 'Vyas', 'Walia', 'Yadav'];
+  // Seed cohort of students across DTU, COEP, VIT, NITK, IIT Roorkee, BITS, Jadavpur, PSG, Thapar, GPM
+  console.log('[SEED] Populating diverse student cohorts across institutions with authentic Verhoeff IDs...');
+  const firstNames = [
+    'Ananya', 'Aditya', 'Ishaan', 'Kavya', 'Manish', 'Neha', 'Pranav', 'Riya',
+    'Siddharth', 'Tanvi', 'Varun', 'Zoya', 'Nikhil', 'Pooja', 'Rahul', 'Sneha',
+    'Tushar', 'Akash', 'Bhavna', 'Chetan', 'Devika', 'Gaurav', 'Harini', 'Jatin',
+    'Kiran', 'Lata', 'Madhav', 'Nandini', 'Omkar', 'Pallavi', 'Ritika', 'Sameer'
+  ];
+  const lastNames = [
+    'Verma', 'Kumar', 'Iyer', 'Reddy', 'Mehta', 'Nair', 'Bose', 'Chopra',
+    'Das', 'Gill', 'Joshi', 'Kulkarni', 'Malhotra', 'Pandey', 'Rao', 'Sen',
+    'Thakur', 'Bhat', 'Dutta', 'Garg', 'Hegde', 'Kaul', 'Mishra', 'Pillai',
+    'Saxena', 'Tiwari', 'Uppal', 'Vyas', 'Walia', 'Yadav', 'Banerjee', 'Nambiar'
+  ];
 
+  // DTU Students (25 students)
   for (let i = 0; i < 25; i++) {
     const fn = firstNames[i % firstNames.length];
     const ln = lastNames[i % lastNames.length];
-    const randDigits = 1000 + i * 37;
+    const apaar = generateVerhoeffApaar(`9182${(1000000 + i * 4731).toString().slice(0, 7)}`);
     await prisma.student.create({
       data: {
-        apaarId: `9182-${randDigits}-4501`,
+        apaarId: apaar,
         studentRollNumber: `2024-DTU-CSE-${(i + 4).toString().padStart(3, '0')}`,
         institutionId: dtu.id,
         courseId: dtuCse.id,
@@ -511,29 +951,105 @@ export async function seedDatabase() {
     });
   }
 
-  // Populate students into COEP, VIT, NITK
-  for (let i = 0; i < 15; i++) {
+  // Jadavpur University Students (18 students)
+  for (let i = 0; i < 18; i++) {
+    const fn = firstNames[(i + 4) % firstNames.length];
+    const ln = lastNames[(i + 2) % lastNames.length];
+    const apaar = generateVerhoeffApaar(`7192${(2000000 + i * 5321).toString().slice(0, 7)}`);
     await prisma.student.create({
       data: {
-        apaarId: `8271-${2000 + i * 43}-3412`,
-        studentRollNumber: `2024-COEP-CSE-${(i + 1).toString().padStart(3, '0')}`,
-        institutionId: coep.id,
-        courseId: coepCse.id,
-        firstName: firstNames[(i + 5) % firstNames.length],
-        lastName: lastNames[(i + 3) % lastNames.length],
-        dateOfBirth: '2005-03-20',
-        gender: 'MALE',
-        category: 'GENERAL',
+        apaarId: apaar,
+        studentRollNumber: `2024-JU-IT-${(i + 1).toString().padStart(3, '0')}`,
+        institutionId: ju.id,
+        courseId: juIt.id,
+        firstName: fn,
+        lastName: ln,
+        dateOfBirth: `2005-0${(i % 8) + 1}-12`,
+        gender: i % 2 === 0 ? 'FEMALE' : 'MALE',
+        category: i % 3 === 0 ? 'OBC' : 'GENERAL',
         admissionCategory: 'MERIT',
         academicSession: '2024-2025',
-        admissionDate: '2024-07-21',
+        admissionDate: '2024-07-23',
         recordStatus: 'VERIFIED',
       },
     });
   }
 
-  // Create a Submission Batch
-  const batch = await prisma.submissionBatch.create({
+  // PSG Tech Students (16 students)
+  for (let i = 0; i < 16; i++) {
+    const fn = firstNames[(i + 8) % firstNames.length];
+    const ln = lastNames[(i + 6) % lastNames.length];
+    const apaar = generateVerhoeffApaar(`6283${(3000000 + i * 6214).toString().slice(0, 7)}`);
+    await prisma.student.create({
+      data: {
+        apaarId: apaar,
+        studentRollNumber: `2024-PSG-RA-${(i + 1).toString().padStart(3, '0')}`,
+        institutionId: psg.id,
+        courseId: psgRa.id,
+        firstName: fn,
+        lastName: ln,
+        dateOfBirth: `2005-0${(i % 7) + 2}-18`,
+        gender: i % 2 === 0 ? 'MALE' : 'FEMALE',
+        category: i % 4 === 0 ? 'SC' : 'OBC',
+        admissionCategory: 'MERIT',
+        supernumeraryQuota: i === 0 ? 'TFW' : 'NONE',
+        academicSession: '2024-2025',
+        admissionDate: '2024-07-24',
+        recordStatus: 'VERIFIED',
+      },
+    });
+  }
+
+  // Thapar Institute Students (20 students)
+  for (let i = 0; i < 20; i++) {
+    const fn = firstNames[(i + 12) % firstNames.length];
+    const ln = lastNames[(i + 10) % lastNames.length];
+    const apaar = generateVerhoeffApaar(`5394${(4000000 + i * 7129).toString().slice(0, 7)}`);
+    await prisma.student.create({
+      data: {
+        apaarId: apaar,
+        studentRollNumber: `2024-TIET-COE-${(i + 1).toString().padStart(3, '0')}`,
+        institutionId: thapar.id,
+        courseId: thaparCoe.id,
+        firstName: fn,
+        lastName: ln,
+        dateOfBirth: `2005-0${(i % 9) + 1}-08`,
+        gender: i % 2 === 0 ? 'MALE' : 'FEMALE',
+        category: 'GENERAL',
+        admissionCategory: 'MERIT',
+        academicSession: '2024-2025',
+        admissionDate: '2024-07-27',
+        recordStatus: 'VERIFIED',
+      },
+    });
+  }
+
+  // Government Polytechnic Mumbai Students (12 diploma students)
+  for (let i = 0; i < 12; i++) {
+    const fn = firstNames[(i + 16) % firstNames.length];
+    const ln = lastNames[(i + 14) % lastNames.length];
+    const apaar = generateVerhoeffApaar(`4485${(5000000 + i * 8432).toString().slice(0, 7)}`);
+    await prisma.student.create({
+      data: {
+        apaarId: apaar,
+        studentRollNumber: `2024-GPM-DIP-${(i + 1).toString().padStart(3, '0')}`,
+        institutionId: gpm.id,
+        courseId: gpmDip.id,
+        firstName: fn,
+        lastName: ln,
+        dateOfBirth: `2006-0${(i % 6) + 1}-20`,
+        gender: i % 2 === 0 ? 'FEMALE' : 'MALE',
+        category: i % 2 === 0 ? 'OBC' : 'SC',
+        admissionCategory: 'MERIT',
+        academicSession: '2024-2025',
+        admissionDate: '2024-08-01',
+        recordStatus: 'VERIFIED',
+      },
+    });
+  }
+
+  // Create Submission Batches
+  const batch1 = await prisma.submissionBatch.create({
     data: {
       batchNumber: 'BATCH-2024-DTU-001',
       institutionId: dtu.id,
@@ -548,7 +1064,23 @@ export async function seedDatabase() {
     },
   });
 
-  // Create a pre-existing Compliance Discrepancy (e.g. at VIT for review demo)
+  await prisma.submissionBatch.create({
+    data: {
+      batchNumber: 'BATCH-2024-JU-001',
+      institutionId: ju.id,
+      submittedByUserId: aicteAdmin.id,
+      academicSession: '2024-2025',
+      totalRecords: 18,
+      validRecords: 18,
+      flaggedRecords: 0,
+      rejectedRecords: 0,
+      status: 'VERIFIED',
+      fileName: 'jadavpur_it_admissions_round1.csv',
+    },
+  });
+
+  // Create Compliance Discrepancies
+  // 1. VIT Over-Intake (+8 seats)
   await prisma.complianceDiscrepancy.create({
     data: {
       id: `DISC-${vit.id}-${vitCse.id}-2024-2025`,
@@ -561,6 +1093,38 @@ export async function seedDatabase() {
       excessCount: 8,
       status: 'OPEN',
       explanation: 'Automated Detection: 248 admissions submitted for approval against sanctioned intake of 240. Excess of +8 seats violates AICTE Approval Process Handbook (APH 2024-25, Clause 4.2).',
+    },
+  });
+
+  // 2. Thapar Institute Over-Intake (+12 seats)
+  await prisma.complianceDiscrepancy.create({
+    data: {
+      id: `DISC-${thapar.id}-${thaparCoe.id}-2024-2025`,
+      institutionId: thapar.id,
+      courseId: thaparCoe.id,
+      academicSession: '2024-2025',
+      discrepancyType: 'OVER_INTAKE',
+      approvedLimit: 180,
+      actualCount: 192,
+      excessCount: 12,
+      status: 'OPEN',
+      explanation: 'Excess Admissions: 192 candidates admitted against approved capacity of 180 seats. Unapproved institutional quota increase detected.',
+    },
+  });
+
+  // 3. PSG Tech Supernumerary Quota Breach
+  await prisma.complianceDiscrepancy.create({
+    data: {
+      id: `DISC-${psg.id}-${psgRa.id}-2024-2025`,
+      institutionId: psg.id,
+      courseId: psgRa.id,
+      academicSession: '2024-2025',
+      discrepancyType: 'SUPERNUMERARY_EXCESS',
+      approvedLimit: 3,
+      actualCount: 6,
+      excessCount: 3,
+      status: 'OPEN',
+      explanation: 'Supernumerary Quota Violation: Tuition Fee Waiver (TFW) admissions exceed statutory 5% cap (allocated 6 vs allowed 3).',
     },
   });
 
@@ -583,7 +1147,7 @@ export async function seedDatabase() {
     institutionId: dtu.id,
     action: 'BULK_UPLOAD_INGESTION',
     targetType: 'SubmissionBatch',
-    targetId: batch.id,
+    targetId: batch1.id,
     details: { fileName: 'dtu_cse_admissions_round1.csv', records: 28 },
   });
 
@@ -597,14 +1161,34 @@ export async function seedDatabase() {
     details: { studentName: 'Priya Sharma', institutions: ['DTU', 'COEP'] },
   });
 
+  await AuditService.recordEvent({
+    actorId: verifOfficer.id,
+    actorRole: 'VERIFICATION_OFFICER',
+    actorEmail: verifOfficer.email,
+    action: 'FLAG_CONCURRENT_ENROLMENT',
+    targetType: 'DuplicateCase',
+    targetId: 'DUP-2024-0125',
+    details: { studentName: 'Arjun Mathur', institutions: ['IIT Roorkee', 'BITS Pilani'] },
+  });
+
   // Notifications
   await prisma.notification.create({
     data: {
       recipientRole: 'AICTE_ADMIN',
-      title: 'Excess Intake Alert Detected',
+      title: 'Excess Intake Alert Detected (VIT)',
       message: 'VIT Computer Science submitted 248 admissions against 240 approved intake (+8 excess).',
       linkUrl: '#compliance',
       severity: 'WARNING',
+    },
+  });
+
+  await prisma.notification.create({
+    data: {
+      recipientRole: 'AICTE_ADMIN',
+      title: 'Excess Intake Alert Detected (Thapar)',
+      message: 'Thapar Institute Computer Engineering admitted 192 students against 180 approved seats (+12 excess).',
+      linkUrl: '#compliance',
+      severity: 'ERROR',
     },
   });
 
@@ -620,6 +1204,16 @@ export async function seedDatabase() {
 
   await prisma.notification.create({
     data: {
+      recipientRole: 'VERIFICATION_OFFICER',
+      title: 'National Registry Cross-State Match (IIT Roorkee / BITS)',
+      message: 'Concurrent enrolment case DUP-2024-0125 (Arjun Mathur) flagged for hearing.',
+      linkUrl: '#duplicates',
+      severity: 'WARNING',
+    },
+  });
+
+  await prisma.notification.create({
+    data: {
       recipientUserId: dtuAdmin.id,
       institutionId: dtu.id,
       title: 'Submission Batch Requires Correction',
@@ -629,7 +1223,7 @@ export async function seedDatabase() {
     },
   });
 
-  console.log('[SEED] Seeding completed successfully!');
+  console.log('[SEED] Seeding completed successfully with 10 institutions and rich testing data!');
 }
 
 // Execute directly if run as a script

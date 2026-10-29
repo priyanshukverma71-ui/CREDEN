@@ -104,7 +104,7 @@ export const MODULE_PALETTE: Record<
 // -------------------------------------------------------------
 // Carefully Modelled Colourful 3D Symbols with Real Depth
 // -------------------------------------------------------------
-const Distinct3DSymbol: React.FC<{ id: ModuleId; hovered: boolean }> = ({ id, hovered }) => {
+export const Distinct3DSymbol: React.FC<{ id: ModuleId; hovered: boolean; isolated?: boolean }> = ({ id, hovered, isolated = false }) => {
   const meshRef = useRef<THREE.Group>(null);
   const meta = MODULE_PALETTE[id] || MODULE_PALETTE.institutions;
 
@@ -112,7 +112,11 @@ const Distinct3DSymbol: React.FC<{ id: ModuleId; hovered: boolean }> = ({ id, ho
   useFrame((state) => {
     if (!meshRef.current) return;
     const time = state.clock.getElapsedTime();
-    meshRef.current.position.y = 0.96 + (hovered ? 0.08 : 0) + Math.sin(time * 2.2 + 1) * 0.035;
+    if (isolated) {
+      meshRef.current.position.y = (hovered ? 0.08 : 0) + Math.sin(time * 2.2 + 1) * 0.035;
+    } else {
+      meshRef.current.position.y = 0.96 + (hovered ? 0.08 : 0) + Math.sin(time * 2.2 + 1) * 0.035;
+    }
     meshRef.current.rotation.y = Math.sin(time * 1.2) * 0.08 + (hovered ? 0.15 : 0);
   });
 
@@ -521,7 +525,7 @@ const Distinct3DSymbol: React.FC<{ id: ModuleId; hovered: boolean }> = ({ id, ho
   };
 
   return (
-    <group ref={meshRef} position={[0, 0.98, 0.1]}>
+    <group ref={meshRef} position={isolated ? [0, 0, 0] : [0, 0.98, 0.1]}>
       {/* Soft ambient tint shadow directly beneath the freely floating 3D icon */}
       <mesh position={[0, -0.62, -0.04]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[1.4, 0.44]} />
