@@ -26,6 +26,12 @@ export const MODULE_PALETTE: Record<
     label: string;      // Default category label
   }
 > = {
+  trustgraph: {
+    primary: '#06B6D4', // Vibrant Cyan / Electric Teal
+    light: '#CFFAFE',   // Cyan tint
+    badgeText: '#0E7490',
+    label: 'INTELLIGENCE & TRUST GRAPH',
+  },
   institutions: {
     primary: '#4285F4', // Google Blue
     light: '#D7E9FF',   // Sky blue
@@ -122,6 +128,46 @@ export const Distinct3DSymbol: React.FC<{ id: ModuleId; hovered: boolean; isolat
 
   const renderSymbolModel = () => {
     switch (id) {
+      case 'trustgraph':
+        // CREDEN TrustGraph — Cyan Constellation Hub & Relational Graph Ring
+        return (
+          <group scale={1.04} position={[0, 0, 0.06]}>
+            {/* Core Neural Nexus Sphere */}
+            <mesh position={[0, 0, 0]}>
+              <sphereGeometry args={[0.22, 28, 28]} />
+              <meshStandardMaterial color="#06B6D4" roughness={0.15} metalness={0.2} />
+            </mesh>
+            {/* Outer Orbit Gyro Ring */}
+            <mesh rotation={[Math.PI / 3, Math.PI / 4, 0]}>
+              <torusGeometry args={[0.42, 0.03, 16, 40]} />
+              <meshStandardMaterial color="#38BDF8" roughness={0.2} metalness={0.6} />
+            </mesh>
+            {/* Satellite Entity Nodes */}
+            {[
+              { pos: [-0.32, 0.28, 0.1], col: '#4285F4' },
+              { pos: [0.34, 0.22, -0.1], col: '#34A853' },
+              { pos: [-0.28, -0.3, -0.05], col: '#7C3AED' },
+              { pos: [0.3, -0.28, 0.12], col: '#EA4335' },
+            ].map((node, idx) => (
+              <group key={idx} position={node.pos as [number, number, number]}>
+                <mesh>
+                  <sphereGeometry args={[0.08, 16, 16]} />
+                  <meshStandardMaterial color={node.col} roughness={0.2} />
+                </mesh>
+              </group>
+            ))}
+            {/* Fine Linking Beams */}
+            <mesh rotation={[0, 0, 0.7]}>
+              <cylinderGeometry args={[0.015, 0.015, 0.8, 12]} />
+              <meshBasicMaterial color="#BAE6FD" />
+            </mesh>
+            <mesh rotation={[0, 0, -0.7]}>
+              <cylinderGeometry args={[0.015, 0.015, 0.8, 12]} />
+              <meshBasicMaterial color="#BAE6FD" />
+            </mesh>
+          </group>
+        );
+
       case 'institutions':
         // 1. Institution Management — Blue Architectural Icon
         return (

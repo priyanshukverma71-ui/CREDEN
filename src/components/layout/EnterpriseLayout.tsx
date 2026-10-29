@@ -26,6 +26,7 @@ import { StudentVerificationWorkspace } from '../workspaces/StudentVerificationW
 import { ReportsAnalyticsWorkspace } from '../workspaces/ReportsAnalyticsWorkspace';
 import { AuditSecurityWorkspace } from '../workspaces/AuditSecurityWorkspace';
 import { SystemIntegrationWorkspace } from '../workspaces/SystemIntegrationWorkspace';
+import { TrustGraphWorkspace } from '../workspaces/TrustGraphWorkspace';
 
 interface EnterpriseLayoutProps {
   onOpenLogin: () => void;
@@ -59,6 +60,13 @@ export const EnterpriseLayout: React.FC<EnterpriseLayoutProps> = ({ onOpenLogin 
 
   const getWorkspaceMeta = (mod: ModuleId) => {
     switch (mod) {
+      case 'trustgraph':
+        return {
+          title: 'CREDEN TrustGraph™ Intelligence',
+          subtitle: 'Interactive 3D Entity Relationship Visualiser, Duplicate Conflict Radar & Provenance Engine',
+          category: 'Graph AI & Intelligence',
+          actionLabel: 'Scan Collisions',
+        };
       case 'institutions':
         return {
           title: 'Institution Management',
@@ -150,6 +158,8 @@ export const EnterpriseLayout: React.FC<EnterpriseLayoutProps> = ({ onOpenLogin 
     switch (activeModule) {
       case 'overview':
         return <ExecutiveCockpit />;
+      case 'trustgraph':
+        return <TrustGraphWorkspace />;
       case 'institutions':
         return <InstitutionWorkspace />;
       case 'students':

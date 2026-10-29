@@ -160,6 +160,20 @@ export const SpatialTopCapsule: React.FC<SpatialTopCapsuleProps> = ({
 
         {/* Right Controls: Search, Persona, Notifications, Profile */}
         <div className="flex items-center gap-2">
+          {/* TrustGraph 1-Click Launch Pill */}
+          <button
+            onClick={() => setActiveModule('trustgraph')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all shadow-xs ${
+              activeModule === 'trustgraph'
+                ? 'bg-cyan-600 text-white shadow-md'
+                : 'bg-white/90 hover:bg-cyan-50 text-slate-800 hover:text-cyan-900 border border-slate-200 hover:border-cyan-300'
+            }`}
+            title="Open CREDEN TrustGraph Intelligence Visualiser"
+          >
+            <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
+            <span className="hidden sm:inline font-mono">TrustGraph™</span>
+          </button>
+
           {/* Quick Search Trigger */}
           <button
             onClick={onSearchClick}

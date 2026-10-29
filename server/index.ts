@@ -15,6 +15,7 @@ import analyticsRouter from './routes/analytics.js';
 import auditRouter from './routes/audit.js';
 import integrationRouter from './routes/integration.js';
 import notificationsRouter from './routes/notifications.js';
+import trustgraphRouter from './routes/trustgraph.js';
 
 dotenv.config();
 
@@ -57,6 +58,7 @@ app.use('/api/analytics', analyticsRouter);
 app.use('/api/audit', auditRouter);
 app.use('/api/integration', integrationRouter);
 app.use('/api/notifications', notificationsRouter);
+app.use('/api/trustgraph', trustgraphRouter);
 
 // Serve static frontend in production
 const distPath = path.join(__dirname, '../dist');

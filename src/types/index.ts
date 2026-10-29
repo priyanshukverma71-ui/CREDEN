@@ -197,6 +197,7 @@ export interface NotificationItem {
 
 export type ModuleId =
   | 'overview'
+  | 'trustgraph'
   | 'institutions'
   | 'students'
   | 'submissions'
@@ -209,3 +210,62 @@ export type ModuleId =
   | 'audit'
   | 'integration'
   | 'settings';
+
+export type TrustGraphNodeType = 'INSTITUTION' | 'SUBMISSION' | 'STUDENT' | 'VALIDATION' | 'CONFLICT' | 'AUDIT';
+
+export interface TrustGraphNode {
+  id: string;
+  dbId?: string;
+  type: TrustGraphNodeType;
+  label: string;
+  subLabel?: string;
+  status?: string;
+  severity?: 'INFO' | 'WARNING' | 'ERROR' | 'CRITICAL';
+  x: number;
+  y: number;
+  z: number;
+  data: Record<string, any>;
+}
+
+export interface TrustGraphEdge {
+  id: string;
+  source: string;
+  target: string;
+  relationship: string;
+  label: string;
+  severity?: 'NORMAL' | 'WARNING' | 'CRITICAL';
+}
+
+export interface IdentityConflictRadar {
+  concurrentEnrolmentRisk: number;
+  identifierIntegrity: number;
+  crossStateConflict: number;
+  timelineCollision: number;
+  quotaAnomaly: number;
+  overallRiskScore: number;
+  threatLevel: 'LOW' | 'MODERATE' | 'HIGH' | 'CRITICAL';
+}
+
+export interface DataQualityScoreBreakdown {
+  totalScore: number;
+  grade: 'A+' | 'A' | 'B' | 'C' | 'F';
+  metrics: {
+    verhoeffChecksum: { score: number; max: 25; status: string; notes: string };
+    syntaxStructure: { score: number; max: 20; status: string; notes: string };
+    demographicCompleteness: { score: number; max: 20; status: string; notes: string };
+    nonDuplicateConfidence: { score: number; max: 20; status: string; notes: string };
+    intakeConformance: { score: number; max: 15; status: string; notes: string };
+  };
+}
+
+export interface ProvenanceTimelineEvent {
+  step: number;
+  stage: string;
+  timestamp: string;
+  actor: string;
+  actorRole: string;
+  status: 'SUCCESS' | 'FLAGGED' | 'PENDING' | 'CRITICAL';
+  description: string;
+  hash?: string;
+  verificationType: 'LOCAL_DETERMINISTIC' | 'OFFICIAL_REGISTRY_GATEWAY' | 'CRYPTOGRAPHIC_AUDIT';
+}

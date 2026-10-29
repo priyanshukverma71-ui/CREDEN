@@ -38,6 +38,7 @@ export const CAROUSEL_MODULES_LIST: {
   title: string;
   subtitle: string;
 }[] = [
+  { id: 'trustgraph', category: 'Intelligence & Graph AI', title: 'CREDEN TrustGraph', subtitle: 'Interactive 3D entity relationship map, duplicate radar & record provenance' },
   { id: 'institutions', category: 'Institutional Oversight', title: 'Institution Management', subtitle: 'Approved technical institutions, programmes & statutory capacity' },
   { id: 'submissions', category: 'Student Data Ops', title: 'Student Data Submission', subtitle: 'Batch CSV ingestion, Verhoeff checksum & quota pre-check' },
   { id: 'apaar', category: 'Verification & Integrity', title: 'APAAR ID Validation', subtitle: '12-digit Verhoeff structural verification & ABC gateway' },
@@ -53,6 +54,7 @@ export const CAROUSEL_MODULES_LIST: {
 // Module coordinates mapped horizontally along X axis with generous negative space
 export const MODULE_COORDINATES: Record<ModuleId, number> = {
   overview: 0,
+  trustgraph: -22,
   institutions: -18,
   submissions: -14,
   apaar: -10,

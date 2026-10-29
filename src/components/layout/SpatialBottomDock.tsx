@@ -13,6 +13,7 @@ import {
   PieChart,
   Lock,
   Network,
+  Share2,
 } from 'lucide-react';
 
 export const SpatialBottomDock: React.FC = () => {
@@ -36,6 +37,12 @@ export const SpatialBottomDock: React.FC = () => {
       label: '3D Launcher',
       icon: Compass,
       bgGradient: 'bg-gradient-to-tr from-slate-700 to-slate-900',
+    },
+    {
+      id: 'trustgraph',
+      label: 'CREDEN TrustGraph',
+      icon: Share2,
+      bgGradient: 'bg-gradient-to-tr from-cyan-500 to-blue-600',
     },
     {
       id: 'institutions',
