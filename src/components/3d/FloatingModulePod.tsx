@@ -557,34 +557,28 @@ export const FloatingModulePod: React.FC<FloatingModulePodProps> = ({
   const [hovered, setHovered] = useState(false);
   const meta = MODULE_PALETTE[id] || MODULE_PALETTE.institutions;
 
-  // Smooth, damped horizontal focus easing
-  useFrame((state) => {
+  // Calm, stable positioning without back-and-forth leaping
+  useFrame(() => {
     if (!groupRef.current) return;
-    const camX = state.camera.position.x;
-    const dist = Math.abs(camX - position[0]);
-    const isFocused = dist < 2.0;
 
-    // Focused card steps gently forward in Z
-    const targetZ = isFocused
-      ? (hovered ? 0.45 : 0.28)
-      : -Math.min(1.2, (dist - 1.8) * 0.2);
-
-    const targetY = position[1] + (hovered ? 0.08 : 0);
+    // Gentle hover lift only; completely stable during navigation
+    const targetZ = hovered ? 0.18 : 0;
+    const targetY = position[1] + (hovered ? 0.05 : 0);
 
     groupRef.current.position.z = THREE.MathUtils.lerp(
       groupRef.current.position.z,
       targetZ,
-      0.08
+      0.1
     );
     groupRef.current.position.y = THREE.MathUtils.lerp(
       groupRef.current.position.y,
       targetY,
-      0.08
+      0.1
     );
 
-    const targetScale = isFocused ? 1.02 : THREE.MathUtils.lerp(1.0, 0.94, Math.min(1, (dist - 1.8) / 5));
+    const targetScale = hovered ? 1.02 : 1.0;
     const currentScale = groupRef.current.scale.x;
-    const newScale = THREE.MathUtils.lerp(currentScale, targetScale, 0.08);
+    const newScale = THREE.MathUtils.lerp(currentScale, targetScale, 0.1);
     groupRef.current.scale.set(newScale, newScale, newScale);
   });
 

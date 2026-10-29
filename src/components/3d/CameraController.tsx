@@ -92,14 +92,7 @@ export const CameraController: React.FC<CameraControllerProps> = () => {
       }
     };
 
-    // 3. Pointer Move for Subtle Spatial Parallax
-    const handleMouseMove = (e: MouseEvent) => {
-      if (isReducedMotion) return;
-      targetPointerX.current = (e.clientX / window.innerWidth) * 2 - 1;
-      targetPointerY.current = -(e.clientY / window.innerHeight) * 2 + 1;
-    };
-
-    // 4. Pointer Drag Panning across the 3D Canvas
+    // 3. Pointer Drag Panning across the 3D Canvas
     const dom = gl.domElement;
     const handlePointerDown = (e: PointerEvent) => {
       if (activeModule !== 'overview') return;
@@ -123,7 +116,6 @@ export const CameraController: React.FC<CameraControllerProps> = () => {
 
     window.addEventListener('wheel', handleWheel, { passive: true });
     window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
     dom.addEventListener('pointerdown', handlePointerDown);
     window.addEventListener('pointermove', handlePointerMove);
     window.addEventListener('pointerup', handlePointerUp);
@@ -131,29 +123,19 @@ export const CameraController: React.FC<CameraControllerProps> = () => {
     return () => {
       window.removeEventListener('wheel', handleWheel);
       window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('mousemove', handleMouseMove);
       dom.removeEventListener('pointerdown', handlePointerDown);
       window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('pointerup', handlePointerUp);
     };
   }, [gl, activeModule, setCameraTargetX, setScrollProgress, openWorkspace, isReducedMotion]);
 
-  // Smooth, damped camera frame updates with subtle pointer parallax
+  // Smooth, damped camera frame updates - rock solid, no back-and-forth wobble
   useFrame(() => {
     const lerpFactor = isReducedMotion ? 1 : 0.075;
     currentX.current = THREE.MathUtils.lerp(currentX.current, targetX.current, lerpFactor);
 
-    // Damped parallax interpolation
-    if (!isReducedMotion) {
-      pointerX.current = THREE.MathUtils.lerp(pointerX.current, targetPointerX.current, 0.05);
-      pointerY.current = THREE.MathUtils.lerp(pointerY.current, targetPointerY.current, 0.05);
-    }
-
-    const parallaxOffsetX = isReducedMotion ? 0 : pointerX.current * 0.35;
-    const parallaxOffsetY = isReducedMotion ? 0 : pointerY.current * 0.18;
-
-    camera.position.x = currentX.current + parallaxOffsetX;
-    camera.position.y = 0.35 + parallaxOffsetY;
+    camera.position.x = currentX.current;
+    camera.position.y = 0.35;
     camera.position.z = 8.2;
 
     // Direct lookahead target aligned with architectural slabs

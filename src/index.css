@@ -25,52 +25,49 @@
    ========================================================================= */
 
 .liquid-glass-window {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(48px) saturate(190%);
-  -webkit-backdrop-filter: blur(48px) saturate(190%);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: rgba(238, 242, 246, 0.76);
+  backdrop-filter: blur(40px) saturate(150%);
+  -webkit-backdrop-filter: blur(40px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
   box-shadow: 
-    0 30px 80px -15px rgba(15, 23, 42, 0.12),
-    0 10px 30px -10px rgba(15, 23, 42, 0.08),
-    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.95),
-    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05);
+    0 30px 80px -15px rgba(0, 0, 0, 0.45),
+    0 12px 30px -10px rgba(0, 0, 0, 0.25),
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.65),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.06);
 }
 
 .liquid-glass-panel {
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.85);
+  background: rgba(241, 245, 249, 0.76);
+  backdrop-filter: blur(32px) saturate(150%);
+  -webkit-backdrop-filter: blur(32px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   box-shadow: 
-    0 20px 50px -10px rgba(15, 23, 42, 0.09),
-    inset 0 1px 2px 0 rgba(255, 255, 255, 0.95);
+    0 20px 50px -10px rgba(0, 0, 0, 0.18),
+    inset 0 1px 2px 0 rgba(255, 255, 255, 0.75);
 }
 
 .liquid-glass-pill {
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(40px) saturate(190%);
-  -webkit-backdrop-filter: blur(40px) saturate(190%);
-  border: 1px solid rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(32px) saturate(160%);
+  -webkit-backdrop-filter: blur(32px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
   box-shadow: 
-    0 18px 45px rgba(15, 23, 42, 0.08),
-    inset 0 1px 2px 0 rgba(255, 255, 255, 1);
+    0 18px 45px rgba(15, 23, 42, 0.1),
+    inset 0 1px 2px 0 rgba(255, 255, 255, 0.95);
 }
 
 .liquid-glass-inner {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(20px);
+  background: rgba(248, 250, 252, 0.85);
   border: 1px solid rgba(226, 232, 240, 0.8);
-  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05);
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04);
 }
 
-/* Surface containers in Light Mode Liquid Glass */
+/* Surface containers in Light Mode Liquid Glass - Blur-free for sharp legible text */
 .surface-card {
   background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(226, 232, 240, 0.9);
   border-radius: 1rem;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
   color: #0F172A;
 }
 
@@ -90,19 +87,15 @@
 }
 
 .glass-panel {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: rgba(255, 255, 255, 0.90);
   border: 1px solid rgba(226, 232, 240, 0.9);
   border-radius: 1rem;
-  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05);
   color: #0F172A;
 }
 
 .glass-panel-elevated {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(40px);
-  -webkit-backdrop-filter: blur(40px);
+  background: rgba(255, 255, 255, 0.96);
   border: 1px solid rgba(226, 232, 240, 0.9);
   box-shadow: 0 25px 60px -12px rgba(15, 23, 42, 0.12);
   color: #0F172A;
