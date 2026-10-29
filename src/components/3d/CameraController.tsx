@@ -90,11 +90,11 @@ export const CameraController: React.FC = () => {
     currentX.current = THREE.MathUtils.lerp(currentX.current, targetX.current, 0.08);
 
     camera.position.x = currentX.current;
-    camera.position.y = 1.1;
-    camera.position.z = 9.2;
+    camera.position.y = 0.55;
+    camera.position.z = 8.6;
 
-    // Slight lookahead tilt
-    camera.lookAt(currentX.current, 0.4, 0);
+    // Slight lookahead tilt centered on floating pods
+    camera.lookAt(currentX.current, 0.2, 0);
   });
 
   return null;

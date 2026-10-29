@@ -3,11 +3,9 @@ import { useAuth } from '../../context/AuthContext';
 import { usePortal } from '../../context/PortalContext';
 import { EnterpriseSidebar } from './EnterpriseSidebar';
 import { EnterpriseTopNav } from './EnterpriseTopNav';
-import { DemoWorkflowBanner } from '../ui/DemoWorkflowBanner';
 import { SearchModal } from '../ui/SearchModal';
 import { SpatialCanvas } from '../3d/SpatialCanvas';
 import { NonWebGLFallback } from '../3d/NonWebGLFallback';
-import { OverviewHUD } from '../ui/OverviewHUD';
 
 // Workspaces
 import { ExecutiveCockpit } from '../workspaces/ExecutiveCockpit';
@@ -98,22 +96,17 @@ export const EnterpriseLayout: React.FC<EnterpriseLayoutProps> = ({ onOpenLogin 
           onOpenLogin={onOpenLogin}
         />
 
-        {/* Dynamic Canvas: Spatial 3D Environment on Opening Page OR Enterprise Workspaces */}
+        {/* Dynamic Canvas: Unobstructed 3D Spatial Environment on Opening Page OR Enterprise Workspaces */}
         {show3DSpatial ? (
           <div className="relative flex-1 w-full h-full overflow-hidden select-none">
             {isReducedMotion ? (
               <NonWebGLFallback />
             ) : (
               <>
-                {/* Full, Crystal-Clear 3D Spatial Canvas */}
+                {/* 100% Full-Screen, Crystal-Clear 3D Spatial Panoramic Canvas */}
                 <SpatialCanvas />
 
-                {/* Floating Overview HUD docked neatly at bottom */}
-                <div className="absolute bottom-16 sm:bottom-20 left-1/2 -translate-x-1/2 w-[94%] max-w-5xl z-20 pointer-events-auto animate-in fade-in slide-in-from-bottom-4 duration-300">
-                  <OverviewHUD />
-                </div>
-
-                {/* Horizontal Flight Progress Bar */}
+                {/* Horizontal Flight Progress Bar at bottom */}
                 <div className="fixed bottom-0 left-0 right-0 h-1 bg-[#1A1D22] z-30">
                   <div
                     className="h-full bg-gradient-to-r from-[#929AA5] via-[#CBD5E1] to-[#FFFFFF] transition-all duration-150"
@@ -130,9 +123,6 @@ export const EnterpriseLayout: React.FC<EnterpriseLayoutProps> = ({ onOpenLogin 
             </div>
           </main>
         )}
-
-        {/* SIH Demonstration Step Workflow Banner docked at bottom */}
-        <DemoWorkflowBanner />
 
         {/* Global Quick Search Modal */}
         <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
