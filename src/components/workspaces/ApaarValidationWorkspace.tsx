@@ -54,6 +54,14 @@ export const ApaarValidationWorkspace: React.FC = () => {
     }
   };
 
+  React.useEffect(() => {
+    const handleAction = () => {
+      handleRunTest(testApaar, testStudentName);
+    };
+    window.addEventListener('creden:action:apaar', handleAction);
+    return () => window.removeEventListener('creden:action:apaar', handleAction);
+  }, [testApaar, testStudentName]);
+
   return (
     <div className="space-y-6">
       {/* Header explanation */}

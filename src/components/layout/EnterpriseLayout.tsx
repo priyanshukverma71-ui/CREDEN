@@ -177,6 +177,40 @@ export const EnterpriseLayout: React.FC<EnterpriseLayoutProps> = ({ onOpenLogin 
     }
   };
 
+  const handlePrimaryAction = () => {
+    switch (activeModule) {
+      case 'submissions':
+        window.dispatchEvent(new CustomEvent('creden:action:submissions'));
+        break;
+      case 'institutions':
+        window.dispatchEvent(new CustomEvent('creden:action:institutions'));
+        break;
+      case 'apaar':
+        window.dispatchEvent(new CustomEvent('creden:action:apaar'));
+        break;
+      case 'duplicates':
+        window.dispatchEvent(new CustomEvent('creden:action:duplicates'));
+        break;
+      case 'compliance':
+        window.dispatchEvent(new CustomEvent('creden:action:compliance'));
+        break;
+      case 'verification':
+        window.dispatchEvent(new CustomEvent('creden:action:verification'));
+        break;
+      case 'reports':
+        window.open('/api/analytics/export-csv?type=students', '_blank');
+        break;
+      case 'audit':
+        window.dispatchEvent(new CustomEvent('creden:action:audit'));
+        break;
+      case 'integration':
+        window.dispatchEvent(new CustomEvent('creden:action:integration'));
+        break;
+      default:
+        break;
+    }
+  };
+
   const { title, subtitle, category, actionLabel } = getWorkspaceMeta(activeModule);
   const is3DSpace = activeModule === 'overview' && viewMode !== 'grid';
 
@@ -253,9 +287,7 @@ export const EnterpriseLayout: React.FC<EnterpriseLayoutProps> = ({ onOpenLogin 
                   {/* Right: Contextual Action Button & Close Button */}
                   <div className="flex items-center gap-2 flex-shrink-0">
                     <button
-                      onClick={() => {
-                        // Contextual module primary action
-                      }}
+                      onClick={handlePrimaryAction}
                       className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-slate-900 hover:bg-black text-white font-semibold text-xs transition-all shadow-md hover:scale-102"
                     >
                       <Sparkles className="w-3 h-3 text-emerald-400" />

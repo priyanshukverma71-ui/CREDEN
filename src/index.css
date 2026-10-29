@@ -102,12 +102,22 @@
 }
 
 /* Light Liquid Glass Backward-Compatibility Overrides */
-.bg-platinum {
+.bg-platinum,
+button.bg-platinum,
+a.bg-platinum {
   background-color: #0F172A !important;
   color: #FFFFFF !important;
 }
-.bg-platinum:hover {
+.bg-platinum:hover,
+button.bg-platinum:hover,
+a.bg-platinum:hover {
   background-color: #1E293B !important;
+  color: #FFFFFF !important;
+}
+.text-midnight,
+.bg-platinum .text-midnight,
+button.bg-platinum span,
+a.bg-platinum span {
   color: #FFFFFF !important;
 }
 .bg-obsidian {
@@ -120,13 +130,13 @@
   border-color: #E2E8F0 !important;
 }
 .border-glass-border-bright {
-  border-color: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(226, 232, 240, 0.95) !important;
 }
 .text-highlight-silver {
   color: #0F172A !important;
 }
 .text-liquid-silver {
-  color: #64748B !important;
+  color: #475569 !important;
 }
 .text-platinum {
   color: #0F172A !important;

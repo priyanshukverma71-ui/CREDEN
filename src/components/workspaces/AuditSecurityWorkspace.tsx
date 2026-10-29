@@ -56,6 +56,11 @@ export const AuditSecurityWorkspace: React.FC = () => {
 
   useEffect(() => {
     fetchLogs();
+    const handleAction = () => {
+      verifyIntegrity();
+    };
+    window.addEventListener('creden:action:audit', handleAction);
+    return () => window.removeEventListener('creden:action:audit', handleAction);
   }, [token]);
 
   return (

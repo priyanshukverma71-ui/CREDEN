@@ -137,7 +137,7 @@ export const SpatialTopCapsule: React.FC<SpatialTopCapsuleProps> = ({
               CREDEN
             </span>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 hidden sm:inline">
-              AICTE
+              Institutional Portal
             </span>
           </div>
         </div>
@@ -145,7 +145,7 @@ export const SpatialTopCapsule: React.FC<SpatialTopCapsuleProps> = ({
         {/* Center: VisionOS Verified Address Capsule in Light Mode */}
         <div className="hidden md:flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-slate-100/90 border border-slate-200 text-xs font-mono text-slate-600 shadow-inner max-w-md w-full justify-center">
           <Lock className="w-3.5 h-3.5 text-emerald-600" />
-          <span className="text-slate-500 truncate">https://creden.aicte-india.org/</span>
+          <span className="text-slate-500 truncate">https://creden.academic-registry.in/</span>
           <span className="text-slate-950 font-semibold truncate capitalize">
             {activeModule}
           </span>

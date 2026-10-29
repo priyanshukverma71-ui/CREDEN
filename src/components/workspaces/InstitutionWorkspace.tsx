@@ -64,6 +64,11 @@ export const InstitutionWorkspace: React.FC = () => {
 
   useEffect(() => {
     fetchInstitutions();
+    const handleAction = () => {
+      setNewCourseOpen(true);
+    };
+    window.addEventListener('creden:action:institutions', handleAction);
+    return () => window.removeEventListener('creden:action:institutions', handleAction);
   }, [token, search]);
 
   const handleCreateCourse = async (e: React.FormEvent) => {

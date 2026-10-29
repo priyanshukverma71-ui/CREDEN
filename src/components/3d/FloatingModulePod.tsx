@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Text } from '@react-three/drei';
+import { Text, RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
 import { ModuleId } from '../../types';
 
@@ -521,21 +521,25 @@ const Distinct3DSymbol: React.FC<{ id: ModuleId; hovered: boolean }> = ({ id, ho
   };
 
   return (
-    <group ref={meshRef} position={[0, 0.95, 0.06]}>
-      {/* 1. Soft Tinted Circular Stage / Plinth */}
-      <mesh castShadow receiveShadow>
-        <cylinderGeometry args={[0.72, 0.72, 0.06, 36]} rotation={[Math.PI / 2, 0, 0]} />
+    <group ref={meshRef} position={[0, 0.95, 0.08]}>
+      {/* 1. Sculpted Circular Plinth with Real 3D Depth (No incomplete circular rings) */}
+      <mesh castShadow receiveShadow position={[0, 0, 0]}>
+        <cylinderGeometry args={[0.74, 0.74, 0.08, 48]} rotation={[Math.PI / 2, 0, 0]} />
         <meshStandardMaterial
           color={meta.light}
-          roughness={0.28}
+          roughness={0.24}
           metalness={0.05}
         />
       </mesh>
 
-      {/* 2. Delicate Outer Accent Halo Ring */}
-      <mesh position={[0, 0, 0.032]}>
-        <ringGeometry args={[0.71, 0.73, 36]} />
-        <meshBasicMaterial color="#FFFFFF" transparent opacity={0.9} />
+      {/* 2. Physical 3D Extruded Torus Bevel Rim */}
+      <mesh position={[0, 0, 0.04]}>
+        <torusGeometry args={[0.74, 0.018, 16, 48]} />
+        <meshStandardMaterial
+          color={meta.primary}
+          roughness={0.2}
+          metalness={0.15}
+        />
       </mesh>
 
       {/* 3. The Refined 3D Symbol Model */}
@@ -557,28 +561,32 @@ export const FloatingModulePod: React.FC<FloatingModulePodProps> = ({
   const [hovered, setHovered] = useState(false);
   const meta = MODULE_PALETTE[id] || MODULE_PALETTE.institutions;
 
-  // Calm, stable positioning without back-and-forth leaping
-  useFrame(() => {
+  // Smooth, subtle forward movement for selected module and gentle hover lift
+  useFrame((state) => {
     if (!groupRef.current) return;
 
-    // Gentle hover lift only; completely stable during navigation
-    const targetZ = hovered ? 0.18 : 0;
-    const targetY = position[1] + (hovered ? 0.05 : 0);
+    const camX = state.camera.position.x;
+    const distToCam = Math.abs(camX - position[0]);
+    const isClose = distToCam < 2.0;
+
+    // Subtle forward movement for selected / active module, gentle hover lift
+    const targetZ = isActive ? 0.35 : (hovered ? 0.22 : (isClose ? 0.10 : 0));
+    const targetY = position[1] + (hovered ? 0.05 : (isClose ? 0.02 : 0));
 
     groupRef.current.position.z = THREE.MathUtils.lerp(
       groupRef.current.position.z,
       targetZ,
-      0.1
+      0.08
     );
     groupRef.current.position.y = THREE.MathUtils.lerp(
       groupRef.current.position.y,
       targetY,
-      0.1
+      0.08
     );
 
     const targetScale = hovered ? 1.02 : 1.0;
     const currentScale = groupRef.current.scale.x;
-    const newScale = THREE.MathUtils.lerp(currentScale, targetScale, 0.1);
+    const newScale = THREE.MathUtils.lerp(currentScale, targetScale, 0.08);
     groupRef.current.scale.set(newScale, newScale, newScale);
   });
 
@@ -602,83 +610,70 @@ export const FloatingModulePod: React.FC<FloatingModulePodProps> = ({
     >
       {/* 1. Realistic Multi-layered Ambient Contact Shadows */}
       {/* Inner tight contact shadow */}
-      <mesh position={[0, -2.25, -0.06]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[3.1, 0.42]} />
-        <meshBasicMaterial color="#0F172A" transparent opacity={hovered ? 0.08 : 0.12} />
+      <mesh position={[0, -2.32, -0.04]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[3.0, 0.48]} />
+        <meshBasicMaterial color="#0F172A" transparent opacity={hovered ? 0.12 : 0.09} />
       </mesh>
       {/* Outer diffuse ambient shadow */}
-      <mesh position={[0, -2.35, -0.08]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[3.6, 0.72]} />
-        <meshBasicMaterial color="#64748B" transparent opacity={hovered ? 0.14 : 0.07} />
+      <mesh position={[0, -2.42, -0.06]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[3.8, 0.82]} />
+        <meshBasicMaterial color="#64748B" transparent opacity={hovered ? 0.18 : 0.08} />
       </mesh>
 
-      {/* 2. Pristine Architectural White Floating Card */}
-      <mesh castShadow receiveShadow position={[0, 0, 0]}>
-        <boxGeometry args={[3.2, 4.3, 0.1]} />
+      {/* 2. Pristine Architectural White Floating Card with Filleted Rounded Corners */}
+      <RoundedBox
+        args={[3.2, 4.4, 0.12]}
+        radius={0.18}
+        smoothness={8}
+        castShadow
+        receiveShadow
+        position={[0, 0, 0]}
+      >
         <meshStandardMaterial
           color="#FFFFFF"
-          roughness={0.12}
+          roughness={0.14}
           metalness={0.02}
         />
-      </mesh>
+      </RoundedBox>
 
       {/* 3. Subtle Colored Top Header Accent Band */}
-      <mesh position={[0, 2.05, 0.052]}>
-        <boxGeometry args={[3.2, 0.2, 0.005]} />
+      <mesh position={[0, 2.05, 0.062]}>
+        <boxGeometry args={[3.0, 0.16, 0.005]} />
         <meshBasicMaterial color={meta.light} />
       </mesh>
-      <mesh position={[0, 2.145, 0.054]}>
-        <boxGeometry args={[3.2, 0.015, 0.005]} />
+      <mesh position={[0, 2.13, 0.064]}>
+        <boxGeometry args={[3.0, 0.02, 0.005]} />
         <meshBasicMaterial color={meta.primary} />
       </mesh>
 
-      {/* 4. Crisp Border Frame Rim */}
-      <group position={[0, 0, 0.052]}>
-        {/* Left border */}
-        <mesh position={[-1.595, 0, 0]}>
-          <boxGeometry args={[0.01, 4.3, 0.002]} />
-          <meshBasicMaterial color="#E2E8F0" />
-        </mesh>
-        {/* Right border */}
-        <mesh position={[1.595, 0, 0]}>
-          <boxGeometry args={[0.01, 4.3, 0.002]} />
-          <meshBasicMaterial color="#E2E8F0" />
-        </mesh>
-        {/* Bottom border */}
-        <mesh position={[0, -2.145, 0]}>
-          <boxGeometry args={[3.2, 0.01, 0.002]} />
-          <meshBasicMaterial color="#E2E8F0" />
-        </mesh>
-      </group>
-
-      {/* 5. Category Chip at Top */}
-      <group position={[0, 1.84, 0.06]}>
-        <mesh position={[0, 0, 0]}>
-          <boxGeometry args={[2.0, 0.22, 0.004]} />
+      {/* 4. Category Chip at Top with Balanced Padding (No text clipping) */}
+      <group position={[0, 1.82, 0.07]}>
+        <RoundedBox args={[2.5, 0.26, 0.008]} radius={0.12} smoothness={4}>
           <meshBasicMaterial color={meta.light} />
-        </mesh>
+        </RoundedBox>
         <Text
-          position={[0, 0, 0.01]}
-          fontSize={0.092}
-          letterSpacing={0.1}
+          position={[0, 0, 0.012]}
+          fontSize={0.088}
+          letterSpacing={0.08}
           color={meta.badgeText}
           anchorX="center"
           anchorY="middle"
           textAlign="center"
+          maxWidth={2.3}
         >
           {(category || meta.label).toUpperCase()}
         </Text>
       </group>
 
-      {/* 6. Refined 3D Colourful Symbol Model */}
+      {/* 5. Refined 3D Colourful Symbol Model */}
       <Distinct3DSymbol id={id} hovered={hovered} />
 
-      {/* 7. Module Title (Crisp, Front-Facing Dark Navy) */}
+      {/* 6. Module Title (Crisp, High-Contrast Dark Navy) */}
       <Text
-        position={[0, -0.06, 0.06]}
-        fontSize={0.21}
+        position={[0, -0.15, 0.07]}
+        fontSize={0.20}
         maxWidth={2.8}
-        lineHeight={1.2}
+        lineHeight={1.22}
         color="#0F172A"
         anchorX="center"
         anchorY="middle"
@@ -687,12 +682,12 @@ export const FloatingModulePod: React.FC<FloatingModulePodProps> = ({
         {title}
       </Text>
 
-      {/* 8. Module Subtitle (Readable Muted Slate Navy) */}
+      {/* 7. Module Subtitle (Readable Muted Slate Navy - No overlapping) */}
       <Text
-        position={[0, -0.60, 0.06]}
+        position={[0, -0.74, 0.07]}
         fontSize={0.115}
-        maxWidth={2.6}
-        lineHeight={1.42}
+        maxWidth={2.7}
+        lineHeight={1.38}
         color="#475569"
         anchorX="center"
         anchorY="middle"
@@ -701,48 +696,28 @@ export const FloatingModulePod: React.FC<FloatingModulePodProps> = ({
         {subtitle}
       </Text>
 
-      {/* 9. Polished "Open Module" Action Button (No wireframe X!) */}
-      <group position={[0, -1.48, 0.06]}>
-        {/* Button base surface */}
-        <mesh>
-          <boxGeometry args={[2.4, 0.44, 0.02]} />
+      {/* 8. Polished Filleted Pill Button (No distorted button shapes or wireframe lines) */}
+      <group position={[0, -1.55, 0.07]}>
+        <RoundedBox
+          args={[2.4, 0.46, 0.04]}
+          radius={0.14}
+          smoothness={6}
+        >
           <meshStandardMaterial
-            color={hovered ? meta.primary : '#F8FAFC'}
-            roughness={0.2}
-            metalness={0.05}
+            color={hovered ? meta.primary : '#F1F5F9'}
+            roughness={0.18}
+            metalness={hovered ? 0.08 : 0.02}
           />
-        </mesh>
-        {/* Crisp border frame when not hovered */}
-        {!hovered && (
-          <group position={[0, 0, 0.012]}>
-            <mesh position={[0, 0.215, 0]}>
-              <boxGeometry args={[2.4, 0.01, 0.002]} />
-              <meshBasicMaterial color="#E2E8F0" />
-            </mesh>
-            <mesh position={[0, -0.215, 0]}>
-              <boxGeometry args={[2.4, 0.01, 0.002]} />
-              <meshBasicMaterial color="#E2E8F0" />
-            </mesh>
-            <mesh position={[-1.195, 0, 0]}>
-              <boxGeometry args={[0.01, 0.44, 0.002]} />
-              <meshBasicMaterial color="#E2E8F0" />
-            </mesh>
-            <mesh position={[1.195, 0, 0]}>
-              <boxGeometry args={[0.01, 0.44, 0.002]} />
-              <meshBasicMaterial color="#E2E8F0" />
-            </mesh>
-          </group>
-        )}
-        {/* Front-Facing Sharp Action Text */}
+        </RoundedBox>
         <Text
-          position={[0, 0, 0.025]}
-          fontSize={0.12}
+          position={[0, 0, 0.03]}
+          fontSize={0.118}
           letterSpacing={0.04}
           color={hovered ? '#FFFFFF' : '#0F172A'}
           anchorX="center"
           anchorY="middle"
         >
-          {hovered ? 'Open Module  →' : 'Open Module  →'}
+          {hovered ? 'Launch Workspace  →' : 'Access Module  →'}
         </Text>
       </group>
     </group>

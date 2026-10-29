@@ -69,6 +69,15 @@ export const StudentSubmissionWorkspace: React.FC = () => {
   const [manualSubmitting, setManualSubmitting] = useState(false);
   const [manualSuccessMsg, setManualSuccessMsg] = useState('');
 
+  useEffect(() => {
+    const handleAction = () => {
+      setActiveTab('wizard');
+      setWizardStep(1);
+    };
+    window.addEventListener('creden:action:submissions', handleAction);
+    return () => window.removeEventListener('creden:action:submissions', handleAction);
+  }, []);
+
   // Load sample synthetic data
   const handleLoadSampleData = () => {
     const sample = `apaarId,studentRollNumber,firstName,lastName,dateOfBirth,gender,category,admissionCategory,supernumeraryQuota,nriOciStatus,courseCode,academicSession,admissionDate

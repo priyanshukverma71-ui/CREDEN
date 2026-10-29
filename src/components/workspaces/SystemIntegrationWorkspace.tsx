@@ -32,7 +32,12 @@ export const SystemIntegrationWorkspace: React.FC = () => {
 
   useEffect(() => {
     fetchStatus();
-  }, []);
+    const handleAction = () => {
+      handleResetSeed();
+    };
+    window.addEventListener('creden:action:integration', handleAction);
+    return () => window.removeEventListener('creden:action:integration', handleAction);
+  }, [token]);
 
   const handleResetSeed = async () => {
     if (!token) return;

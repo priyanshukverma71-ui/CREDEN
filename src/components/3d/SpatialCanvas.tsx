@@ -110,7 +110,7 @@ export const SpatialCanvas: React.FC = () => {
   };
 
   return (
-    <div className="absolute inset-0 pointer-events-auto bg-[#F7F9FC] select-none">
+    <div className="absolute inset-0 pointer-events-auto bg-[#F7F9FC] select-none touch-none">
       <Canvas
         camera={{ position: [0, 0.35, 8.2], fov: 42 }}
         gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
