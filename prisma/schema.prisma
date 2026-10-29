@@ -1,0 +1,282 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id              String            @id @default(uuid())
+  email           String            @unique
+  passwordHash    String
+  fullName        String
+  role            String            // AICTE_ADMIN, INSTITUTION_ADMIN, DATA_ENTRY_OPERATOR, VERIFICATION_OFFICER, AUDITOR, EXTERNAL_VERIFIER, STUDENT
+  institutionId   String?
+  institution     Institution?      @relation(fields: [institutionId], references: [id])
+  active          Boolean           @default(true)
+  lastLoginAt     DateTime?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  
+  submissions     SubmissionBatch[]
+  assignedDuplicates DuplicateCase[]
+  reviews         ComplianceDiscrepancy[]
+  auditEvents     AuditEvent[]
+  notifications   Notification[]
+}
+
+model Institution {
+  id              String            @id @default(uuid())
+  code            String            @unique // AICTE Permanent Institute ID, e.g. "1-10972411"
+  name            String
+  state           String
+  district        String
+  type            String            // GOVERNMENT, GOVERNMENT_AIDED, PRIVATE_UNAIDED, CENTRAL_UNIVERSITY
+  establishedYear Int
+  approvalStatus  String            @default("APPROVED") // APPROVED, PROVISIONAL, UNDER_INSPECTION, SUSPENDED
+  address         String
+  website         String?
+  contactEmail    String
+  contactPhone    String
+  accreditedBy    String?           // NBA, NAAC A++, etc.
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  users           User[]
+  courses         Course[]
+  intakeConfigs   IntakeConfig[]
+  students        Student[]
+  submissionBatches SubmissionBatch[]
+  discrepancies   ComplianceDiscrepancy[]
+}
+
+model Course {
+  id              String            @id @default(uuid())
+  institutionId   String
+  institution     Institution       @relation(fields: [institutionId], references: [id])
+  courseCode      String
+  courseName      String
+  degreeLevel     String            // UG, PG, DIPLOMA, PHD
+  durationYears   Int               @default(4)
+  approvedIntake  Int
+  academicSession String            // e.g. "2024-2025"
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  intakeConfigs   IntakeConfig[]
+  students        Student[]
+  discrepancies   ComplianceDiscrepancy[]
+}
+
+model IntakeConfig {
+  id                String          @id @default(uuid())
+  institutionId     String
+  institution       Institution     @relation(fields: [institutionId], references: [id])
+  courseId          String
+  course            Course          @relation(fields: [courseId], references: [id])
+  academicSession   String          // "2024-2025"
+  generalSeats      Int
+  obcSeats          Int
+  scSeats           Int
+  stSeats           Int
+  ewsSeats          Int
+  tfwQuota          Int             @default(0) // Tuition Fee Waiver (Supernumerary max 5%)
+  pmsssQuota        Int             @default(0) // Prime Minister's Special Scholarship Scheme
+  nriQuota          Int             @default(0) // Max 15% supernumerary
+  foreignQuota      Int             @default(0)
+  lateralEntryQuota Int             @default(0)
+  effectiveFrom     DateTime        @default(now())
+  policyVersion     String          @default("AICTE-APH-2024-V2.1")
+  approvedBy        String          @default("AICTE Approvals Bureau")
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+}
+
+model Student {
+  id                  String               @id @default(uuid())
+  apaarId             String               // 12-digit format, e.g. "9874-5612-3450"
+  studentRollNumber   String
+  institutionId       String
+  institution         Institution          @relation(fields: [institutionId], references: [id])
+  courseId            String
+  course              Course               @relation(fields: [courseId], references: [id])
+  firstName           String
+  lastName            String
+  dateOfBirth         String               // YYYY-MM-DD
+  gender              String               // MALE, FEMALE, OTHER
+  category            String               // GENERAL, OBC, SC, ST, EWS
+  admissionCategory   String               // MERIT, MANAGEMENT, LATERAL, SUPERNUMERARY
+  supernumeraryQuota  String               @default("NONE") // NONE, TFW, PMSSS, DEFENCE, J_AND_K
+  nriOciStatus        String               @default("NONE") // NONE, NRI, OCI, FOREIGN_NATIONAL
+  academicSession     String               // e.g. "2024-2025"
+  admissionDate       String               // YYYY-MM-DD
+  recordStatus        String               @default("DRAFT") // DRAFT, SUBMITTED, VALIDATING, UNDER_REVIEW, VERIFIED, CORRECTION_REQUIRED, REJECTED, CLOSED
+  provenance          String               @default("INSTITUTION_PORTAL_INGESTION")
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  versions            StudentRecordVersion[]
+  validationResults   ValidationResult[]
+  duplicateAsPrimary  DuplicateCase[]      @relation("DuplicatePrimary")
+  duplicateAsSecondary DuplicateCase[]     @relation("DuplicateSecondary")
+  verificationRequests VerificationRequest[]
+
+  @@index([apaarId])
+  @@index([institutionId])
+  @@index([courseId])
+  @@index([academicSession])
+}
+
+model StudentRecordVersion {
+  id              String      @id @default(uuid())
+  studentId       String
+  student         Student     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  versionNumber   Int
+  changedBy       String
+  reason          String
+  snapshotJson    String
+  createdAt       DateTime    @default(now())
+}
+
+model ValidationResult {
+  id                String    @id @default(uuid())
+  studentId         String
+  student           Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  ruleId            String    // APAAR-SYNTAX-01, APAAR-DUP-CROSS-02, INTAKE-LIMIT-01, etc.
+  ruleVersion       String    @default("v2.1")
+  severity          String    // INFO, WARNING, ERROR, CRITICAL
+  resultStatus      String    // PASSED, FLAGGED, FAILED
+  message           String
+  detailsJson       String?
+  recommendedAction String
+  reviewStatus      String    @default("PENDING") // PENDING, RESOLVED, IGNORED
+  validatedAt       DateTime  @default(now())
+
+  @@index([studentId])
+  @@index([ruleId])
+}
+
+model DuplicateCase {
+  id                String    @id @default(uuid())
+  caseReference     String    @unique // e.g. "DUP-2024-0042"
+  studentIdA        String
+  studentA          Student   @relation("DuplicatePrimary", fields: [studentIdA], references: [id], onDelete: Cascade)
+  studentIdB        String
+  studentB          Student   @relation("DuplicateSecondary", fields: [studentIdB], references: [id], onDelete: Cascade)
+  matchType         String    // EXACT_APAAR, EXACT_ROLL_NO, CONCURRENT_ENROLMENT, FUZZY_IDENTITY
+  confidenceScore   Float     @default(1.0)
+  matchingFieldsJson String   // ["apaarId", "firstName", "lastName", "dateOfBirth"]
+  status            String    @default("OPEN") // OPEN, INVESTIGATING, CONFIRMED_DUPLICATE, FALSE_POSITIVE, RESOLVED
+  assignedToUserId  String?
+  assignedTo        User?     @relation(fields: [assignedToUserId], references: [id])
+  evidenceNotes     String?
+  resolutionReason  String?
+  createdAt         DateTime  @default(now())
+  resolvedAt        DateTime?
+
+  @@index([studentIdA])
+  @@index([studentIdB])
+}
+
+model ComplianceDiscrepancy {
+  id                String       @id @default(uuid())
+  institutionId     String
+  institution       Institution  @relation(fields: [institutionId], references: [id])
+  courseId          String
+  course            Course       @relation(fields: [courseId], references: [id])
+  academicSession   String
+  discrepancyType   String       // OVER_INTAKE, CATEGORY_QUOTA_BREACH, SUPERNUMERARY_EXCESS, CONCURRENT_ADMISSION
+  approvedLimit     Int
+  actualCount       Int
+  excessCount       Int
+  status            String       @default("OPEN") // OPEN, UNDER_REVIEW, EXPLAINED_JUSTIFIED, SANCTIONED, RESOLVED
+  explanation       String?
+  reviewedByUserId  String?
+  reviewedBy        User?        @relation(fields: [reviewedByUserId], references: [id])
+  createdAt         DateTime     @default(now())
+  resolvedAt        DateTime?
+
+  @@index([institutionId])
+  @@index([courseId])
+}
+
+model SubmissionBatch {
+  id                String       @id @default(uuid())
+  batchNumber       String       @unique // e.g. "BATCH-2024-AICTE-0089"
+  institutionId     String
+  institution       Institution  @relation(fields: [institutionId], references: [id])
+  submittedByUserId String
+  submittedBy       User         @relation(fields: [submittedByUserId], references: [id])
+  academicSession   String
+  totalRecords      Int          @default(0)
+  validRecords      Int          @default(0)
+  flaggedRecords    Int          @default(0)
+  rejectedRecords   Int          @default(0)
+  status            String       @default("DRAFT") // DRAFT, SUBMITTED, PROCESSING, VALIDATED, REQUIRES_CORRECTION, APPROVED
+  fileName          String?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  @@index([institutionId])
+}
+
+model VerificationRequest {
+  id                  String    @id @default(uuid())
+  verificationRef     String    @unique // e.g. "VRF-2024-998124"
+  studentId           String
+  student             Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  verifierOrgName     String
+  verifierEmail       String
+  purpose             String    // EMPLOYMENT_SCREENING, HIGHER_EDUCATION_ADMISSION, GOVERNMENT_SCHOLARSHIP
+  claimsRequestedJson String    // ["name", "course", "institution", "academicSession", "apaarVerificationStatus"]
+  verificationStatus  String    @default("VERIFIED") // VERIFIED, REVOKED, RECORD_MISMATCH, EXPIRED
+  signedToken         String    // HMAC-SHA256 signature
+  ipAddress           String?
+  verifiedAt          DateTime  @default(now())
+  expiresAt           DateTime?
+
+  @@index([studentId])
+  @@index([verificationRef])
+}
+
+model AuditEvent {
+  id              String    @id @default(uuid())
+  actorId         String
+  actorRole       String
+  actorEmail      String
+  institutionId   String?
+  action          String    // AUTH_LOGIN, STUDENT_INGEST, APAAR_VALIDATE, DUPLICATE_RESOLVE, COMPLIANCE_REVIEW, VERIFICATION_QUERY, EXPORT_CSV
+  targetType      String    // Student, Batch, Compliance, User, Verification
+  targetId        String?
+  detailsJson     String?
+  ipAddress       String?
+  prevHash        String?
+  integrityHash   String    // SHA-256(prevHash + timestamp + actor + action + targetId)
+  createdAt       DateTime  @default(now())
+
+  user            User      @relation(fields: [actorId], references: [id])
+
+  @@index([actorId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+model Notification {
+  id                String    @id @default(uuid())
+  recipientUserId   String?
+  recipientRole     String?   // Can target all users of a role
+  institutionId     String?
+  title             String
+  message           String
+  linkUrl           String?
+  severity          String    @default("INFO") // INFO, SUCCESS, WARNING, ERROR
+  isRead            Boolean   @default(false)
+  createdAt         DateTime  @default(now())
+
+  recipient         User?     @relation(fields: [recipientUserId], references: [id])
+
+  @@index([recipientUserId])
+  @@index([recipientRole])
+}

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" width="100" height="120">
+  <defs>
+    <linearGradient id="silverPlat" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F1F3F5" />
+      <stop offset="50%" stop-color="#D4D7DC" />
+      <stop offset="100%" stop-color="#9299A3" />
+    </linearGradient>
+    <linearGradient id="glowPlat" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#9299A3" stop-opacity="0.2" />
+    </linearGradient>
+  </defs>
+  <!-- Central Lion Pillar Motif -->
+  <g fill="url(#silverPlat)" stroke="#111317" stroke-width="0.5">
+    <!-- Center Lion Face & Crown -->
+    <path d="M50 15 C42 15 36 22 36 32 C36 42 42 48 45 52 L42 62 L58 62 L55 52 C58 48 64 42 64 32 C64 22 58 15 50 15 Z" />
+    <!-- Left Lion Silhouette -->
+    <path d="M36 28 C30 26 24 32 24 42 C24 50 29 56 34 58 L37 54 C32 50 28 44 30 38 C31 34 34 32 36 28 Z" />
+    <!-- Right Lion Silhouette -->
+    <path d="M64 28 C70 26 76 32 76 42 C76 50 71 56 66 58 L63 54 C68 50 72 44 70 38 C69 34 66 32 64 28 Z" />
+    <!-- Mane details -->
+    <path d="M44 26 C47 24 53 24 56 26 M42 34 C47 32 53 32 58 34 M45 42 C48 40 52 40 55 42" stroke="url(#silverPlat)" stroke-width="1" fill="none"/>
+    <!-- Abacus Base Slab -->
+    <rect x="22" y="64" width="56" height="8" rx="2" fill="url(#silverPlat)" />
+    <!-- Ashoka Chakra in Center of Abacus -->
+    <circle cx="50" cy="68" r="3.5" fill="#111317" stroke="url(#silverPlat)" stroke-width="0.75" />
+    <!-- Galloping Horse left and Bull right silhouettes -->
+    <ellipse cx="32" cy="68" rx="3" ry="1.5" fill="#111317" />
+    <ellipse cx="68" cy="68" rx="3" ry="1.5" fill="#111317" />
+    <!-- Bell shaped inverted lotus capital -->
+    <path d="M26 74 C28 85 40 92 50 92 C60 92 72 85 74 74 Z" fill="url(#silverPlat)" />
+    <!-- Base plinth pedestal with stepped layers -->
+    <rect x="18" y="94" width="64" height="4" rx="1" fill="url(#silverPlat)" />
+    <rect x="14" y="99" width="72" height="5" rx="1.5" fill="url(#silverPlat)" />
+  </g>
+  <!-- Motto Satyameva Jayate (stylized banner below) -->
+  <text x="50" y="114" font-family="'Inter', sans-serif" font-size="6.5" font-weight="700" fill="#D4D7DC" text-anchor="middle" letter-spacing="1">सत्यमेव जयते</text>
+</svg>

@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #08090B;
+    color: #F1F3F5;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Smoked glass styling matching the visual identity */
+.glass-panel {
+  background: rgba(17, 19, 23, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 215, 220, 0.14);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(241, 243, 245, 0.12);
+}
+
+.glass-panel-elevated {
+  background: rgba(26, 29, 34, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(212, 215, 220, 0.28);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(241, 243, 245, 0.2);
+}
+
+.platinum-border-glow {
+  box-shadow: 0 0 20px rgba(212, 215, 220, 0.15), inset 0 0 10px rgba(212, 215, 220, 0.08);
+}
+
+.platinum-gradient-text {
+  background: linear-gradient(135deg, #FFFFFF 0%, #D4D7DC 50%, #9299A3 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Custom scrollbars in restrained obsidian styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #08090B;
+}
+::-webkit-scrollbar-thumb {
+  background: #1A1D22;
+  border-radius: 3px;
+  border: 1px solid rgba(212, 215, 220, 0.1);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9299A3;
+}
+
+/* Print layout for Certificates */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+}
