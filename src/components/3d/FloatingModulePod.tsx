@@ -108,12 +108,12 @@ const Distinct3DSymbol: React.FC<{ id: ModuleId; hovered: boolean }> = ({ id, ho
   const meshRef = useRef<THREE.Group>(null);
   const meta = MODULE_PALETTE[id] || MODULE_PALETTE.institutions;
 
-  // Gentle, floating levitation
+  // Gentle, floating levitation with organic breathing
   useFrame((state) => {
     if (!meshRef.current) return;
     const time = state.clock.getElapsedTime();
-    meshRef.current.position.y = 0.95 + (hovered ? 0.08 : 0) + Math.sin(time * 2 + 1) * 0.02;
-    meshRef.current.rotation.y = Math.sin(time * 0.8) * 0.06;
+    meshRef.current.position.y = 0.96 + (hovered ? 0.08 : 0) + Math.sin(time * 2.2 + 1) * 0.035;
+    meshRef.current.rotation.y = Math.sin(time * 1.2) * 0.08 + (hovered ? 0.15 : 0);
   });
 
   const renderSymbolModel = () => {
@@ -121,7 +121,7 @@ const Distinct3DSymbol: React.FC<{ id: ModuleId; hovered: boolean }> = ({ id, ho
       case 'institutions':
         // 1. Institution Management — Blue Architectural Icon
         return (
-          <group scale={0.88} position={[0, 0, 0.06]}>
+          <group scale={1.04} position={[0, 0, 0.06]}>
             {/* Triangular Pediment Gable */}
             <mesh position={[0, 0.38, 0]}>
               <cylinderGeometry args={[0.55, 0.55, 0.08, 3]} rotation={[0, 0, Math.PI]} />
@@ -170,7 +170,7 @@ const Distinct3DSymbol: React.FC<{ id: ModuleId; hovered: boolean }> = ({ id, ho
       case 'submissions':
         // 2. Student Data Submission — Green Document & Ingestion Arrow Icon
         return (
-          <group scale={0.88} position={[0, 0, 0.06]}>
+          <group scale={1.04} position={[0, 0, 0.06]}>
             {/* Back sheet */}
             <mesh position={[-0.06, 0.06, -0.02]} rotation={[0, 0, 0.04]}>
               <boxGeometry args={[0.62, 0.78, 0.02]} />
@@ -216,7 +216,7 @@ const Distinct3DSymbol: React.FC<{ id: ModuleId; hovered: boolean }> = ({ id, ho
       case 'apaar':
         // 3. APAAR ID Validation — Lavender Identity Card & Checkmark Icon
         return (
-          <group scale={0.88} position={[0, 0, 0.06]}>
+          <group scale={1.04} position={[0, 0, 0.06]}>
             {/* ID Card Base */}
             <mesh position={[0, 0, 0]}>
               <boxGeometry args={[0.82, 0.58, 0.05]} />
@@ -263,7 +263,7 @@ const Distinct3DSymbol: React.FC<{ id: ModuleId; hovered: boolean }> = ({ id, ho
       case 'admissions':
         // 4. Admission Monitoring — Yellow / Amber Analytics Bar Chart Icon
         return (
-          <group scale={0.88} position={[0, 0, 0.06]}>
+          <group scale={1.04} position={[0, 0, 0.06]}>
             {/* Base Milestone Axis */}
             <mesh position={[0, -0.32, 0]}>
               <boxGeometry args={[0.88, 0.05, 0.12]} />
@@ -301,7 +301,7 @@ const Distinct3DSymbol: React.FC<{ id: ModuleId; hovered: boolean }> = ({ id, ho
       case 'duplicates':
         // 5. Duplicate Record Detection — Coral Comparison Discs & Lens Icon
         return (
-          <group scale={0.88} position={[0, 0, 0.06]}>
+          <group scale={1.04} position={[0, 0, 0.06]}>
             {/* Record Disc 1 (Coral Red) */}
             <mesh position={[-0.15, 0.02, 0]}>
               <cylinderGeometry args={[0.34, 0.34, 0.05, 32]} rotation={[Math.PI / 2, 0, 0]} />
@@ -340,7 +340,7 @@ const Distinct3DSymbol: React.FC<{ id: ModuleId; hovered: boolean }> = ({ id, ho
       case 'compliance':
         // 6. Compliance Monitoring — Teal Shield & Scale of Justice Icon
         return (
-          <group scale={0.88} position={[0, 0, 0.06]}>
+          <group scale={1.04} position={[0, 0, 0.06]}>
             {/* Heraldic Shield Main Body */}
             <mesh position={[0, 0.08, 0]}>
               <boxGeometry args={[0.68, 0.42, 0.05]} />
@@ -377,7 +377,7 @@ const Distinct3DSymbol: React.FC<{ id: ModuleId; hovered: boolean }> = ({ id, ho
       case 'verification':
         // 7. Student Record Verification — Blue-Violet Scroll & Verified Seal Icon
         return (
-          <group scale={0.88} position={[0, 0, 0.06]}>
+          <group scale={1.04} position={[0, 0, 0.06]}>
             {/* Parchment Diploma Sheet */}
             <mesh position={[0, 0, 0]}>
               <boxGeometry args={[0.66, 0.74, 0.03]} />
@@ -415,7 +415,7 @@ const Distinct3DSymbol: React.FC<{ id: ModuleId; hovered: boolean }> = ({ id, ho
       case 'reports':
         // 8. Reports and Analytics — Multicolour Segmented Pie/Donut Chart Icon
         return (
-          <group scale={0.88} position={[0, 0, 0.06]}>
+          <group scale={1.04} position={[0, 0, 0.06]}>
             {/* Quadrant 1 (Google Blue) */}
             <mesh position={[0.12, 0.12, 0]}>
               <cylinderGeometry args={[0.28, 0.28, 0.06, 16, 1, false, 0, Math.PI / 2]} rotation={[Math.PI / 2, 0, 0]} />
@@ -447,7 +447,7 @@ const Distinct3DSymbol: React.FC<{ id: ModuleId; hovered: boolean }> = ({ id, ho
       case 'audit':
         // 9. Audit and Security — Deep-Blue Security Padlock Icon
         return (
-          <group scale={0.88} position={[0, 0, 0.06]}>
+          <group scale={1.04} position={[0, 0, 0.06]}>
             {/* Curved Silver Metallic Shackle */}
             <mesh position={[0, 0.24, 0]}>
               <torusGeometry args={[0.2, 0.045, 16, 32, Math.PI]} />
@@ -481,7 +481,7 @@ const Distinct3DSymbol: React.FC<{ id: ModuleId; hovered: boolean }> = ({ id, ho
       default:
         // 10. System Integration — Mint Connectivity & API Mesh Nodes Icon
         return (
-          <group scale={0.88} position={[0, 0, 0.06]}>
+          <group scale={1.04} position={[0, 0, 0.06]}>
             {/* Central Network Hub Node (Mint) */}
             <mesh position={[0, 0, 0.02]}>
               <sphereGeometry args={[0.18, 24, 24]} />
@@ -521,28 +521,14 @@ const Distinct3DSymbol: React.FC<{ id: ModuleId; hovered: boolean }> = ({ id, ho
   };
 
   return (
-    <group ref={meshRef} position={[0, 0.95, 0.08]}>
-      {/* 1. Sculpted Circular Plinth with Real 3D Depth (No incomplete circular rings) */}
-      <mesh castShadow receiveShadow position={[0, 0, 0]}>
-        <cylinderGeometry args={[0.74, 0.74, 0.08, 48]} rotation={[Math.PI / 2, 0, 0]} />
-        <meshStandardMaterial
-          color={meta.light}
-          roughness={0.24}
-          metalness={0.05}
-        />
+    <group ref={meshRef} position={[0, 0.98, 0.1]}>
+      {/* Soft ambient tint shadow directly beneath the freely floating 3D icon */}
+      <mesh position={[0, -0.62, -0.04]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[1.4, 0.44]} />
+        <meshBasicMaterial color={meta.primary} transparent opacity={hovered ? 0.22 : 0.12} />
       </mesh>
 
-      {/* 2. Physical 3D Extruded Torus Bevel Rim */}
-      <mesh position={[0, 0, 0.04]}>
-        <torusGeometry args={[0.74, 0.018, 16, 48]} />
-        <meshStandardMaterial
-          color={meta.primary}
-          roughness={0.2}
-          metalness={0.15}
-        />
-      </mesh>
-
-      {/* 3. The Refined 3D Symbol Model */}
+      {/* Heroic, Colourful 3D Sculpted Model (Freely Floating, No Enclosing Rings) */}
       {renderSymbolModel()}
     </group>
   );
@@ -622,8 +608,8 @@ export const FloatingModulePod: React.FC<FloatingModulePodProps> = ({
 
       {/* 2. Pristine Architectural White Floating Card with Filleted Rounded Corners */}
       <RoundedBox
-        args={[3.2, 4.4, 0.12]}
-        radius={0.18}
+        args={[3.2, 4.4, 0.10]}
+        radius={0.20}
         smoothness={8}
         castShadow
         receiveShadow
@@ -631,24 +617,14 @@ export const FloatingModulePod: React.FC<FloatingModulePodProps> = ({
       >
         <meshStandardMaterial
           color="#FFFFFF"
-          roughness={0.14}
-          metalness={0.02}
+          roughness={0.16}
+          metalness={0.01}
         />
       </RoundedBox>
 
-      {/* 3. Subtle Colored Top Header Accent Band */}
-      <mesh position={[0, 2.05, 0.062]}>
-        <boxGeometry args={[3.0, 0.16, 0.005]} />
-        <meshBasicMaterial color={meta.light} />
-      </mesh>
-      <mesh position={[0, 2.13, 0.064]}>
-        <boxGeometry args={[3.0, 0.02, 0.005]} />
-        <meshBasicMaterial color={meta.primary} />
-      </mesh>
-
-      {/* 4. Category Chip at Top with Balanced Padding (No text clipping) */}
-      <group position={[0, 1.82, 0.07]}>
-        <RoundedBox args={[2.5, 0.26, 0.008]} radius={0.12} smoothness={4}>
+      {/* 3. Category Chip at Top with Balanced Padding (Soft Colorful Squircle, No Outlines) */}
+      <group position={[0, 1.84, 0.06]}>
+        <RoundedBox args={[2.4, 0.26, 0.008]} radius={0.13} smoothness={4}>
           <meshBasicMaterial color={meta.light} />
         </RoundedBox>
         <Text
@@ -659,19 +635,19 @@ export const FloatingModulePod: React.FC<FloatingModulePodProps> = ({
           anchorX="center"
           anchorY="middle"
           textAlign="center"
-          maxWidth={2.3}
+          maxWidth={2.2}
         >
           {(category || meta.label).toUpperCase()}
         </Text>
       </group>
 
-      {/* 5. Refined 3D Colourful Symbol Model */}
+      {/* 4. Freely Floating Heroic 3D Colourful Symbol */}
       <Distinct3DSymbol id={id} hovered={hovered} />
 
-      {/* 6. Module Title (Crisp, High-Contrast Dark Navy) */}
+      {/* 5. Clear Module Label — Title (Crisp, High-Contrast Dark Navy) */}
       <Text
-        position={[0, -0.15, 0.07]}
-        fontSize={0.20}
+        position={[0, -0.15, 0.06]}
+        fontSize={0.21}
         maxWidth={2.8}
         lineHeight={1.22}
         color="#0F172A"
@@ -682,13 +658,13 @@ export const FloatingModulePod: React.FC<FloatingModulePodProps> = ({
         {title}
       </Text>
 
-      {/* 7. Module Subtitle (Readable Muted Slate Navy - No overlapping) */}
+      {/* 6. Clear Module Label — Subtitle (Readable Muted Slate - No overlapping) */}
       <Text
-        position={[0, -0.74, 0.07]}
+        position={[0, -0.74, 0.06]}
         fontSize={0.115}
         maxWidth={2.7}
         lineHeight={1.38}
-        color="#475569"
+        color="#64748B"
         anchorX="center"
         anchorY="middle"
         textAlign="center"
@@ -696,28 +672,28 @@ export const FloatingModulePod: React.FC<FloatingModulePodProps> = ({
         {subtitle}
       </Text>
 
-      {/* 8. Polished Filleted Pill Button (No distorted button shapes or wireframe lines) */}
-      <group position={[0, -1.55, 0.07]}>
+      {/* 7. Polished Capsule Pill Button (No distorted button shapes or wireframe lines) */}
+      <group position={[0, -1.55, 0.06]}>
         <RoundedBox
-          args={[2.4, 0.46, 0.04]}
-          radius={0.14}
-          smoothness={6}
+          args={[2.3, 0.44, 0.03]}
+          radius={0.22}
+          smoothness={8}
         >
           <meshStandardMaterial
-            color={hovered ? meta.primary : '#F1F5F9'}
+            color={hovered ? meta.primary : '#F8FAFC'}
             roughness={0.18}
             metalness={hovered ? 0.08 : 0.02}
           />
         </RoundedBox>
         <Text
-          position={[0, 0, 0.03]}
+          position={[0, 0, 0.025]}
           fontSize={0.118}
           letterSpacing={0.04}
           color={hovered ? '#FFFFFF' : '#0F172A'}
           anchorX="center"
           anchorY="middle"
         >
-          {hovered ? 'Launch Workspace  →' : 'Access Module  →'}
+          {hovered ? 'Launch Workspace  →' : 'Open Module  →'}
         </Text>
       </group>
     </group>
