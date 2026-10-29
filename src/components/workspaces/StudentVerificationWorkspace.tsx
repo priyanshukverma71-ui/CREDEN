@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { ApiService } from '../../services/apiService';
 import {
   FileCheck2,
   Search,
@@ -11,21 +12,27 @@ import {
   GraduationCap,
   Sparkles,
   Lock,
+  Printer,
+  Copy,
+  Check,
 } from 'lucide-react';
 
 export const StudentVerificationWorkspace: React.FC = () => {
   const { token } = useAuth();
-  const [referenceOrToken, setReferenceOrToken] = useState('VRF-2024-');
-  const [verifierOrg, setVerifierOrg] = useState('Tata Consultancy Services (TCS)');
-  const [verifierEmail, setVerifierEmail] = useState('screening@tcs.com');
+  const [referenceOrToken, setReferenceOrToken] = useState('XXXXXXXX1012');
+  const [verifierOrg, setVerifierOrg] = useState('Infosys Talent Acquisition & Screening');
+  const [verifierEmail, setVerifierEmail] = useState('verifier@infosys.com');
   const [purpose, setPurpose] = useState('EMPLOYMENT_SCREENING');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
-  // Quick preset verifications for demo
+  // Quick preset verifications for demo (Alpha Parity)
   const samplePresets = [
-    { label: 'Aarav Sharma (Verified Student)', ref: 'student-demo-aarav' },
+    { label: 'Aarav Sharma (COEP CSE)', ref: 'XXXXXXXX1012' },
+    { label: 'Ananya Deshmukh (COEP CSE)', ref: 'XXXXXXXX4589' },
+    { label: 'Rohan Deshmukh (Dual Enrolment)', ref: 'XXXXXXXX1122' },
   ];
 
   const handleVerify = async (e: React.FormEvent) => {
@@ -37,24 +44,26 @@ export const StudentVerificationWorkspace: React.FC = () => {
     setErrorMsg(null);
 
     try {
-      let queryRef = referenceOrToken.trim();
+      const queryRef = referenceOrToken.trim();
 
-      // If test demo preset
-      if (queryRef === 'student-demo-aarav') {
-        // Query student Aarav first to get token
-        const studRes = await fetch('/api/students?search=Aarav', {
-          headers: { Authorization: `Bearer ${token}` },
+      // First try ApiService for authoritative verification
+      const apiRes = await ApiService.verifyCredential({ identifier: queryRef });
+      if (apiRes && apiRes.success && apiRes.result) {
+        setResult({
+          isValid: true,
+          studentName: apiRes.result.studentName,
+          apaarIdMasked: apiRes.result.maskedApaarId,
+          institutionName: apiRes.result.institutionName,
+          courseName: apiRes.result.programmeName,
+          academicSession: apiRes.result.academicYear,
+          validationScore: apiRes.result.validationScore,
+          verificationTimestamp: apiRes.result.timestamp,
+          sha256Seal: apiRes.result.sha256Seal || 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
         });
-        const studData = await studRes.json();
-        if (studData.data && studData.data[0]) {
-          const certRes = await fetch(`/api/students/${studData.data[0].id}/certificate`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          const certData = await certRes.json();
-          queryRef = certData.verificationRef || certData.verificationToken;
-        }
+        return;
       }
 
+      // Fallback to internal query route
       const res = await fetch('/api/verification/query', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

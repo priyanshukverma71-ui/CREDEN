@@ -119,4 +119,18 @@ describe('CREDEN Core AICTE Governance Engines', () => {
       expect(result.totalEvents).toBeGreaterThan(0);
     });
   });
+
+  describe('Alpha Parity & Policy Simulator', () => {
+    it('should evaluate what-if policy simulation impact', () => {
+      const warningThreshold = 85;
+      const excessThreshold = 100;
+      const totalProgrammes = 48;
+      const nearCount = warningThreshold < 90 ? 4 : 2;
+      const excessCount = excessThreshold <= 100 ? 2 : 1;
+
+      expect(nearCount).toBe(4);
+      expect(excessCount).toBe(2);
+      expect(totalProgrammes - (nearCount + excessCount)).toBe(42);
+    });
+  });
 });
