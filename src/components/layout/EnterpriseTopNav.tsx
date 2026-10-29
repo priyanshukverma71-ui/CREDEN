@@ -180,9 +180,6 @@ export const EnterpriseTopNav: React.FC<EnterpriseTopNavProps> = ({
             <Search className="w-3.5 h-3.5 text-[#7B8390] group-hover:text-[#D2D6DC]" />
             <span className="truncate">Search students, APAAR, institutions...</span>
           </div>
-          <kbd className="hidden lg:inline-block px-1.5 py-0.5 text-[10px] font-mono bg-[#1C2027] text-[#929AA5] rounded border border-[#2B313C]">
-            Ctrl+K
-          </kbd>
         </button>
       </div>
 

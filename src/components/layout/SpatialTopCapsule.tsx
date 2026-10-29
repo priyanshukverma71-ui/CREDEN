@@ -159,13 +159,11 @@ export const SpatialTopCapsule: React.FC<SpatialTopCapsuleProps> = ({
           {/* Quick Search Trigger */}
           <button
             onClick={onSearchClick}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100/90 hover:bg-white border border-slate-200 text-xs text-slate-700 hover:text-slate-950 transition-all shadow-sm"
-            title="Search (Ctrl+K)"
+            className="p-2 rounded-full bg-slate-100/90 hover:bg-white border border-slate-200 text-slate-700 hover:text-slate-950 transition-all shadow-sm"
+            title="Search"
+            aria-label="Search"
           >
             <Search className="w-3.5 h-3.5" />
-            <kbd className="hidden lg:inline-block px-1.5 py-0.2 text-[9px] font-mono bg-white text-slate-600 rounded-md border border-slate-200 shadow-xs">
-              Ctrl+K
-            </kbd>
           </button>
 
           {/* Persona Dropdown */}
