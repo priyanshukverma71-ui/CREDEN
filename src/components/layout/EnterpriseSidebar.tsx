@@ -196,37 +196,6 @@ export const EnterpriseSidebar: React.FC = () => {
           </div>
         ))}
       </div>
-
-      {/* Institutional Compliance Status & User Pill */}
-      <div className="p-2.5 border-t border-[#22262C] bg-[#111317]">
-        {!sidebarCollapsed ? (
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-[10px] text-[#929AA5] px-1 font-mono">
-              <span className="flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                APH 2024-25
-              </span>
-              <span className="text-[9px] px-1.5 py-0.5 rounded bg-[#1A1E24] text-[#D2D6DC] border border-[#282E37]">
-                SYNTHETIC SANDBOX
-              </span>
-            </div>
-            {user?.institutionName && (
-              <div className="p-2 rounded-md bg-[#16191F] border border-[#22262C] text-[11px] truncate text-[#D2D6DC]">
-                <div className="text-[9px] uppercase tracking-wider text-[#7B8390] font-mono">
-                  Affiliated Institution
-                </div>
-                <div className="truncate font-medium text-[#F1F3F5]">
-                  {user.institutionName}
-                </div>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="flex justify-center" title="APH 2024-25 Rules Enforced">
-            <div className="w-2 h-2 rounded-full bg-emerald-400" />
-          </div>
-        )}
-      </div>
     </aside>
   );
 };
