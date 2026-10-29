@@ -79,30 +79,57 @@ export const SpatialCanvas: React.FC = () => {
   ];
 
   return (
-    <div className="absolute inset-0 pointer-events-auto">
+    <div className="absolute inset-0 pointer-events-auto bg-[#08090B]">
       <Canvas
-        camera={{ position: [0, 0.8, 8.5], fov: 42 }}
+        camera={{ position: [0, 1.1, 9.2], fov: 44 }}
         gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
         dpr={[1, 2]}
       >
-        {/* Spatial background color & atmospheric depth fog */}
+        {/* Spatial background color & distant atmospheric depth fog */}
         <color attach="background" args={['#08090B']} />
-        <fog attach="fog" args={['#08090B', 8, 35]} />
+        <fog attach="fog" args={['#08090B', 28, 75]} />
 
-        {/* Ambient & Silver Volumetric Lights */}
-        <ambientLight intensity={0.65} color="#D4D7DC" />
+        {/* Studio Lighting Setup: Crisp, High-Contrast Metallic Illumination */}
+        <ambientLight intensity={1.1} color="#E2E8F0" />
+
+        {/* Main High-Intensity Overhead Key Light */}
         <directionalLight
-          position={[10, 15, 10]}
-          intensity={1.2}
-          color="#F1F3F5"
+          position={[6, 16, 14]}
+          intensity={2.8}
+          color="#FFFFFF"
           castShadow
         />
+
+        {/* Dual Side Rim Lights for Metallic Edge Gleam */}
         <directionalLight
-          position={[-15, 10, -5]}
-          intensity={0.5}
-          color="#9299A3"
+          position={[-18, 12, 6]}
+          intensity={1.8}
+          color="#CBD5E1"
         />
-        <pointLight position={[0, 4, 2]} intensity={0.8} color="#FFFFFF" />
+        <directionalLight
+          position={[18, 12, 6]}
+          intensity={1.8}
+          color="#CBD5E1"
+        />
+
+        {/* Backlight for Volumetric Silhouette Separation */}
+        <directionalLight
+          position={[0, 10, -12]}
+          intensity={1.4}
+          color="#94A3B8"
+        />
+
+        {/* Floor Upward Bounce Light */}
+        <directionalLight
+          position={[0, -6, 6]}
+          intensity={0.9}
+          color="#64748B"
+        />
+
+        {/* Center Point Fill */}
+        <pointLight position={[0, 4, 6]} intensity={2.2} color="#FFFFFF" distance={30} />
+        <pointLight position={[-12, 3, 4]} intensity={1.8} color="#FFFFFF" distance={20} />
+        <pointLight position={[12, 3, 4]} intensity={1.8} color="#FFFFFF" distance={20} />
 
         <Suspense fallback={null}>
           <CameraController />
@@ -116,7 +143,7 @@ export const SpatialCanvas: React.FC = () => {
               id={m.id}
               title={m.title}
               subtitle={m.subtitle}
-              position={[m.x, 0.2, 0]}
+              position={[m.x, 0.5, 0]}
               onSelect={openWorkspace}
               isActive={activeModule === m.id}
             />

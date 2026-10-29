@@ -51,6 +51,9 @@ export const EnterpriseLayout: React.FC<EnterpriseLayoutProps> = ({ onOpenLogin 
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Show 3D Spatial Canvas on opening page (overview) by default, or when in panoramic viewMode
+  const show3DSpatial = (activeModule === 'overview' && viewMode !== 'grid') || viewMode === 'panoramic';
+
   const renderActiveModuleWorkspace = () => {
     switch (activeModule) {
       case 'overview':
@@ -95,22 +98,25 @@ export const EnterpriseLayout: React.FC<EnterpriseLayoutProps> = ({ onOpenLogin 
           onOpenLogin={onOpenLogin}
         />
 
-        {/* Dynamic Canvas: Enterprise Data Workspace OR 3D Panoramic Mode */}
-        {viewMode === 'panoramic' ? (
+        {/* Dynamic Canvas: Spatial 3D Environment on Opening Page OR Enterprise Workspaces */}
+        {show3DSpatial ? (
           <div className="relative flex-1 w-full h-full overflow-hidden select-none">
             {isReducedMotion ? (
               <NonWebGLFallback />
             ) : (
               <>
+                {/* Full, Crystal-Clear 3D Spatial Canvas */}
                 <SpatialCanvas />
-                {/* Floating HUD at bottom */}
-                <div className="absolute bottom-20 left-1/2 -translate-x-1/2 w-[92%] max-w-5xl z-20 pointer-events-auto animate-in fade-in slide-in-from-bottom-6 duration-300">
+
+                {/* Floating Overview HUD docked neatly at bottom */}
+                <div className="absolute bottom-16 sm:bottom-20 left-1/2 -translate-x-1/2 w-[94%] max-w-5xl z-20 pointer-events-auto animate-in fade-in slide-in-from-bottom-4 duration-300">
                   <OverviewHUD />
                 </div>
-                {/* Flight progress bar */}
+
+                {/* Horizontal Flight Progress Bar */}
                 <div className="fixed bottom-0 left-0 right-0 h-1 bg-[#1A1D22] z-30">
                   <div
-                    className="h-full bg-gradient-to-r from-[#929AA5] to-[#D2D6DC] transition-all duration-150"
+                    className="h-full bg-gradient-to-r from-[#929AA5] via-[#CBD5E1] to-[#FFFFFF] transition-all duration-150"
                     style={{ width: `${Math.max(0, Math.min(100, scrollProgress * 100))}%` }}
                   />
                 </div>

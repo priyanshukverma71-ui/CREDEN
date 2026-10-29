@@ -190,20 +190,25 @@ export const EnterpriseTopNav: React.FC<EnterpriseTopNavProps> = ({
       {/* Right Actions */}
       <div className="flex items-center gap-2">
         {/* 3D Spatial Cockpit vs Data View Switcher */}
-        <button
-          onClick={toggleViewMode}
-          className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-mono transition-all border ${
-            viewMode === 'panoramic'
-              ? 'bg-[#22262C] text-[#F1F3F5] border-[#D2D6DC]/40 shadow-sm'
-              : 'bg-[#16191F] text-[#929AA5] border-[#22262C] hover:text-[#D2D6DC] hover:border-[#2D333D]'
-          }`}
-          title="Toggle between 3D Spatial Panoramic view and Enterprise Data Grid"
-        >
-          <Compass className="w-3.5 h-3.5 text-[#D2D6DC]" />
-          <span className="hidden sm:inline">
-            {viewMode === 'panoramic' ? '3D Panoramic' : '3D View'}
-          </span>
-        </button>
+        {(() => {
+          const isSpatial = (activeModule === 'overview' && viewMode !== 'grid') || viewMode === 'panoramic';
+          return (
+            <button
+              onClick={toggleViewMode}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-mono transition-all border ${
+                isSpatial
+                  ? 'bg-[#1C2027] text-white border-[#D2D6DC]/60 shadow-sm'
+                  : 'bg-[#16191F] text-[#929AA5] border-[#22262C] hover:text-[#D2D6DC] hover:border-[#2D333D]'
+              }`}
+              title="Toggle between 3D Spatial Panoramic view and Enterprise Data Grid"
+            >
+              <Compass className={`w-3.5 h-3.5 ${isSpatial ? 'text-emerald-400' : 'text-[#D2D6DC]'}`} />
+              <span className="hidden sm:inline">
+                {isSpatial ? '3D Spatial (Active)' : 'View 3D Spatial'}
+              </span>
+            </button>
+          );
+        })()}
 
         {/* Role Persona Quick Switcher */}
         <div className="relative" ref={roleMenuRef}>

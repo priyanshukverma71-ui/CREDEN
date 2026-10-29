@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { ModuleId, NotificationItem } from '../types';
 import { useAuth } from './AuthContext';
 
-export type ViewMode = 'enterprise' | 'panoramic';
+export type ViewMode = 'enterprise' | 'panoramic' | 'grid';
 
 interface PortalContextType {
   activeModule: ModuleId;
@@ -63,7 +63,7 @@ export const PortalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const { token } = useAuth();
 
   const toggleViewMode = () => {
-    setViewMode((prev) => (prev === 'enterprise' ? 'panoramic' : 'enterprise'));
+    setViewMode((prev) => (prev === 'panoramic' || (activeModule === 'overview' && prev !== 'grid') ? 'grid' : 'panoramic'));
   };
 
   const toggleSidebar = () => {
