@@ -4,83 +4,110 @@
 
 @layer base {
   body {
-    background-color: #08090B;
-    color: #F1F3F5;
+    background-color: #0A0B0E;
+    color: #F4F6F9;
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
   }
 
   /* Accessible focus states */
   *:focus-visible {
-    outline: 2px solid #D2D6DC;
+    outline: 2px solid rgba(255, 255, 255, 0.5);
     outline-offset: 1px;
   }
 }
 
-/* Restrained Enterprise Surfaces */
-.surface-card {
-  background-color: #14171B;
-  border: 1px solid #22262C;
-  border-radius: 12px;
+/* =========================================================================
+   Apple VisionOS Liquid Glass System
+   Frosted translucent surfaces, specular edge rims, physical optical thickness
+   ========================================================================= */
+
+.liquid-glass-window {
+  background: rgba(22, 20, 24, 0.72);
+  backdrop-filter: blur(48px) saturate(190%);
+  -webkit-backdrop-filter: blur(48px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 
+    0 35px 90px -15px rgba(0, 0, 0, 0.85),
+    0 10px 30px -10px rgba(0, 0, 0, 0.6),
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4);
 }
 
-.surface-elevated {
-  background-color: #1A1E24;
-  border: 1px solid #282D35;
-  border-radius: 12px;
+.liquid-glass-panel {
+  background: rgba(25, 23, 26, 0.65);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 
+    0 25px 60px -10px rgba(0, 0, 0, 0.75),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.22);
 }
 
-.surface-subtle {
-  background-color: #111317;
-  border: 1px solid #1E2228;
-  border-radius: 8px;
+.liquid-glass-pill {
+  background: rgba(30, 26, 30, 0.75);
+  backdrop-filter: blur(40px) saturate(190%);
+  -webkit-backdrop-filter: blur(40px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.7),
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.3);
 }
 
-/* Subtle silver metallic title text */
-.silver-gradient-text {
-  background: linear-gradient(180deg, #F1F3F5 0%, #D2D6DC 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.liquid-glass-inner {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
 }
 
-/* Enterprise scrollbar */
+/* Cinematic Atmospheric Spatial Backdrop */
+.spatial-ambient-bg {
+  background: 
+    radial-gradient(circle at 65% 15%, rgba(180, 110, 75, 0.18) 0%, transparent 45%),
+    radial-gradient(circle at 20% 85%, rgba(45, 60, 95, 0.25) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(20, 22, 28, 0.8) 0%, #07080B 100%);
+}
+
+/* Glass Scrollbar */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #08090B;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #22262C;
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3B414C;
+  background: rgba(255, 255, 255, 0.32);
 }
 
-/* High-density Enterprise Table styling */
+/* High-density Enterprise Table styling inside Liquid Glass Window */
 .enterprise-table th {
   padding: 0.625rem 1rem;
   font-size: 0.6875rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #929AA5;
-  border-bottom: 1px solid #22262C;
-  background-color: #111317;
+  color: #A3A8B4;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.35);
 }
 
 .enterprise-table td {
   padding: 0.75rem 1rem;
   font-size: 0.75rem;
-  color: #F1F3F5;
-  border-bottom: 1px solid #1A1E24;
+  color: #F4F6F9;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .enterprise-table tr:hover td {
-  background-color: #171A1F;
+  background: rgba(255, 255, 255, 0.04);
 }
 
 /* Print layout for Certificates */

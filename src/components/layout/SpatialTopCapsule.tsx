@@ -17,6 +17,8 @@ import {
   GraduationCap,
   LogOut,
   ChevronDown,
+  RotateCw,
+  Share2,
 } from 'lucide-react';
 
 interface SpatialTopCapsuleProps {
@@ -42,7 +44,6 @@ export const SpatialTopCapsule: React.FC<SpatialTopCapsuleProps> = ({
   const roleMenuRef = useRef<HTMLDivElement>(null);
   const notifMenuRef = useRef<HTMLDivElement>(null);
 
-  // Close menus when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (roleMenuRef.current && !roleMenuRef.current.contains(e.target as Node)) {
@@ -103,14 +104,14 @@ export const SpatialTopCapsule: React.FC<SpatialTopCapsuleProps> = ({
 
   return (
     <header className="fixed top-3 inset-x-0 z-40 px-4 pointer-events-none flex justify-center">
-      <div className="pointer-events-auto flex items-center justify-between gap-3 w-full max-w-7xl px-4 py-2 rounded-2xl bg-[#13161B]/85 backdrop-blur-xl border border-[#D7DBE2]/20 shadow-[0_15px_40px_rgba(0,0,0,0.8),0_0_1px_rgba(215,219,226,0.15)] transition-all">
-        {/* Left: Back / Forward Spatial Navigation & Brand */}
+      <div className="pointer-events-auto flex items-center justify-between gap-3 w-full max-w-7xl px-4 py-2 rounded-full liquid-glass-pill transition-all">
+        {/* Left: VisionOS Style Navigation Pill (< >) & Brand */}
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 bg-[#07080A]/60 rounded-xl p-0.5 border border-[#303642]">
+          <div className="flex items-center gap-1 bg-white/10 rounded-full p-0.5 border border-white/15">
             <button
               onClick={() => setActiveModule('overview')}
               disabled={activeModule === 'overview'}
-              className="p-1.5 rounded-lg text-[#A6AFBB] hover:text-[#F2F4F7] hover:bg-[#1E232B] disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+              className="p-1.5 rounded-full text-white/70 hover:text-white hover:bg-white/15 disabled:opacity-30 disabled:hover:bg-transparent transition-all"
               title="Return to 3D Space (Esc)"
               aria-label="Back to 3D Space"
             >
@@ -121,7 +122,7 @@ export const SpatialTopCapsule: React.FC<SpatialTopCapsuleProps> = ({
                 if (activeModule === 'overview') setActiveModule('institutions');
               }}
               disabled={activeModule !== 'overview'}
-              className="p-1.5 rounded-lg text-[#A6AFBB] hover:text-[#F2F4F7] hover:bg-[#1E232B] disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+              className="p-1.5 rounded-full text-white/70 hover:text-white hover:bg-white/15 disabled:opacity-30 disabled:hover:bg-transparent transition-all"
               title="Enter Spatial Workspace"
               aria-label="Forward to Workspace"
             >
@@ -129,30 +130,33 @@ export const SpatialTopCapsule: React.FC<SpatialTopCapsuleProps> = ({
             </button>
           </div>
 
-          <div className="h-5 w-[1px] bg-[#303642] hidden sm:block" />
+          <div className="h-4 w-[1px] bg-white/20 hidden sm:block" />
 
           {/* CREDEN Wordmark */}
           <div className="flex items-center gap-2">
-            <span className="font-bold text-sm tracking-tight text-[#F2F4F7]">
+            <span className="font-bold text-sm tracking-tight text-white drop-shadow-sm">
               CREDEN
             </span>
-            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#1A1F27] text-[#D7DBE2] border border-[#303642] hidden sm:inline">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/15 text-white/90 border border-white/20 hidden sm:inline">
               AICTE
             </span>
           </div>
         </div>
 
-        {/* Center: VisionOS-Style Verified Address Capsule */}
-        <div className="hidden md:flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-[#07080A]/80 border border-[#303642] text-xs font-mono text-[#A6AFBB] shadow-inner max-w-md w-full justify-center">
-          <Lock className="w-3 h-3 text-[#D7DBE2]" />
-          <span className="text-[#A6AFBB] truncate">creden.aicte-india.org</span>
-          <span className="text-[#4B5563]">/</span>
-          <span className="text-[#F2F4F7] font-medium truncate capitalize">
+        {/* Center: VisionOS Verified Address Capsule (Exact Match to Reference Image) */}
+        <div className="hidden md:flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-black/40 border border-white/15 text-xs font-mono text-white/80 shadow-inner max-w-md w-full justify-center">
+          <Lock className="w-3.5 h-3.5 text-emerald-400" />
+          <span className="text-white/60 truncate">https://creden.aicte-india.org/</span>
+          <span className="text-white font-medium truncate capitalize">
             {activeModule}
           </span>
-          <span className="text-[9px] px-1 rounded bg-[#13161B] text-[#D7DBE2] border border-[#2B313C] ml-auto">
-            TLS 1.3
-          </span>
+          <button
+            onClick={() => window.location.reload()}
+            className="p-1 rounded-full hover:bg-white/10 text-white/60 hover:text-white ml-auto transition-colors"
+            title="Reload Environment"
+          >
+            <RotateCw className="w-3 h-3" />
+          </button>
         </div>
 
         {/* Right Controls: Search, Persona, Notifications, Profile */}
@@ -160,11 +164,11 @@ export const SpatialTopCapsule: React.FC<SpatialTopCapsuleProps> = ({
           {/* Quick Search Trigger */}
           <button
             onClick={onSearchClick}
-            className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-[#07080A]/60 hover:bg-[#1E232B] border border-[#303642] text-xs text-[#A6AFBB] hover:text-[#F2F4F7] transition-all"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-xs text-white/80 hover:text-white transition-all shadow-sm"
             title="Search (Ctrl+K)"
           >
             <Search className="w-3.5 h-3.5" />
-            <kbd className="hidden lg:inline-block px-1 py-0.2 text-[9px] font-mono bg-[#181C22] text-[#A6AFBB] rounded border border-[#2B313C]">
+            <kbd className="hidden lg:inline-block px-1.5 py-0.2 text-[9px] font-mono bg-black/30 text-white/70 rounded-md border border-white/10">
               Ctrl+K
             </kbd>
           </button>
@@ -173,20 +177,20 @@ export const SpatialTopCapsule: React.FC<SpatialTopCapsuleProps> = ({
           <div className="relative" ref={roleMenuRef}>
             <button
               onClick={() => setRoleMenuOpen(!roleMenuOpen)}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#07080A]/60 hover:bg-[#1E232B] border border-[#303642] text-xs text-[#F2F4F7] transition-all"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-xs text-white transition-all shadow-sm"
             >
-              <ShieldCheck className="w-3.5 h-3.5 text-[#D7DBE2]" />
+              <ShieldCheck className="w-3.5 h-3.5 text-white" />
               <span className="hidden sm:inline font-medium text-xs max-w-[120px] truncate">
                 {user ? user.role.replace(/_/g, ' ') : 'AICTE Admin'}
               </span>
-              <ChevronDown className="w-3 h-3 text-[#A6AFBB]" />
+              <ChevronDown className="w-3 h-3 text-white/60" />
             </button>
 
             {roleMenuOpen && (
-              <div className="absolute right-0 mt-2 w-72 rounded-2xl bg-[#13161B] border border-[#303642] shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-                <div className="px-2.5 py-1.5 border-b border-[#222730] mb-1">
-                  <div className="text-xs font-semibold text-[#F2F4F7]">Evaluation Role</div>
-                  <div className="text-[10px] text-[#A6AFBB]">Instant role-scoped access</div>
+              <div className="absolute right-0 mt-2 w-72 rounded-3xl liquid-glass-panel p-2 z-50 animate-in fade-in zoom-in-95 duration-150 shadow-2xl">
+                <div className="px-3 py-1.5 border-b border-white/10 mb-1">
+                  <div className="text-xs font-semibold text-white">Evaluation Role</div>
+                  <div className="text-[10px] text-white/60">Instant role-scoped access</div>
                 </div>
                 <div className="space-y-1 max-h-64 overflow-y-auto">
                   {roles.map((r) => {
@@ -199,13 +203,13 @@ export const SpatialTopCapsule: React.FC<SpatialTopCapsuleProps> = ({
                           switchDemoRole(r.role);
                           setRoleMenuOpen(false);
                         }}
-                        className={`w-full text-left px-2.5 py-2 rounded-xl text-xs flex items-center gap-2.5 transition-colors ${
+                        className={`w-full text-left px-3 py-2 rounded-2xl text-xs flex items-center gap-2.5 transition-colors ${
                           isCurrent
-                            ? 'bg-[#1E232B] text-[#FFFFFF] font-semibold border border-[#D7DBE2]/30'
-                            : 'text-[#A6AFBB] hover:text-[#F2F4F7] hover:bg-[#181C22]'
+                            ? 'bg-white text-black font-semibold shadow-md'
+                            : 'text-white/80 hover:text-white hover:bg-white/15'
                         }`}
                       >
-                        <Icon className="w-3.5 h-3.5 text-[#D7DBE2] flex-shrink-0" />
+                        <Icon className="w-3.5 h-3.5 flex-shrink-0" />
                         <div className="truncate">
                           <div>{r.title}</div>
                         </div>
@@ -224,31 +228,31 @@ export const SpatialTopCapsule: React.FC<SpatialTopCapsuleProps> = ({
                 setNotifMenuOpen(!notifMenuOpen);
                 if (!notifMenuOpen) markNotificationsAsRead();
               }}
-              className="p-1.5 rounded-xl bg-[#07080A]/60 hover:bg-[#1E232B] border border-[#303642] text-[#A6AFBB] hover:text-[#F2F4F7] transition-all relative"
+              className="p-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-white/80 hover:text-white transition-all relative"
               title="Notifications"
             >
-              <Bell className="w-4 h-4" />
+              <Bell className="w-3.5 h-3.5" />
               {unreadNotificationCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#D7DBE2] text-[#07080A] text-[9px] font-bold flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center shadow-md">
                   {unreadNotificationCount}
                 </span>
               )}
             </button>
 
             {notifMenuOpen && (
-              <div className="absolute right-0 mt-2 w-80 rounded-2xl bg-[#13161B] border border-[#303642] shadow-2xl p-3 z-50 animate-in fade-in zoom-in-95 duration-150">
-                <div className="flex items-center justify-between pb-2 border-b border-[#222730] mb-2">
-                  <span className="text-xs font-semibold text-[#F2F4F7]">System Notifications</span>
-                  <span className="text-[10px] text-[#A6AFBB] font-mono">APH Live</span>
+              <div className="absolute right-0 mt-2 w-80 rounded-3xl liquid-glass-panel p-3.5 z-50 animate-in fade-in zoom-in-95 duration-150 shadow-2xl">
+                <div className="flex items-center justify-between pb-2 border-b border-white/10 mb-2">
+                  <span className="text-xs font-semibold text-white">System Notifications</span>
+                  <span className="text-[10px] text-white/60 font-mono">Live</span>
                 </div>
                 <div className="space-y-2 max-h-64 overflow-y-auto">
                   {notifications.length === 0 ? (
-                    <p className="text-xs text-[#A6AFBB] py-4 text-center">No new notifications</p>
+                    <p className="text-xs text-white/60 py-4 text-center">No new notifications</p>
                   ) : (
                     notifications.map((n) => (
-                      <div key={n.id} className="p-2 rounded-xl bg-[#07080A]/60 border border-[#222730] text-xs">
-                        <div className="font-medium text-[#F2F4F7]">{n.title}</div>
-                        <div className="text-[11px] text-[#A6AFBB] mt-0.5">{n.message}</div>
+                      <div key={n.id} className="p-2 rounded-xl bg-white/5 border border-white/10 text-xs">
+                        <div className="font-medium text-white">{n.title}</div>
+                        <div className="text-[11px] text-white/70 mt-0.5">{n.message}</div>
                       </div>
                     ))
                   )}
@@ -261,15 +265,15 @@ export const SpatialTopCapsule: React.FC<SpatialTopCapsuleProps> = ({
           {user ? (
             <button
               onClick={logout}
-              className="p-1.5 rounded-xl bg-[#07080A]/60 hover:bg-[#1E232B] border border-[#303642] text-[#A6AFBB] hover:text-rose-400 transition-all"
+              className="p-2 rounded-full bg-white/10 hover:bg-red-500/30 border border-white/15 text-white/80 hover:text-red-300 transition-all"
               title="Sign Out"
             >
-              <LogOut className="w-4 h-4" />
+              <LogOut className="w-3.5 h-3.5" />
             </button>
           ) : (
             <button
               onClick={onOpenLogin}
-              className="px-3 py-1.5 rounded-xl bg-[#D7DBE2] hover:bg-white text-[#07080A] font-semibold text-xs transition-all shadow-sm"
+              className="px-3.5 py-1.5 rounded-full bg-white hover:bg-white/90 text-black font-semibold text-xs transition-all shadow-md"
             >
               Sign In
             </button>

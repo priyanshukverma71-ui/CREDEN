@@ -123,32 +123,32 @@ export const SpatialCanvas: React.FC = () => {
         gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
         dpr={[1, 2]}
       >
-        {/* Deep Midnight Black Spatial Atmosphere & Subtle Distance Fog */}
-        <color attach="background" args={['#08090B']} />
-        <fog attach="fog" args={['#08090B', 15, 45]} />
+        {/* Liquid Glass Spatial Atmosphere & Subtle Distance Fog */}
+        <color attach="background" args={['#0A0B0E']} />
+        <fog attach="fog" args={['#0A0B0E', 18, 50]} />
 
-        {/* Studio Lighting Setup: Soft, Diffused Metallic Illumination */}
-        <ambientLight intensity={0.7} color="#CBD5E1" />
+        {/* VisionOS Style Studio Lighting: Warm Key Light & Cool Specular Rim */}
+        <ambientLight intensity={0.9} color="#F5EFEA" />
 
-        {/* Primary Soft Directional Key Light from Top Front */}
+        {/* Primary Warm Directional Key Light from Top Front */}
         <directionalLight
-          position={[6, 12, 10]}
-          intensity={1.6}
-          color="#FFFFFF"
+          position={[6, 14, 10]}
+          intensity={1.8}
+          color="#FFF6EE"
         />
 
-        {/* Restrained Silver Rim Lighting from Behind-Left */}
+        {/* Cool Rim Lighting from Behind-Left */}
         <directionalLight
           position={[-8, 6, -6]}
-          intensity={0.75}
-          color="#94A3B8"
+          intensity={0.9}
+          color="#C8D6EC"
         />
 
-        {/* Subtle Bottom Ground Bounce Fill */}
+        {/* Subtle Ambient Ground Bounce Fill */}
         <directionalLight
           position={[0, -4, 4]}
-          intensity={0.25}
-          color="#334155"
+          intensity={0.3}
+          color="#4A4550"
         />
 
         <Suspense fallback={null}>

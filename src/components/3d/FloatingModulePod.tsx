@@ -22,17 +22,19 @@ interface FloatingModulePodProps {
 const ModuleSymbol: React.FC<{ id: ModuleId; hovered: boolean }> = ({ id, hovered }) => {
   const platinumMat = (
     <meshStandardMaterial
-      color="#D8DCE3"
-      metalness={0.82}
-      roughness={0.32}
+      color="#FFFFFF"
+      metalness={0.92}
+      roughness={0.14}
+      emissive="#28222A"
+      emissiveIntensity={0.25}
     />
   );
 
   const darkMat = (
     <meshStandardMaterial
-      color="#181B22"
+      color="#1C1820"
       metalness={0.35}
-      roughness={0.55}
+      roughness={0.45}
     />
   );
 
@@ -417,52 +419,59 @@ export const FloatingModulePod: React.FC<FloatingModulePodProps> = ({
         <meshBasicMaterial color="#000000" transparent opacity={0.4} />
       </mesh>
 
-      {/* 2. Refined Architectural Charcoal Slab (Deep Obsidian & Graphite) */}
+      {/* 2. Refined Liquid Glass Panel (Smoked Optical Glass with Refraction) */}
       <mesh castShadow receiveShadow position={[0, 0, 0]}>
         <boxGeometry args={[3.2, 4.4, 0.08]} />
-        <meshStandardMaterial
-          color="#0B0E14"
-          roughness={0.65}
-          metalness={0.25}
+        <meshPhysicalMaterial
+          color="#1D1A22"
+          roughness={0.16}
+          metalness={0.15}
+          transmission={0.82}
+          thickness={0.5}
+          ior={1.46}
+          transparent
+          opacity={0.75}
+          clearcoat={1.0}
+          clearcoatRoughness={0.08}
         />
       </mesh>
 
-      {/* 3. Extremely Thin Liquid Platinum Hairline Border (1px Precision Edge) */}
+      {/* 3. Optical Glass Specular Rim Border */}
       <group position={[0, 0, 0.042]}>
-        {/* Top hairline */}
+        {/* Top edge specular highlight */}
         <mesh position={[0, 2.2, 0]}>
-          <boxGeometry args={[3.2, 0.012, 0.006]} />
+          <boxGeometry args={[3.2, 0.015, 0.008]} />
           <meshStandardMaterial
-            color={hovered || isActive ? '#FFFFFF' : '#D7DBE2'}
-            roughness={0.25}
-            metalness={0.9}
+            color={hovered || isActive ? '#FFFFFF' : '#E2E8F0'}
+            roughness={0.15}
+            metalness={0.85}
           />
         </mesh>
-        {/* Bottom hairline */}
+        {/* Bottom edge */}
         <mesh position={[0, -2.2, 0]}>
           <boxGeometry args={[3.2, 0.012, 0.006]} />
           <meshStandardMaterial
-            color={hovered || isActive ? '#FFFFFF' : '#475160'}
-            roughness={0.35}
-            metalness={0.75}
+            color={hovered || isActive ? '#FFFFFF' : '#474D58'}
+            roughness={0.3}
+            metalness={0.7}
           />
         </mesh>
-        {/* Left hairline */}
+        {/* Left edge */}
         <mesh position={[-1.6, 0, 0]}>
           <boxGeometry args={[0.012, 4.4, 0.006]} />
           <meshStandardMaterial
-            color={hovered || isActive ? '#FFFFFF' : '#475160'}
-            roughness={0.35}
-            metalness={0.75}
+            color={hovered || isActive ? '#FFFFFF' : '#474D58'}
+            roughness={0.3}
+            metalness={0.7}
           />
         </mesh>
-        {/* Right hairline */}
+        {/* Right edge */}
         <mesh position={[1.6, 0, 0]}>
           <boxGeometry args={[0.012, 4.4, 0.006]} />
           <meshStandardMaterial
-            color={hovered || isActive ? '#FFFFFF' : '#475160'}
-            roughness={0.35}
-            metalness={0.75}
+            color={hovered || isActive ? '#FFFFFF' : '#474D58'}
+            roughness={0.3}
+            metalness={0.7}
           />
         </mesh>
       </group>
@@ -513,22 +522,25 @@ export const FloatingModulePod: React.FC<FloatingModulePodProps> = ({
         {subtitle}
       </Text>
 
-      {/* 8. Refined Interactive Action Button */}
+      {/* 8. Refined Liquid Glass Action Button */}
       <group position={[0, -1.48, 0.06]}>
-        {/* Button Charcoal Base */}
+        {/* Button Glass Base */}
         <mesh>
           <boxGeometry args={[2.3, 0.44, 0.02]} />
-          <meshStandardMaterial
-            color={hovered ? '#1E232D' : '#14171E'}
-            roughness={0.5}
-            metalness={0.3}
+          <meshPhysicalMaterial
+            color={hovered ? '#2D2832' : '#221E26'}
+            roughness={0.2}
+            metalness={0.1}
+            transmission={0.8}
+            transparent
+            opacity={0.85}
           />
         </mesh>
-        {/* Button Fine Perimeter Line */}
+        {/* Button Glass Specular Rim */}
         <mesh position={[0, 0, 0.012]}>
           <boxGeometry args={[2.3, 0.44, 0.002]} />
           <meshBasicMaterial
-            color={hovered ? '#CBD5E1' : '#2A303C'}
+            color={hovered ? '#FFFFFF' : 'rgba(255, 255, 255, 0.35)'}
             wireframe
           />
         </mesh>
@@ -537,7 +549,7 @@ export const FloatingModulePod: React.FC<FloatingModulePodProps> = ({
           position={[0, 0, 0.025]}
           fontSize={0.12}
           letterSpacing={0.06}
-          color={hovered ? '#FFFFFF' : '#D7DBE2'}
+          color={hovered ? '#FFFFFF' : '#F1F4F9'}
           anchorX="center"
           anchorY="middle"
         >

@@ -14,7 +14,6 @@ import {
   TrendingUp,
   Lock,
   Cpu,
-  Layers,
 } from 'lucide-react';
 
 interface NavItem {
@@ -44,26 +43,26 @@ export const SpatialFloatingRail: React.FC = () => {
 
   return (
     <aside
-      className="fixed left-4 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col items-center py-3 px-2 rounded-full bg-[#13161B]/90 backdrop-blur-xl border border-[#D7DBE2]/20 shadow-[0_20px_50px_rgba(0,0,0,0.85),0_0_1px_rgba(215,219,226,0.15)] transition-all duration-300"
+      className="fixed left-4 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col items-center py-3.5 px-2 rounded-[28px] liquid-glass-pill transition-all duration-300"
       aria-label="Spatial Navigation Rail"
     >
-      {/* CREDEN Emblem at Top */}
+      {/* VisionOS Style Top Emblem */}
       <button
         onClick={() => setActiveModule('overview')}
-        className="w-10 h-10 mb-2 rounded-full flex items-center justify-center bg-[#07080A] border border-[#D7DBE2]/30 text-[#D7DBE2] hover:text-white hover:border-white transition-all shadow-md group relative"
+        className="w-10 h-10 mb-2.5 rounded-full flex items-center justify-center bg-white/10 hover:bg-white/20 border border-white/25 text-white transition-all shadow-md group relative"
         title="CREDEN - Return to Spatial Overview"
       >
-        <div className="w-5 h-5 rounded-full border-2 border-[#D7DBE2] group-hover:scale-105 transition-transform flex items-center justify-center">
-          <div className="w-1.5 h-1.5 rounded-full bg-[#D7DBE2]" />
+        <div className="w-5 h-5 rounded-full border-2 border-white/80 group-hover:scale-105 transition-transform flex items-center justify-center">
+          <div className="w-1.5 h-1.5 rounded-full bg-white" />
         </div>
         {/* Tooltip */}
-        <span className="absolute left-14 px-2.5 py-1 rounded-md bg-[#07080A] text-[#F2F4F7] text-xs font-mono border border-[#303642] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-xl z-50">
+        <span className="absolute left-14 px-2.5 py-1 rounded-xl liquid-glass-panel text-white text-xs font-mono whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-2xl z-50">
           CREDEN 3D Space
         </span>
       </button>
 
-      {/* Thin Liquid-Platinum Divider */}
-      <div className="w-6 h-[1px] bg-[#303642] mb-2" />
+      {/* Specular Glass Hairline Divider */}
+      <div className="w-6 h-[1px] bg-white/15 mb-2.5" />
 
       {/* Navigation Icons Stack */}
       <div className="flex flex-col gap-1.5 max-h-[75vh] overflow-y-auto no-scrollbar py-0.5">
@@ -80,10 +79,10 @@ export const SpatialFloatingRail: React.FC = () => {
                   openWorkspace(item.id);
                 }
               }}
-              className={`relative w-9 h-9 rounded-full flex items-center justify-center transition-all group ${
+              className={`relative w-9 h-9 rounded-2xl flex items-center justify-center transition-all group ${
                 isActive
-                  ? 'bg-[#D7DBE2] text-[#07080A] shadow-[0_0_15px_rgba(215,219,226,0.4)] scale-105 font-bold'
-                  : 'text-[#A6AFBB] hover:text-[#F2F4F7] hover:bg-[#1E232B] hover:scale-105'
+                  ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.45)] scale-105 font-bold'
+                  : 'text-white/70 hover:text-white hover:bg-white/15 hover:scale-105'
               }`}
               title={item.label}
               aria-label={item.label}
@@ -91,9 +90,9 @@ export const SpatialFloatingRail: React.FC = () => {
               <Icon className="w-4 h-4" />
 
               {/* Floating Tooltip Pill */}
-              <div className="absolute left-12 px-2.5 py-1 rounded-lg bg-[#07080A]/95 text-[#F2F4F7] text-xs border border-[#303642] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-150 pointer-events-none shadow-2xl flex items-center gap-1.5 z-50">
+              <div className="absolute left-12 px-2.5 py-1 rounded-xl liquid-glass-panel text-white text-xs border border-white/20 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-150 pointer-events-none shadow-2xl flex items-center gap-1.5 z-50">
                 <span className="font-medium">{item.label}</span>
-                <span className="text-[10px] text-[#A6AFBB] font-mono px-1 rounded bg-[#181C22]">
+                <span className="text-[10px] text-white/60 font-mono px-1 rounded bg-black/40">
                   {item.category}
                 </span>
               </div>
