@@ -15,6 +15,7 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma db push",
     "prisma:seed": "tsx server/seed.ts",
+    "vercel-build": "prisma generate && vite build",
     "test": "vitest run"
   },
   "dependencies": {

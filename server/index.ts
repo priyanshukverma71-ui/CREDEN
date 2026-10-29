@@ -75,9 +75,12 @@ app.get('*', (req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`[CREDEN] AICTE Student Data Management Server active at http://localhost:${PORT}`);
-  console.log(`[CREDEN] Health check: http://localhost:${PORT}/api/health`);
-});
+// Start HTTP listener when not in Vercel serverless function
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`[CREDEN] AICTE Student Data Management Server active at http://localhost:${PORT}`);
+    console.log(`[CREDEN] Health check: http://localhost:${PORT}/api/health`);
+  });
+}
 
 export default app;

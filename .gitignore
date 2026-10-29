@@ -19,6 +19,7 @@ dist-server/
 *.db-journal
 *.sqlite
 *.sqlite-journal
+!prisma/dev.db
 
 # Logs
 npm-debug.log*
