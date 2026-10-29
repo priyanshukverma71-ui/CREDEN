@@ -91,18 +91,18 @@ export const DuplicateDetectionWorkspace: React.FC = () => {
       {/* Top filter header */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
-          <h4 className="text-sm font-bold text-highlight-silver">
-            Intelligent Multi-Institution Duplicate Detection Engine
+          <h4 className="text-sm font-bold text-slate-900">
+            Multi-Institution Duplicate Record Detection
           </h4>
-          <p className="text-xs text-liquid-silver">
-            Detects exact APAAR collisions, cross-institution concurrent enrolments, and fuzzy demographic identity matches.
+          <p className="text-xs text-slate-500">
+            Cross-institution concurrent enrolments and demographic identity match review.
           </p>
         </div>
 
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-3 py-1.5 text-xs rounded-xl bg-obsidian border border-glass-border text-highlight-silver outline-none"
+          className="px-3 py-1.5 text-xs rounded-xl bg-slate-50 border border-slate-200 text-slate-900 outline-none"
         >
           <option value="">All Case Statuses</option>
           <option value="OPEN">Open Cases</option>

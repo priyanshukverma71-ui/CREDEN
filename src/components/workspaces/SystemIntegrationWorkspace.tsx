@@ -64,23 +64,20 @@ export const SystemIntegrationWorkspace: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* 1-Click SIH Demonstration Seed & Reset Card */}
-      <div className="glass-panel rounded-2xl p-6 border border-glass-border flex flex-col md:flex-row items-center justify-between gap-4">
+      {/* Demonstration Seed & Reset Card */}
+      <div className="surface-card p-6 flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-platinum/10 border border-platinum/40 flex items-center justify-center flex-shrink-0">
-            <RotateCcw className="w-6 h-6 text-platinum" />
+          <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center flex-shrink-0">
+            <RotateCcw className="w-6 h-6 text-blue-600" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h4 className="text-sm font-bold text-highlight-silver">
-                Reproducible SIH Demonstration Reset & Re-Seed
+              <h4 className="text-sm font-bold text-slate-900">
+                Demonstration Database Reset & Re-Seed
               </h4>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-graphite text-platinum font-mono">
-                1-Click Repeatable
-              </span>
             </div>
-            <p className="text-xs text-liquid-silver mt-0.5">
-              Instantly cleans and populates verified records, cross-institution duplicate cases (Priya Sharma at DTU & COEP), and admission intake discrepancies.
+            <p className="text-xs text-slate-500 mt-0.5">
+              Restores standard verified student records, cross-institution duplicate test cases, and admission quota discrepancies.
             </p>
           </div>
         </div>
@@ -89,12 +86,12 @@ export const SystemIntegrationWorkspace: React.FC = () => {
           <button
             onClick={handleResetSeed}
             disabled={resetting}
-            className="flex-shrink-0 px-4 py-2 rounded-xl bg-platinum hover:bg-white text-midnight text-xs font-bold flex items-center gap-2 transition-colors disabled:opacity-40 shadow-sm"
+            className="flex-shrink-0 px-4 py-2 rounded-xl bg-slate-900 hover:bg-black text-white text-xs font-semibold flex items-center gap-2 transition-colors disabled:opacity-40 shadow-sm"
           >
             {resetting ? (
               <>
                 <RefreshCw className="w-4 h-4 animate-spin" />
-                <span>Re-Seeding Demonstration Database...</span>
+                <span>Re-Seeding Database...</span>
               </>
             ) : (
               <>

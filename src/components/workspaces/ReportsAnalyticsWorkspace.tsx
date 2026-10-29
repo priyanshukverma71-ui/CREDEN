@@ -83,9 +83,6 @@ export const ReportsAnalyticsWorkspace: React.FC = () => {
             <h4 className="text-base font-bold text-slate-900 tracking-tight">
               National Analytics, Forecasting & Regulatory Reports
             </h4>
-            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
-              AICTE Telemetry
-            </span>
           </div>
           <p className="text-xs text-slate-500 mt-0.5">
             Historical enrolment trends, multi-year capacity growth, supernumerary quota distributions, and official statutory compliance reports.

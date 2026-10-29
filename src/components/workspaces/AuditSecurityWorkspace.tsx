@@ -66,21 +66,18 @@ export const AuditSecurityWorkspace: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Integrity Verification Card */}
-      <div className="glass-panel rounded-2xl p-6 border border-glass-border flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="surface-card p-6 flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-platinum/10 border border-platinum/40 flex items-center justify-center flex-shrink-0">
-            <Lock className="w-6 h-6 text-platinum" />
+          <div className="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center flex-shrink-0">
+            <Lock className="w-6 h-6 text-indigo-600" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h4 className="text-sm font-bold text-highlight-silver">
+              <h4 className="text-sm font-bold text-slate-900">
                 Cryptographic Audit Chain Integrity Verification
               </h4>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-graphite text-platinum font-mono">
-                SHA-256 Chained
-              </span>
             </div>
-            <p className="text-xs text-liquid-silver mt-0.5">
+            <p className="text-xs text-slate-500 mt-0.5">
               Every consequential event (ingestion, validation, duplicate resolution, export) is immutably sealed in a chained hash block.
             </p>
           </div>
@@ -89,12 +86,12 @@ export const AuditSecurityWorkspace: React.FC = () => {
         <button
           onClick={verifyIntegrity}
           disabled={verifying}
-          className="flex-shrink-0 px-4 py-2 rounded-xl bg-platinum hover:bg-white text-midnight text-xs font-bold flex items-center gap-2 transition-colors disabled:opacity-40 shadow-sm"
+          className="flex-shrink-0 px-4 py-2 rounded-xl bg-slate-900 hover:bg-black text-white text-xs font-semibold flex items-center gap-2 transition-colors disabled:opacity-40 shadow-sm"
         >
           {verifying ? (
             <>
               <RefreshCw className="w-4 h-4 animate-spin" />
-              <span>Verifying Block Chaining...</span>
+              <span>Verifying Hash Chain...</span>
             </>
           ) : (
             <>

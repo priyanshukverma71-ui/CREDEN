@@ -10,6 +10,7 @@ import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 
 export const SpatialCanvas: React.FC = () => {
   const {
+    activeModule,
     openWorkspace,
     carouselIndex,
     setCarouselIndex,
@@ -42,6 +43,7 @@ export const SpatialCanvas: React.FC = () => {
         camera={{ position: [0, 0.42, 7.6], fov: 42 }}
         gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
         dpr={[1, 2]}
+        frameloop={activeModule === 'overview' ? 'always' : 'demand'}
       >
         {/* Soft Spatial Atmosphere Fog */}
         <fog attach="fog" args={['#DFEDF9', 18, 48]} />
@@ -79,18 +81,7 @@ export const SpatialCanvas: React.FC = () => {
       </Canvas>
 
       {/* Minimal Spatial HUD: Anchored Comfortably Below the Floating Front 3D Active Icon */}
-      <div className="absolute top-[74%] sm:top-[75%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center text-center pointer-events-none z-20 w-full max-w-xl px-4">
-        {/* Soft Pastel Category Badge */}
-        <div
-          className="px-3.5 py-1 rounded-full text-[11px] font-semibold tracking-wider uppercase mb-2 shadow-xs transition-colors duration-300"
-          style={{
-            backgroundColor: activeMeta.light,
-            color: activeMeta.badgeText,
-          }}
-        >
-          {activeModuleData.category}
-        </div>
-
+      <div className="absolute top-[75%] sm:top-[76%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center text-center pointer-events-none z-20 w-full max-w-xl px-4">
         {/* Minimal High-Contrast Bold Title */}
         <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-1.5 transition-all duration-300">
           {activeModuleData.title}

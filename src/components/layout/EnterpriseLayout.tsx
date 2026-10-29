@@ -254,9 +254,9 @@ export const EnterpriseLayout: React.FC<EnterpriseLayoutProps> = ({ onOpenLogin 
       {/* 4. Rock-Solid Liquid Glass Workspace Window with Dark Blur Backdrop */}
       {!is3DSpace && (
         <>
-          {/* Dark Blur Spatial Backdrop (Darkens & blurs the 3D scene behind the window) */}
+          {/* Dark Spatial Backdrop (Lightweight, crisp focus behind the window) */}
           <div
-            className="fixed inset-0 z-10 bg-slate-950/65 backdrop-blur-xl transition-all duration-300 pointer-events-auto"
+            className="fixed inset-0 z-10 bg-slate-950/70 backdrop-blur-sm transition-opacity duration-200 pointer-events-auto"
             onClick={() => setActiveModule('overview')}
             aria-label="Backdrop click to close and return to 3D Space"
           />
@@ -267,30 +267,23 @@ export const EnterpriseLayout: React.FC<EnterpriseLayoutProps> = ({ onOpenLogin 
               <div className="flex-1 flex flex-col h-full min-w-0 rounded-3xl liquid-glass-window shadow-2xl overflow-hidden border border-slate-300/60">
                 {/* Window Header Bar: Clean, distraction-free, blur-free */}
                 <div className="flex items-center justify-between px-5 py-3 border-b border-slate-200/70 bg-slate-100/75 backdrop-blur-md flex-shrink-0">
-                  {/* Left: Return Button & Breadcrumbs */}
+                  {/* Left: Return Button & Title */}
                   <div className="flex items-center gap-3 min-w-0">
                     <button
                       onClick={() => setActiveModule('overview')}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 hover:bg-slate-900 text-slate-800 hover:text-white border border-slate-200 text-xs font-semibold transition-all group flex-shrink-0 shadow-xs"
-                      title="Return to 3D Space (Esc)"
+                      title="Return to 3D Space"
                     >
                       <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
                       <span>Back to 3D Space</span>
-                      <kbd className="hidden sm:inline-block text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-600 border border-slate-200 group-hover:bg-slate-800 group-hover:text-white">
-                        Esc
-                      </kbd>
                     </button>
 
                     <div className="h-4 w-[1px] bg-slate-300 hidden sm:block" />
 
                     <div className="flex items-center gap-2 truncate">
-                      <span className="text-xs text-slate-500 font-mono hidden sm:inline">Module:</span>
                       <h1 className="text-sm sm:text-base font-bold text-slate-950 tracking-tight truncate">
                         {title}
                       </h1>
-                      <span className="hidden md:inline-block text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-200/80 text-slate-700 font-medium">
-                        {category}
-                      </span>
                     </div>
                   </div>
 
@@ -307,7 +300,7 @@ export const EnterpriseLayout: React.FC<EnterpriseLayoutProps> = ({ onOpenLogin 
                     <button
                       onClick={() => setActiveModule('overview')}
                       className="p-1.5 rounded-full bg-white/80 hover:bg-rose-50 text-slate-500 hover:text-rose-600 border border-slate-200 transition-colors"
-                      title="Close Window (Esc)"
+                      title="Close Window"
                     >
                       <span className="sr-only">Close</span>
                       <X className="w-4 h-4" />
@@ -319,9 +312,6 @@ export const EnterpriseLayout: React.FC<EnterpriseLayoutProps> = ({ onOpenLogin 
                 {subtitle && (
                   <div className="px-5 py-2 bg-slate-100/50 border-b border-slate-200/60 text-xs text-slate-600 flex items-center justify-between flex-shrink-0">
                     <span className="truncate">{subtitle}</span>
-                    <span className="font-mono text-[10px] text-slate-500 hidden md:inline ml-4 flex-shrink-0">
-                      APH Standard 2024-25 §4
-                    </span>
                   </div>
                 )}
 

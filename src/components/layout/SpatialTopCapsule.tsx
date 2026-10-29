@@ -134,9 +134,6 @@ export const SpatialTopCapsule: React.FC<SpatialTopCapsuleProps> = ({
             <span className="font-bold text-sm tracking-tight text-slate-950">
               CREDEN
             </span>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 hidden sm:inline">
-              Institutional Portal
-            </span>
           </div>
         </div>
 
@@ -150,10 +147,10 @@ export const SpatialTopCapsule: React.FC<SpatialTopCapsuleProps> = ({
                 ? 'bg-cyan-600 text-white shadow-md'
                 : 'bg-white/90 hover:bg-cyan-50 text-slate-800 hover:text-cyan-900 border border-slate-200 hover:border-cyan-300'
             }`}
-            title="Open CREDEN TrustGraph Intelligence Visualiser"
+            title="Open CREDEN TrustGraph"
           >
             <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
-            <span className="hidden sm:inline font-mono">TrustGraph™</span>
+            <span className="hidden sm:inline font-mono">TrustGraph</span>
           </button>
 
           {/* Quick Search Trigger */}
@@ -182,8 +179,7 @@ export const SpatialTopCapsule: React.FC<SpatialTopCapsuleProps> = ({
             {roleMenuOpen && (
               <div className="absolute right-0 mt-2 w-72 rounded-3xl liquid-glass-panel p-2 z-50 animate-in fade-in zoom-in-95 duration-150 shadow-2xl">
                 <div className="px-3 py-1.5 border-b border-slate-200 mb-1">
-                  <div className="text-xs font-semibold text-slate-900">Evaluation Role</div>
-                  <div className="text-[10px] text-slate-500">Instant role-scoped access</div>
+                  <div className="text-xs font-semibold text-slate-900">Switch Role</div>
                 </div>
                 <div className="space-y-1 max-h-64 overflow-y-auto">
                   {roles.map((r) => {
@@ -235,8 +231,7 @@ export const SpatialTopCapsule: React.FC<SpatialTopCapsuleProps> = ({
             {notifMenuOpen && (
               <div className="absolute right-0 mt-2 w-80 rounded-3xl liquid-glass-panel p-3.5 z-50 animate-in fade-in zoom-in-95 duration-150 shadow-2xl">
                 <div className="flex items-center justify-between pb-2 border-b border-slate-200 mb-2">
-                  <span className="text-xs font-semibold text-slate-900">System Notifications</span>
-                  <span className="text-[10px] text-slate-500 font-mono">Live Sync</span>
+                  <span className="text-xs font-semibold text-slate-900">Notifications</span>
                 </div>
                 <div className="space-y-2 max-h-64 overflow-y-auto">
                   {notifications.length === 0 ? (

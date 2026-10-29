@@ -91,26 +91,25 @@ export const StudentVerificationWorkspace: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="glass-panel rounded-2xl p-5 border border-glass-border">
-        <div className="flex items-center gap-3 mb-2">
-          <FileCheck2 className="w-5 h-5 text-platinum" />
-          <h4 className="text-sm font-bold text-highlight-silver">
-            Authorized Student Record Verification Portal
+      <div className="surface-card p-5">
+        <div className="flex items-center gap-2.5 mb-1">
+          <FileCheck2 className="w-5 h-5 text-blue-600" />
+          <h4 className="text-sm font-bold text-slate-900">
+            Student Record Verification Portal
           </h4>
         </div>
-        <p className="text-xs text-liquid-silver leading-relaxed">
-          Enables authorized employers, universities, and government agencies to verify academic credentials and APAAR-linked enrolments with minimal disclosure. Sensitive demographic data is protected, and cryptographic signatures are validated server-side.
+        <p className="text-xs text-slate-500 leading-relaxed">
+          Enables authorized employers and universities to verify academic credentials and APAAR-linked enrolments with zero-knowledge minimal disclosure.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left: Verification Query Form */}
-        <div className="glass-panel rounded-2xl p-6 border border-glass-border space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-glass-border">
-            <span className="text-xs font-semibold text-highlight-silver uppercase tracking-wider font-mono">
+        <div className="surface-card p-6 space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+            <span className="text-xs font-semibold text-slate-900 uppercase tracking-wider font-mono">
               Credential Query
             </span>
-            <span className="text-[10px] text-platinum font-mono">HMAC-SHA256 Signed</span>
           </div>
 
           <div className="flex items-center gap-2">

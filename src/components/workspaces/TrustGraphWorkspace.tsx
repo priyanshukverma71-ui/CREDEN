@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Suspense } from 'react';
+import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Text, Html } from '@react-three/drei';
 import * as THREE from 'three';
@@ -161,12 +161,14 @@ const EdgeLine: React.FC<{
 
   if (!sourceNode || !targetNode) return null;
 
-  const points = [
-    new THREE.Vector3(sourceNode.x, sourceNode.y, sourceNode.z),
-    new THREE.Vector3(targetNode.x, targetNode.y, targetNode.z),
-  ];
+  const lineGeometry = useMemo(() => {
+    const pts = [
+      new THREE.Vector3(sourceNode.x, sourceNode.y, sourceNode.z),
+      new THREE.Vector3(targetNode.x, targetNode.y, targetNode.z),
+    ];
+    return new THREE.BufferGeometry().setFromPoints(pts);
+  }, [sourceNode.x, sourceNode.y, sourceNode.z, targetNode.x, targetNode.y, targetNode.z]);
 
-  const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
   const isConnectedToSelected = selectedNodeId && (edge.source === selectedNodeId || edge.target === selectedNodeId);
   const isCritical = edge.severity === 'CRITICAL';
 
@@ -482,14 +484,11 @@ export const TrustGraphWorkspace: React.FC = () => {
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-sm font-bold text-slate-950 tracking-tight">
-                CREDEN TrustGraph™
+                CREDEN TrustGraph
               </h2>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-50 text-cyan-800 border border-cyan-200 font-semibold">
-                Student-Data Intelligence
-              </span>
             </div>
             <p className="text-[11px] text-slate-500">
-              Interactive 3D Entity Constellation • Explainable Duplicate Detection • Radar Conflict Diagnostics
+              Interactive 3D relationship map, duplicate conflict radar & provenance engine
             </p>
           </div>
         </div>

@@ -20,8 +20,6 @@ import {
   CheckCircle2,
   Maximize2,
 } from 'lucide-react';
-import { Canvas } from '@react-three/fiber';
-import { Float, MeshReflectorMaterial } from '@react-three/drei';
 
 interface OverviewMetrics {
   registeredInstitutions: number;
@@ -33,62 +31,20 @@ interface OverviewMetrics {
   intakeDiscrepancies: number;
 }
 
-// Compact Studio 3D Emblem with realistic liquid glass materials
-const Cockpit3DEmblem: React.FC = () => {
+// Crisp, Lightweight Liquid Glass Cockpit Emblem (Zero WebGL overhead)
+const CockpitEmblem: React.FC = () => {
   return (
-    <div className="w-full h-44 relative rounded-2xl overflow-hidden bg-slate-50 border border-slate-200/80 shadow-inner">
-      <Canvas
-        camera={{ position: [0, 1.2, 4.2], fov: 40 }}
-        gl={{ antialias: true, powerPreference: 'high-performance' }}
-        dpr={[1, 1.5]}
-      >
-        <color attach="background" args={['#F1F5F9']} />
-        <ambientLight intensity={1.5} color="#FFFFFF" />
-        <directionalLight position={[5, 10, 5]} intensity={2.0} color="#FFFFFF" />
-        <directionalLight position={[-5, 4, -2]} intensity={0.8} color="#94A3B8" />
-
-        <Suspense fallback={null}>
-          <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.3}>
-            {/* Liquid Glass Central Octahedron */}
-            <mesh position={[0, 0.4, 0]} rotation={[0.2, 0.4, 0]}>
-              <octahedronGeometry args={[1.1, 0]} />
-              <meshPhysicalMaterial
-                color="#FFFFFF"
-                transmission={0.92}
-                roughness={0.1}
-                thickness={0.8}
-                ior={1.52}
-                reflectivity={0.9}
-                clearcoat={1}
-              />
-            </mesh>
-            {/* Colorful Vibrant Ring */}
-            <mesh position={[0, 0.4, 0]} rotation={[1.1, 0.3, 0]}>
-              <torusGeometry args={[1.7, 0.04, 16, 64]} />
-              <meshStandardMaterial
-                color="#2563EB"
-                metalness={0.8}
-                roughness={0.2}
-              />
-            </mesh>
-          </Float>
-
-          {/* Soft Daylight Studio Base */}
-          <mesh position={[0, -1.2, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-            <planeGeometry args={[20, 20]} />
-            <meshStandardMaterial
-              color="#E2E8F0"
-              roughness={0.8}
-            />
-          </mesh>
-        </Suspense>
-      </Canvas>
-
-      {/* Floating subtle overlay */}
+    <div className="w-full h-40 relative rounded-2xl overflow-hidden bg-gradient-to-tr from-slate-50 to-blue-50/50 border border-slate-200/80 flex items-center justify-center">
+      <div className="relative flex items-center justify-center">
+        <div className="w-24 h-24 rounded-3xl bg-gradient-to-tr from-blue-500/20 to-indigo-500/20 blur-xl absolute -inset-2" />
+        <div className="relative w-18 h-18 rounded-2xl bg-white/95 border border-slate-200 shadow-md flex items-center justify-center">
+          <ShieldCheck className="w-9 h-9 text-blue-600" />
+        </div>
+      </div>
       <div className="absolute top-2.5 left-3 flex items-center gap-1.5 pointer-events-none">
         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-        <span className="text-[10px] font-mono uppercase tracking-wider text-slate-600 font-semibold">
-          Spatial Trust Engine
+        <span className="text-[10px] font-mono tracking-wider text-slate-600 font-semibold uppercase">
+          Trust Engine
         </span>
       </div>
     </div>
@@ -156,9 +112,6 @@ export const ExecutiveCockpit: React.FC = () => {
             <div className="flex items-center gap-2">
               <span className="text-xs font-bold text-rose-700 font-mono tracking-wide uppercase">
                 Regulatory Intake Violation Detected
-              </span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 border border-rose-200 font-mono font-semibold">
-                APH 2024-25 §4.2
               </span>
             </div>
             <p className="text-xs text-slate-600 mt-0.5">
@@ -272,12 +225,9 @@ export const ExecutiveCockpit: React.FC = () => {
               <div className="flex items-center gap-2">
                 <TrendingUp className="w-4 h-4 text-blue-600" />
                 <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 font-mono">
-                  National Technical Admission Trend (5-Year Academic Sessions)
+                  National Technical Admission Trend
                 </h3>
               </div>
-              <span className="text-[10px] text-slate-500 font-mono">
-                Source: AICTE Regulatory Ingestion
-              </span>
             </div>
 
             {/* SVG Trend Line / Area */}
@@ -408,28 +358,24 @@ export const ExecutiveCockpit: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Column (1 Col): Studio 3D Emblem & Top Institutions */}
-        <div className="space-y-4">
-          {/* Studio 3D Emblem with toggle */}
-          <div className="surface-card p-4 relative">
-            <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-200">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-900 font-mono">
-                3D Spatial Cockpit
-              </span>
-              <button
-                onClick={toggleViewMode}
-                className="flex items-center gap-1 text-[10px] text-blue-600 hover:text-blue-700 font-mono font-semibold hover:underline"
-                title="Expand to Fullscreen 3D Panoramic Environment"
-              >
-                <span>Fullscreen</span>
-                <Maximize2 className="w-3 h-3" />
-              </button>
+          {/* Cockpit Emblem & Top Institutions */}
+          <div className="space-y-4">
+            <div className="surface-card p-4 relative">
+              <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-200">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-900 font-mono">
+                  Trust Architecture
+                </span>
+                <button
+                  onClick={toggleViewMode}
+                  className="flex items-center gap-1 text-[10px] text-blue-600 hover:text-blue-700 font-mono font-semibold hover:underline"
+                  title="Expand to Fullscreen 3D Panoramic Environment"
+                >
+                  <span>Fullscreen 3D</span>
+                  <Maximize2 className="w-3 h-3" />
+                </button>
+              </div>
+              <CockpitEmblem />
             </div>
-            <Cockpit3DEmblem />
-            <div className="mt-2 text-[11px] text-slate-500 text-center">
-              VisionOS liquid glass architecture & luminous floating symbols.
-            </div>
-          </div>
 
           {/* Top Institutions Table */}
           <div className="surface-card p-4">
