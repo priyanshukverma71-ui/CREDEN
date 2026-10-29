@@ -450,18 +450,53 @@ export const FloatingModulePod: React.FC<FloatingModulePodProps> = ({
         />
       </mesh>
 
-      {/* 3. Outer Chamfered Beveled Platinum Border */}
-      <mesh position={[0, 0, 0.06]}>
-        <boxGeometry args={[3.45, 4.25, 0.04]} />
-        <meshStandardMaterial
-          color={hovered || isActive ? '#FFFFFF' : '#E2E8F0'}
-          metalness={0.96}
-          roughness={0.08}
-          emissive={hovered || isActive ? '#64748B' : '#1E293B'}
-          emissiveIntensity={0.4}
-          wireframe
-        />
-      </mesh>
+      {/* 3. Outer Chamfered Beveled Platinum Perimeter Frame */}
+      <group position={[0, 0, 0.06]}>
+        {/* Top edge */}
+        <mesh position={[0, 2.1, 0]}>
+          <boxGeometry args={[3.44, 0.04, 0.03]} />
+          <meshStandardMaterial
+            color={hovered || isActive ? '#FFFFFF' : '#E2E8F0'}
+            metalness={0.98}
+            roughness={0.08}
+            emissive={hovered || isActive ? '#94A3B8' : '#334155'}
+            emissiveIntensity={0.3}
+          />
+        </mesh>
+        {/* Bottom edge */}
+        <mesh position={[0, -2.1, 0]}>
+          <boxGeometry args={[3.44, 0.04, 0.03]} />
+          <meshStandardMaterial
+            color={hovered || isActive ? '#FFFFFF' : '#E2E8F0'}
+            metalness={0.98}
+            roughness={0.08}
+            emissive={hovered || isActive ? '#94A3B8' : '#334155'}
+            emissiveIntensity={0.3}
+          />
+        </mesh>
+        {/* Left edge */}
+        <mesh position={[-1.7, 0, 0]}>
+          <boxGeometry args={[0.04, 4.2, 0.03]} />
+          <meshStandardMaterial
+            color={hovered || isActive ? '#FFFFFF' : '#E2E8F0'}
+            metalness={0.98}
+            roughness={0.08}
+            emissive={hovered || isActive ? '#94A3B8' : '#334155'}
+            emissiveIntensity={0.3}
+          />
+        </mesh>
+        {/* Right edge */}
+        <mesh position={[1.7, 0, 0]}>
+          <boxGeometry args={[0.04, 4.2, 0.03]} />
+          <meshStandardMaterial
+            color={hovered || isActive ? '#FFFFFF' : '#E2E8F0'}
+            metalness={0.98}
+            roughness={0.08}
+            emissive={hovered || isActive ? '#94A3B8' : '#334155'}
+            emissiveIntensity={0.3}
+          />
+        </mesh>
+      </group>
 
       {/* 4. Glass Surface Subtle Specular Sheen (Horizontal accent line) */}
       <mesh position={[0, 1.95, 0.07]}>

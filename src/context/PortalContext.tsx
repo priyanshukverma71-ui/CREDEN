@@ -102,6 +102,7 @@ export const PortalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const closeWorkspace = () => {
     setIsWorkspaceOpen(false);
+    setActiveModule('overview');
   };
 
   const toggleReducedMotion = () => {

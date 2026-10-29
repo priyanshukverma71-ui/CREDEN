@@ -40,6 +40,8 @@ export const EnterpriseSidebar: React.FC = () => {
   const {
     activeModule,
     setActiveModule,
+    openWorkspace,
+    closeWorkspace,
     sidebarCollapsed,
     toggleSidebar,
     unreadNotificationCount,
@@ -86,7 +88,12 @@ export const EnterpriseSidebar: React.FC = () => {
   ];
 
   const handleSelectModule = (id: ModuleId) => {
-    setActiveModule(id);
+    if (id === 'overview') {
+      closeWorkspace();
+      setActiveModule('overview');
+    } else {
+      openWorkspace(id);
+    }
   };
 
   return (

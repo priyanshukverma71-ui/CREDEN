@@ -10,6 +10,7 @@ export const CameraController: React.FC = () => {
     setCameraTargetX,
     setScrollProgress,
     setActiveModule,
+    isWorkspaceOpen,
   } = usePortal();
 
   const currentX = useRef(cameraTargetX || 0);
@@ -25,6 +26,9 @@ export const CameraController: React.FC = () => {
   // Map mouse wheel scroll to horizontal camera flight along X
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
+      // If modal workspace pop-up is open, allow standard scrolling inside modal
+      if (isWorkspaceOpen) return;
+
       e.preventDefault();
       const delta = (e.deltaY || e.deltaX) * 0.015;
       const newTarget = Math.max(-20, Math.min(20, targetX.current + delta));
@@ -38,6 +42,7 @@ export const CameraController: React.FC = () => {
 
     // Keyboard Arrow navigation
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (isWorkspaceOpen) return;
       if (e.key === 'ArrowRight') {
         const newTarget = Math.min(20, targetX.current + 4);
         targetX.current = newTarget;
@@ -83,7 +88,7 @@ export const CameraController: React.FC = () => {
       window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('pointerup', handlePointerUp);
     };
-  }, [gl, setCameraTargetX, setScrollProgress]);
+  }, [gl, setCameraTargetX, setScrollProgress, isWorkspaceOpen]);
 
   // Smooth camera frame updates
   useFrame(() => {
