@@ -16,7 +16,6 @@ import {
   AlertTriangle,
   RotateCcw,
   Sparkles,
-  Compass,
   SlidersHorizontal,
   ExternalLink,
   ChevronRight,
@@ -189,34 +188,6 @@ export const EnterpriseTopNav: React.FC<EnterpriseTopNavProps> = ({
 
       {/* Right Actions */}
       <div className="flex items-center gap-2">
-        {/* 3D Spatial Cockpit vs Data View Switcher */}
-        {(() => {
-          const isSpatial = activeModule === 'overview' && viewMode !== 'grid';
-          return (
-            <button
-              onClick={() => {
-                if (!isSpatial) {
-                  setActiveModule('overview');
-                  setViewMode('panoramic');
-                } else {
-                  setViewMode('grid');
-                }
-              }}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-mono transition-all border ${
-                isSpatial
-                  ? 'bg-[#1C2027] text-white border-[#D2D6DC]/60 shadow-sm'
-                  : 'bg-[#16191F] text-[#D2D6DC] border-[#22262C] hover:text-white hover:border-[#38404E]'
-              }`}
-              title="Return to 3D Spatial Panoramic View"
-            >
-              <Compass className={`w-3.5 h-3.5 ${isSpatial ? 'text-emerald-400' : 'text-[#D2D6DC]'}`} />
-              <span className="hidden sm:inline">
-                {isSpatial ? '3D Spatial (Active)' : '3D Spatial View'}
-              </span>
-            </button>
-          );
-        })()}
-
         {/* Role Persona Quick Switcher */}
         <div className="relative" ref={roleMenuRef}>
           <button
