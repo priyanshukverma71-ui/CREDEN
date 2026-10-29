@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { usePortal } from '../../context/PortalContext';
 import { Student } from '../../types';
 import {
   FileUp,
@@ -20,6 +21,7 @@ import { StudentCertificateModal } from './StudentCertificateModal';
 
 export const StudentDataWorkspace: React.FC = () => {
   const { token, user } = useAuth();
+  const { setActiveModule } = usePortal();
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -220,12 +222,7 @@ export const StudentDataWorkspace: React.FC = () => {
           </a>
 
           <button
-            onClick={() => {
-              setWizardStep(1);
-              setBatchResult(null);
-              setPreviewData(null);
-              setUploadWizardOpen(true);
-            }}
+            onClick={() => setActiveModule('submissions')}
             className="px-3.5 py-1.5 rounded-lg bg-platinum hover:bg-white text-midnight text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-sm"
           >
             <FileUp className="w-3.5 h-3.5" />

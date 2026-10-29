@@ -6,54 +6,81 @@
   body {
     background-color: #08090B;
     color: #F1F3F5;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  /* Accessible focus states */
+  *:focus-visible {
+    outline: 2px solid #D2D6DC;
+    outline-offset: 1px;
+  }
 }
 
-/* Smoked glass styling matching the visual identity */
-.glass-panel {
-  background: rgba(17, 19, 23, 0.72);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(212, 215, 220, 0.14);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(241, 243, 245, 0.12);
+/* Restrained Enterprise Surfaces */
+.surface-card {
+  background-color: #14171B;
+  border: 1px solid #22262C;
+  border-radius: 12px;
 }
 
-.glass-panel-elevated {
-  background: rgba(26, 29, 34, 0.85);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(212, 215, 220, 0.28);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(241, 243, 245, 0.2);
+.surface-elevated {
+  background-color: #1A1E24;
+  border: 1px solid #282D35;
+  border-radius: 12px;
 }
 
-.platinum-border-glow {
-  box-shadow: 0 0 20px rgba(212, 215, 220, 0.15), inset 0 0 10px rgba(212, 215, 220, 0.08);
+.surface-subtle {
+  background-color: #111317;
+  border: 1px solid #1E2228;
+  border-radius: 8px;
 }
 
-.platinum-gradient-text {
-  background: linear-gradient(135deg, #FFFFFF 0%, #D4D7DC 50%, #9299A3 100%);
+/* Subtle silver metallic title text */
+.silver-gradient-text {
+  background: linear-gradient(180deg, #F1F3F5 0%, #D2D6DC 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* Custom scrollbars in restrained obsidian styling */
+/* Enterprise scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: #08090B;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1A1D22;
-  border-radius: 3px;
-  border: 1px solid rgba(212, 215, 220, 0.1);
+  background: #22262C;
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #9299A3;
+  background: #3B414C;
+}
+
+/* High-density Enterprise Table styling */
+.enterprise-table th {
+  padding: 0.625rem 1rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #929AA5;
+  border-bottom: 1px solid #22262C;
+  background-color: #111317;
+}
+
+.enterprise-table td {
+  padding: 0.75rem 1rem;
+  font-size: 0.75rem;
+  color: #F1F3F5;
+  border-bottom: 1px solid #1A1E24;
+}
+
+.enterprise-table tr:hover td {
+  background-color: #171A1F;
 }
 
 /* Print layout for Certificates */

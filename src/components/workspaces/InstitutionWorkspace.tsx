@@ -35,7 +35,11 @@ export const InstitutionWorkspace: React.FC = () => {
       });
       if (res.ok) {
         const data = await res.json();
-        setInstitutions(data.data || []);
+        const list = data.data || [];
+        setInstitutions(list);
+        if (list.length > 0 && !selectedInst) {
+          fetchDetail(list[0].id);
+        }
       }
     } catch (e) {
       console.error(e);

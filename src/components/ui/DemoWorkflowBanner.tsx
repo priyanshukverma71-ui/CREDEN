@@ -1,18 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { usePortal } from '../../context/PortalContext';
 import { useAuth } from '../../context/AuthContext';
 import {
   ChevronRight,
   ChevronLeft,
-  RotateCcw,
-  Sparkles,
-  CheckCircle,
+  ChevronDown,
+  ChevronUp,
   ExternalLink,
+  Sparkles,
 } from 'lucide-react';
 
 export const DemoWorkflowBanner: React.FC = () => {
-  const { sihStep, setSihStep, advanceSihStep, openWorkspace } = usePortal();
+  const { sihStep, setSihStep, advanceSihStep, openWorkspace, setActiveModule } = usePortal();
   const { switchDemoRole } = useAuth();
+  const [collapsed, setCollapsed] = useState(false);
 
   const steps = [
     {
@@ -21,7 +22,7 @@ export const DemoWorkflowBanner: React.FC = () => {
       desc: 'Assume DTU Institution Admin persona to manage intake & student data.',
       action: async () => {
         await switchDemoRole('INSTITUTION_ADMIN', '1-10928371');
-        openWorkspace('institutions');
+        setActiveModule('institutions');
       },
       actionLabel: 'Switch to DTU Admin',
     },
@@ -30,7 +31,7 @@ export const DemoWorkflowBanner: React.FC = () => {
       title: 'Upload Synthetic Student Batch',
       desc: 'Open Bulk Upload Assistant to inspect file schema, mapping & validation.',
       action: () => {
-        openWorkspace('students');
+        setActiveModule('submissions');
       },
       actionLabel: 'Open Upload Assistant',
     },
@@ -39,7 +40,7 @@ export const DemoWorkflowBanner: React.FC = () => {
       title: 'Inspect APAAR Field Validation',
       desc: 'Review syntax check, checksum verification and multi-tier duplicate flags.',
       action: () => {
-        openWorkspace('apaar');
+        setActiveModule('apaar');
       },
       actionLabel: 'Inspect APAAR Engine',
     },
@@ -48,7 +49,7 @@ export const DemoWorkflowBanner: React.FC = () => {
       title: 'Identify Intake Discrepancy Alert',
       desc: 'Detect +4 excess admissions breach in B.Tech CSE against approved sanction limit.',
       action: () => {
-        openWorkspace('admissions');
+        setActiveModule('admissions');
       },
       actionLabel: 'View Admission Discrepancy',
     },
@@ -57,7 +58,7 @@ export const DemoWorkflowBanner: React.FC = () => {
       title: 'Submit Correction or Review',
       desc: 'Correct invalid student record or submit explanation for compliance audit.',
       action: () => {
-        openWorkspace('students');
+        setActiveModule('students');
       },
       actionLabel: 'View Correction Queue',
     },
@@ -67,7 +68,7 @@ export const DemoWorkflowBanner: React.FC = () => {
       desc: 'Assume AICTE Central Verification Officer role to review flagged cases.',
       action: async () => {
         await switchDemoRole('VERIFICATION_OFFICER');
-        openWorkspace('compliance');
+        setActiveModule('compliance');
       },
       actionLabel: 'Switch to Officer',
     },
@@ -76,7 +77,7 @@ export const DemoWorkflowBanner: React.FC = () => {
       title: 'Review Evidence & Resolve Duplicate',
       desc: 'Inspect Priya Sharma concurrent enrolment across DTU & COEP; apply resolution.',
       action: () => {
-        openWorkspace('duplicates');
+        setActiveModule('duplicates');
       },
       actionLabel: 'Inspect Duplicate Case',
     },
@@ -85,16 +86,16 @@ export const DemoWorkflowBanner: React.FC = () => {
       title: 'Inspect Updated Dashboard Metrics',
       desc: 'Verify that resolution updates national KPI metrics and capacity utilization in real time.',
       action: () => {
-        openWorkspace('overview');
+        setActiveModule('overview');
       },
-      actionLabel: 'Check Overview HUD',
+      actionLabel: 'Check Executive Cockpit',
     },
     {
       num: 9,
       title: 'Verify Permitted Record Claim (QR)',
       desc: 'Scan or query student QR code with minimal disclosure of sensitive data.',
       action: () => {
-        openWorkspace('verification');
+        setActiveModule('verification');
       },
       actionLabel: 'Open Verification Portal',
     },
@@ -103,7 +104,7 @@ export const DemoWorkflowBanner: React.FC = () => {
       title: 'Review Tamper-Evident Audit Trail',
       desc: 'Inspect SHA-256 cryptographic hash-chain across all recorded actions.',
       action: () => {
-        openWorkspace('audit');
+        setActiveModule('audit');
       },
       actionLabel: 'Inspect Audit Chain',
     },
@@ -112,7 +113,7 @@ export const DemoWorkflowBanner: React.FC = () => {
       title: 'Export Compliance & Enrolment Report',
       desc: 'Generate authorized CSV export with full institutional and quota provenance.',
       action: () => {
-        openWorkspace('reports');
+        setActiveModule('reports');
       },
       actionLabel: 'Export AICTE Report',
     },
@@ -121,57 +122,81 @@ export const DemoWorkflowBanner: React.FC = () => {
   const current = steps[sihStep - 1] || steps[0];
 
   return (
-    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 w-[95%] max-w-4xl glass-panel-elevated rounded-2xl px-5 py-3 border border-glass-border shadow-glass-panel">
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-        {/* Step Info */}
-        <div className="flex items-center gap-3 w-full sm:w-auto">
-          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-platinum text-midnight font-bold text-xs flex items-center justify-center font-mono shadow-[0_0_10px_rgba(212,215,220,0.4)]">
-            {current.num}
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-highlight-silver">
-                {current.title}
-              </span>
-              <span className="text-[10px] text-liquid-silver font-mono">
-                [Step {current.num} of 11]
-              </span>
+    <div className="fixed bottom-3 left-1/2 -translate-x-1/2 z-40 w-[95%] max-w-4xl select-none">
+      <div className="surface-elevated rounded-xl px-4 py-2.5 border border-[#2B313C] shadow-2xl transition-all">
+        <div className="flex items-center justify-between gap-3">
+          {/* Step Info */}
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="flex-shrink-0 w-7 h-7 rounded-full bg-[#D2D6DC] text-[#08090B] font-bold text-xs flex items-center justify-center font-mono shadow-sm">
+              {current.num}
             </div>
-            <p className="text-[11px] text-liquid-silver line-clamp-1 max-w-lg">
-              {current.desc}
-            </p>
+            {!collapsed && (
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold text-[#F1F3F5] truncate">
+                    {current.title}
+                  </span>
+                  <span className="text-[10px] text-[#929AA5] font-mono whitespace-nowrap">
+                    [Evaluation Step {current.num}/11]
+                  </span>
+                </div>
+                <p className="text-[11px] text-[#929AA5] truncate max-w-lg hidden sm:block">
+                  {current.desc}
+                </p>
+              </div>
+            )}
+            {collapsed && (
+              <span className="text-xs text-[#929AA5] font-mono">
+                Evaluation Step {current.num}/11: {current.title}
+              </span>
+            )}
           </div>
-        </div>
 
-        {/* Action button & navigation */}
-        <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-          <button
-            onClick={current.action}
-            className="px-3.5 py-1.5 rounded-lg bg-platinum hover:bg-white text-midnight font-medium text-xs flex items-center gap-1.5 shadow-sm transition-all"
-          >
-            <span>{current.actionLabel}</span>
-            <ExternalLink className="w-3.5 h-3.5" />
-          </button>
+          {/* Action button & navigation */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {!collapsed && (
+              <button
+                onClick={current.action}
+                className="px-3 py-1.5 rounded-lg bg-[#D2D6DC] hover:bg-white text-[#08090B] font-medium text-xs flex items-center gap-1.5 shadow-sm transition-all"
+              >
+                <span>{current.actionLabel}</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </button>
+            )}
 
-          <div className="flex items-center border border-glass-border rounded-lg overflow-hidden bg-obsidian">
+            <div className="flex items-center border border-[#262C36] rounded-lg overflow-hidden bg-[#111317]">
+              <button
+                disabled={sihStep <= 1}
+                onClick={() => setSihStep(Math.max(1, sihStep - 1))}
+                className="p-1.5 text-[#929AA5] hover:text-[#F1F3F5] hover:bg-[#1A1E24] disabled:opacity-30"
+                title="Previous evaluation step"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" />
+              </button>
+              <span className="px-2 text-[10px] text-[#929AA5] font-mono">
+                {sihStep}/11
+              </span>
+              <button
+                disabled={sihStep >= 11}
+                onClick={() => setSihStep(Math.min(11, sihStep + 1))}
+                className="p-1.5 text-[#929AA5] hover:text-[#F1F3F5] hover:bg-[#1A1E24] disabled:opacity-30"
+                title="Next evaluation step"
+              >
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            {/* Collapse toggle */}
             <button
-              disabled={sihStep <= 1}
-              onClick={() => setSihStep(Math.max(1, sihStep - 1))}
-              className="p-1.5 text-liquid-silver hover:text-highlight-silver hover:bg-graphite/40 disabled:opacity-30"
-              title="Previous demonstration step"
+              onClick={() => setCollapsed(!collapsed)}
+              className="p-1 rounded-md text-[#929AA5] hover:text-[#F1F3F5] hover:bg-[#1A1E24]"
+              title={collapsed ? 'Expand guide' : 'Minimize guide'}
             >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-            <span className="px-2 text-[10px] text-liquid-silver font-mono">
-              {sihStep}/11
-            </span>
-            <button
-              disabled={sihStep >= 11}
-              onClick={() => setSihStep(Math.min(11, sihStep + 1))}
-              className="p-1.5 text-liquid-silver hover:text-highlight-silver hover:bg-graphite/40 disabled:opacity-30"
-              title="Next demonstration step"
-            >
-              <ChevronRight className="w-4 h-4" />
+              {collapsed ? (
+                <ChevronUp className="w-4 h-4" />
+              ) : (
+                <ChevronDown className="w-4 h-4" />
+              )}
             </button>
           </div>
         </div>

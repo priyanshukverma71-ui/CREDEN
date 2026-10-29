@@ -2,12 +2,20 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { ModuleId, NotificationItem } from '../types';
 import { useAuth } from './AuthContext';
 
+export type ViewMode = 'enterprise' | 'panoramic';
+
 interface PortalContextType {
   activeModule: ModuleId;
   setActiveModule: (mod: ModuleId) => void;
   isWorkspaceOpen: boolean;
   openWorkspace: (mod: ModuleId) => void;
   closeWorkspace: () => void;
+  viewMode: ViewMode;
+  setViewMode: (mode: ViewMode) => void;
+  toggleViewMode: () => void;
+  sidebarCollapsed: boolean;
+  setSidebarCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
+  toggleSidebar: () => void;
   scrollProgress: number;
   setScrollProgress: (progress: number) => void;
   cameraTargetX: number;
@@ -27,6 +35,7 @@ export const MODULE_COORDINATES: Record<ModuleId, number> = {
   overview: 0,
   institutions: -18,
   students: -14,
+  submissions: -12,
   apaar: -10,
   admissions: -6,
   duplicates: -2,
@@ -42,7 +51,9 @@ const PortalContext = createContext<PortalContextType | undefined>(undefined);
 
 export const PortalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [activeModule, setActiveModule] = useState<ModuleId>('overview');
-  const [isWorkspaceOpen, setIsWorkspaceOpen] = useState<boolean>(false);
+  const [isWorkspaceOpen, setIsWorkspaceOpen] = useState<boolean>(true);
+  const [viewMode, setViewMode] = useState<ViewMode>('enterprise');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
   const [scrollProgress, setScrollProgress] = useState<number>(0.5); // centered at overview initially
   const [cameraTargetX, setCameraTargetX] = useState<number>(0);
   const [isReducedMotion, setIsReducedMotion] = useState<boolean>(false);
@@ -50,6 +61,14 @@ export const PortalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const [sihStep, setSihStep] = useState<number>(1);
   const { token } = useAuth();
+
+  const toggleViewMode = () => {
+    setViewMode((prev) => (prev === 'enterprise' ? 'panoramic' : 'enterprise'));
+  };
+
+  const toggleSidebar = () => {
+    setSidebarCollapsed((prev) => !prev);
+  };
 
   // Fetch notifications
   const fetchNotifications = async () => {
@@ -115,6 +134,12 @@ export const PortalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         isWorkspaceOpen,
         openWorkspace,
         closeWorkspace,
+        viewMode,
+        setViewMode,
+        toggleViewMode,
+        sidebarCollapsed,
+        setSidebarCollapsed,
+        toggleSidebar,
         scrollProgress,
         setScrollProgress,
         cameraTargetX,

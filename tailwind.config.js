@@ -7,30 +7,35 @@ export default {
   theme: {
     extend: {
       colors: {
+        canvas: '#08090B',
+        surface: '#14171B',
+        'surface-elevated': '#1A1E24',
+        'surface-hover': '#20252D',
+        'border-enterprise': '#22262C',
+        'border-subtle': 'rgba(210, 214, 220, 0.12)',
+        'silver-accent': '#D2D6DC',
+        'text-secondary': '#929AA5',
+        'text-primary': '#F1F3F5',
+        // Backward-compatible color aliases
         midnight: '#08090B',
-        obsidian: '#111317',
-        graphite: '#1A1D22',
-        platinum: '#D4D7DC',
-        'liquid-silver': '#9299A3',
+        obsidian: '#14171B',
+        graphite: '#1A1E24',
+        platinum: '#D2D6DC',
+        'liquid-silver': '#929AA5',
         'highlight-silver': '#F1F3F5',
-        // dark glass tones
-        'glass-black': 'rgba(8, 9, 11, 0.78)',
-        'glass-border': 'rgba(212, 215, 220, 0.16)',
-        'glass-border-bright': 'rgba(212, 215, 220, 0.4)',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-        mono: ['JetBrains Mono', 'Fira Code', 'Courier New', 'monospace'],
+        sans: ['Inter', 'IBM Plex Sans', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
       boxShadow: {
-        'platinum-glow': '0 0 25px rgba(212, 215, 220, 0.12)',
-        'glass-panel': '0 20px 50px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(241, 243, 245, 0.15)',
-        'active-pod': '0 10px 40px rgba(212, 215, 220, 0.18), inset 0 0 15px rgba(212, 215, 220, 0.1)',
+        'enterprise': '0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.4)',
+        'enterprise-md': '0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.5)',
+        'enterprise-lg': '0 10px 15px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -4px rgba(0, 0, 0, 0.6)',
       },
-      backdropBlur: {
-        'xs': '2px',
-        'md': '12px',
-        'xl': '24px',
+      borderRadius: {
+        'enterprise': '8px',
+        'enterprise-lg': '12px',
       }
     },
   },

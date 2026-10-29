@@ -199,6 +199,7 @@ export type ModuleId =
   | 'overview'
   | 'institutions'
   | 'students'
+  | 'submissions'
   | 'apaar'
   | 'admissions'
   | 'duplicates'
