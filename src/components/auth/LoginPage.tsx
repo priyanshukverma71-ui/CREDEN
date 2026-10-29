@@ -2,22 +2,20 @@ import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { UserRole } from '../../types';
 import {
-  ShieldCheck,
-  Building,
-  Layers,
-  UserCheck,
-  SlidersHorizontal,
-  CheckCircle2,
-  GraduationCap,
-  Lock,
-  Mail,
+  Shield,
   Eye,
   EyeOff,
   ArrowRight,
-  Sparkles,
   AlertCircle,
-  KeyRound,
-  RotateCcw,
+  CheckCircle2,
+  Lock,
+  Mail,
+  ChevronDown,
+  Building2,
+  Users,
+  FileCheck,
+  Scale,
+  Search,
 } from 'lucide-react';
 
 interface LoginPageProps {
@@ -25,76 +23,82 @@ interface LoginPageProps {
   onContinueAsGuest?: () => void;
 }
 
+interface DemoRoleOption {
+  role: UserRole;
+  label: string;
+  scope: string;
+  institutionCode?: string;
+}
+
 export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess, onContinueAsGuest }) => {
   const { login, switchDemoRole } = useAuth();
 
-  const [activeTab, setActiveTab] = useState<'LOGIN' | 'RECOVERY'>('LOGIN');
-  const [email, setEmail] = useState('aicte.admin@aicte-india.org');
-  const [password, setPassword] = useState('CredenSecure#2024');
+  // Authentication mode: 'SIGN_IN' | 'RECOVERY'
+  const [authMode, setAuthMode] = useState<'SIGN_IN' | 'RECOVERY'>('SIGN_IN');
+
+  // Sign-in form state (empty by default as required)
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [keepSignedIn, setKeepSignedIn] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Recovery state
+  // Password recovery state
   const [recoveryEmail, setRecoveryEmail] = useState('');
-  const [recoveryMessage, setRecoveryMessage] = useState<string | null>(null);
   const [recoveryLoading, setRecoveryLoading] = useState(false);
+  const [recoverySuccess, setRecoverySuccess] = useState<string | null>(null);
+  const [recoveryError, setRecoveryError] = useState<string | null>(null);
 
-  const demoAccounts = [
+  // Demo access state
+  const demoRoles: DemoRoleOption[] = [
     {
-      role: 'AICTE_ADMIN' as UserRole,
-      title: 'AICTE Administrator',
-      subtitle: 'Dr. Rajiv V. (National Oversight)',
-      email: 'aicte.admin@aicte-india.org',
-      icon: ShieldCheck,
+      role: 'AICTE_ADMIN',
+      label: 'AICTE Administrator',
+      scope: 'National regulatory oversight and policy enforcement',
     },
     {
-      role: 'INSTITUTION_ADMIN' as UserRole,
-      title: 'Institution Admin (DTU)',
-      subtitle: 'Prof. S. K. Raman (Dean Academic)',
-      email: 'admin@dtu.ac.in',
-      icon: Building,
+      role: 'INSTITUTION_ADMIN',
+      label: 'Institution Administrator',
+      scope: 'Approved intake management and student data submissions',
+      institutionCode: '1-10928371',
     },
     {
-      role: 'DATA_ENTRY_OPERATOR' as UserRole,
-      title: 'Data Entry Operator',
-      subtitle: 'Meera Joshi (DTU Academic Officer)',
-      email: 'operator@dtu.ac.in',
-      icon: Layers,
+      role: 'DATA_ENTRY_OPERATOR',
+      label: 'Data Entry Operator',
+      scope: 'Batch CSV ingestion, record validation, and error correction',
+      institutionCode: '1-10928371',
     },
     {
-      role: 'VERIFICATION_OFFICER' as UserRole,
-      title: 'Verification Officer',
-      subtitle: 'S. Chandrasekhar (AICTE Verification Bureau)',
-      email: 'officer@aicte.gov.in',
-      icon: UserCheck,
+      role: 'VERIFICATION_OFFICER',
+      label: 'Verification Officer',
+      scope: 'Duplicate investigation and intake discrepancy review',
     },
     {
-      role: 'AUDITOR' as UserRole,
-      title: 'National Auditor (CAG)',
-      subtitle: 'R. K. Mukherjee (Academic Audit)',
-      email: 'auditor@cag.gov.in',
-      icon: SlidersHorizontal,
+      role: 'AUDITOR',
+      label: 'Auditor',
+      scope: 'Cryptographic SHA-256 audit trail and tamper log inspection',
     },
     {
-      role: 'EXTERNAL_VERIFIER' as UserRole,
-      title: 'Authorized Verifier',
-      subtitle: 'Vikramaditya Roy (TCS Background Screening)',
-      email: 'hr@tcs.com',
-      icon: CheckCircle2,
-    },
-    {
-      role: 'STUDENT' as UserRole,
-      title: 'Student Profile',
-      subtitle: 'Aarav Sharma (B.Tech CSE DTU)',
-      email: 'student@aicte.gov.in',
-      icon: GraduationCap,
+      role: 'EXTERNAL_VERIFIER',
+      label: 'Authorised Verifier',
+      scope: 'Zero-knowledge minimal disclosure record checking',
     },
   ];
 
-  const handleLoginSubmit = async (e: React.FormEvent) => {
+  const [selectedDemoRole, setSelectedDemoRole] = useState<UserRole>('AICTE_ADMIN');
+  const [demoLoading, setDemoLoading] = useState(false);
+
+  // Submit standard institutional login
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
+
+    if (!email.trim() || !password) {
+      setErrorMessage('Please provide both your institutional email and account password.');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -109,34 +113,26 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess, onContinueAsGue
         login(data.token, data.user);
         if (onSuccess) onSuccess();
       } else {
-        setErrorMessage(data.error || 'Authentication failed. Please verify credentials.');
+        setErrorMessage(data.error || 'Invalid institutional credentials. Please verify and try again.');
       }
     } catch (err: any) {
-      setErrorMessage(err.message || 'Unable to connect to authentication bureau.');
+      setErrorMessage('Authentication service temporarily unreachable. Please check your connection.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleQuickLogin = async (account: typeof demoAccounts[0]) => {
-    setEmail(account.email);
-    setPassword('CredenSecure#2024');
-    setLoading(true);
-    setErrorMessage(null);
-
-    try {
-      await switchDemoRole(account.role);
-      if (onSuccess) onSuccess();
-    } catch (err: any) {
-      setErrorMessage('Failed to sign in demo account: ' + err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleRecoverySubmit = async (e: React.FormEvent) => {
+  // Submit password recovery
+  const handlePasswordRecovery = async (e: React.FormEvent) => {
     e.preventDefault();
-    setRecoveryMessage(null);
+    setRecoveryError(null);
+    setRecoverySuccess(null);
+
+    if (!recoveryEmail.trim()) {
+      setRecoveryError('Please enter your registered institutional email address.');
+      return;
+    }
+
     setRecoveryLoading(true);
 
     try {
@@ -147,300 +143,365 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess, onContinueAsGue
       });
 
       const data = await res.json();
-      setRecoveryMessage(data.message || 'Recovery instructions dispatched.');
+      if (res.ok) {
+        setRecoverySuccess(
+          data.message || 'If an account exists for this address, password reset instructions have been dispatched.'
+        );
+      } else {
+        setRecoveryError(data.error || 'Unable to process recovery request.');
+      }
     } catch (err: any) {
-      setRecoveryMessage('Service unavailable. Try again later.');
+      setRecoveryError('Recovery service unavailable. Please contact institutional support.');
     } finally {
       setRecoveryLoading(false);
     }
   };
 
+  // Execute demo role access
+  const handleEnterDemoRole = async () => {
+    const target = demoRoles.find((r) => r.role === selectedDemoRole);
+    if (!target) return;
+
+    setDemoLoading(true);
+    setErrorMessage(null);
+
+    try {
+      await switchDemoRole(target.role, target.institutionCode);
+      if (onSuccess) onSuccess();
+    } catch (err: any) {
+      setErrorMessage(`Demo access error: ${err.message}`);
+    } finally {
+      setDemoLoading(false);
+    }
+  };
+
+  const selectedRoleMeta = demoRoles.find((r) => r.role === selectedDemoRole) || demoRoles[0];
+
   return (
-    <div className="relative min-h-screen w-full flex flex-col justify-between p-4 sm:p-8 bg-[#08090B] text-[#F1F3F5] overflow-y-auto selection:bg-platinum selection:text-midnight">
-      {/* Background ambient radial gradients matching the visual identity */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-gradient-to-b from-graphite/30 via-obsidian/20 to-transparent blur-3xl" />
-        <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-obsidian/40 to-transparent blur-2xl" />
-      </div>
-
-      {/* Top Header Branding */}
-      <header className="relative z-10 flex items-center justify-between max-w-6xl w-full mx-auto pb-6 border-b border-glass-border">
-        <div className="flex items-center gap-3.5">
-          <img
-            src="/emblem.svg"
-            alt="National Emblem of India"
-            className="w-10 h-12 object-contain drop-shadow-[0_0_12px_rgba(212,215,220,0.3)]"
-          />
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold font-mono platinum-gradient-text tracking-wider">
-                CREDEN
-              </span>
-              <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-graphite border border-glass-border text-platinum">
-                AICTE Official
-              </span>
+    <div className="min-h-screen w-full flex flex-col justify-between bg-[#0B0C0E] text-[#F1F2F4] select-none font-sans">
+      {/* Top Header */}
+      <header className="w-full border-b border-[#30343A] bg-[#0B0C0E]">
+        <div className="max-w-[1140px] w-full mx-auto px-4 sm:px-6 py-5 flex items-center justify-between">
+          {/* Left: Emblem, Brand & Subtitle */}
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-[#141619] border border-[#30343A] flex items-center justify-center flex-shrink-0">
+              <Shield className="w-4 h-4 text-[#D9DCE1]" />
             </div>
-            <p className="text-xs text-liquid-silver tracking-tight">
-              APAAR Based Student Data Management & Verification Portal
-            </p>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-base font-bold font-mono tracking-wider text-[#F1F2F4]">
+                  CREDEN
+                </span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#141619] text-[#9BA1AA] border border-[#30343A]">
+                  Institutional Portal
+                </span>
+              </div>
+              <p className="text-xs text-[#9BA1AA] tracking-tight">
+                Academic Data Management & Verification
+              </p>
+            </div>
           </div>
-        </div>
 
-        {onContinueAsGuest && (
-          <button
-            onClick={onContinueAsGuest}
-            className="text-xs text-liquid-silver hover:text-platinum flex items-center gap-1.5 transition-colors"
-          >
-            <span>Explore as Public Verifier</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        )}
+          {/* Right: Public Verification secondary link */}
+          {onContinueAsGuest && (
+            <button
+              onClick={onContinueAsGuest}
+              className="text-xs text-[#9BA1AA] hover:text-[#F1F2F4] flex items-center gap-1.5 transition-colors duration-150 py-1 px-2 rounded-md hover:bg-[#141619]"
+            >
+              <span>Public Verification</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
       </header>
 
-      {/* Center Authentication Console */}
-      <main className="relative z-10 max-w-5xl w-full mx-auto my-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column: Sign-in / Recovery Box (7 cols) */}
-        <div className="lg:col-span-7 glass-panel-elevated rounded-3xl p-6 sm:p-8 border border-glass-border-bright shadow-glass-panel relative">
-          {/* Tabs */}
-          <div className="flex items-center justify-between pb-4 border-b border-glass-border mb-6">
-            <div className="flex items-center gap-4">
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveTab('LOGIN');
-                  setErrorMessage(null);
-                }}
-                className={`text-xs font-semibold uppercase tracking-wider pb-1 transition-colors relative ${
-                  activeTab === 'LOGIN'
-                    ? 'text-highlight-silver'
-                    : 'text-liquid-silver hover:text-highlight-silver'
-                }`}
-              >
-                Institutional Sign In
-                {activeTab === 'LOGIN' && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-platinum" />
-                )}
-              </button>
+      {/* Main Authentication Container */}
+      <main className="flex-1 flex items-center justify-center py-10 sm:py-14 px-4 sm:px-6">
+        <div className="max-w-[1140px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* LEFT SECTION — SIGN IN (approx 60% / 7 cols) */}
+          <div className="lg:col-span-7 bg-[#141619] border border-[#30343A] rounded-xl p-6 sm:p-8 shadow-sm">
+            {authMode === 'SIGN_IN' ? (
+              <div>
+                {/* Header */}
+                <div className="mb-6">
+                  <h1 className="text-2xl font-semibold text-[#F1F2F4] tracking-tight">
+                    Sign in to CREDEN
+                  </h1>
+                  <p className="text-sm text-[#9BA1AA] mt-1">
+                    Access your institution’s academic records and verification services.
+                  </p>
+                </div>
 
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveTab('RECOVERY');
-                  setErrorMessage(null);
-                }}
-                className={`text-xs font-semibold uppercase tracking-wider pb-1 transition-colors relative ${
-                  activeTab === 'RECOVERY'
-                    ? 'text-highlight-silver'
-                    : 'text-liquid-silver hover:text-highlight-silver'
-                }`}
-              >
-                Credential Recovery
-                {activeTab === 'RECOVERY' && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-platinum" />
+                {/* Error Banner */}
+                {errorMessage && (
+                  <div
+                    role="alert"
+                    className="mb-5 p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-start gap-2.5"
+                  >
+                    <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-rose-400" />
+                    <span>{errorMessage}</span>
+                  </div>
                 )}
-              </button>
-            </div>
 
-            <span className="text-[10px] text-liquid-silver font-mono">
-              AICTE-AUTH-V2.1
-            </span>
+                {/* Form */}
+                <form onSubmit={handleSignIn} className="space-y-4">
+                  {/* Field: Institutional email or officer ID */}
+                  <div>
+                    <label
+                      htmlFor="institutional-email"
+                      className="block text-xs font-medium text-[#F1F2F4] mb-1.5"
+                    >
+                      Institutional email or officer ID
+                    </label>
+                    <input
+                      id="institutional-email"
+                      type="text"
+                      autoComplete="username"
+                      required
+                      placeholder="name@institution.ac.in or officer ID"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full h-11 px-3.5 rounded-lg bg-[#0B0C0E] border border-[#30343A] text-sm text-[#F1F2F4] placeholder:text-[#5F6672] focus:outline-none focus:border-[#D9DCE1] transition-colors duration-150"
+                    />
+                  </div>
+
+                  {/* Field: Password */}
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label
+                        htmlFor="account-password"
+                        className="text-xs font-medium text-[#F1F2F4]"
+                      >
+                        Password
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAuthMode('RECOVERY');
+                          setErrorMessage(null);
+                        }}
+                        className="text-xs text-[#9BA1AA] hover:text-[#F1F2F4] transition-colors duration-150"
+                      >
+                        Forgot password?
+                      </button>
+                    </div>
+                    <div className="relative">
+                      <input
+                        id="account-password"
+                        type={showPassword ? 'text' : 'password'}
+                        autoComplete="current-password"
+                        required
+                        placeholder="Enter password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full h-11 pl-3.5 pr-10 rounded-lg bg-[#0B0C0E] border border-[#30343A] text-sm text-[#F1F2F4] placeholder:text-[#5F6672] focus:outline-none focus:border-[#D9DCE1] transition-colors duration-150"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        aria-label={showPassword ? 'Hide password' : 'Show password'}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9BA1AA] hover:text-[#F1F2F4] p-1 transition-colors duration-150"
+                      >
+                        {showPassword ? (
+                          <EyeOff className="w-4 h-4" />
+                        ) : (
+                          <Eye className="w-4 h-4" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Session Persistence Checkbox */}
+                  <div className="pt-1">
+                    <label className="flex items-start gap-2.5 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={keepSignedIn}
+                        onChange={(e) => setKeepSignedIn(e.target.checked)}
+                        className="mt-0.5 w-4 h-4 rounded bg-[#0B0C0E] border-[#30343A] text-[#D9DCE1] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-[#D9DCE1]"
+                      />
+                      <div className="text-xs leading-normal">
+                        <span className="text-[#F1F2F4] font-medium">Keep me signed in</span>
+                        <p className="text-[11px] text-[#9BA1AA] mt-0.5">
+                          Maintains an 8-hour authorised session on this trusted institutional device.
+                        </p>
+                      </div>
+                    </label>
+                  </div>
+
+                  {/* Submit Button */}
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full h-11 rounded-lg bg-[#D9DCE1] hover:bg-white text-[#0B0C0E] text-sm font-semibold flex items-center justify-center gap-2 transition-colors duration-150 shadow-sm disabled:opacity-50"
+                    >
+                      {loading ? (
+                        <span className="flex items-center gap-2">
+                          <span className="w-4 h-4 border-2 border-[#0B0C0E] border-t-transparent rounded-full animate-spin" />
+                          <span>Signing in...</span>
+                        </span>
+                      ) : (
+                        <span>Sign in</span>
+                      )}
+                    </button>
+                  </div>
+
+                  {/* Security Note */}
+                  <p className="text-[11px] text-[#9BA1AA] text-center pt-2 leading-relaxed">
+                    Access is restricted to authorised institutional and regulatory personnel.
+                  </p>
+                </form>
+              </div>
+            ) : (
+              /* RECOVERY WORKFLOW */
+              <div>
+                <div className="mb-6">
+                  <h1 className="text-2xl font-semibold text-[#F1F2F4] tracking-tight">
+                    Reset your password
+                  </h1>
+                  <p className="text-sm text-[#9BA1AA] mt-1">
+                    Enter your registered institutional email to receive verification and reset instructions.
+                  </p>
+                </div>
+
+                {recoverySuccess && (
+                  <div className="mb-5 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5 text-emerald-400" />
+                    <span>{recoverySuccess}</span>
+                  </div>
+                )}
+
+                {recoveryError && (
+                  <div className="mb-5 p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-start gap-2.5">
+                    <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-rose-400" />
+                    <span>{recoveryError}</span>
+                  </div>
+                )}
+
+                <form onSubmit={handlePasswordRecovery} className="space-y-4">
+                  <div>
+                    <label
+                      htmlFor="recovery-email"
+                      className="block text-xs font-medium text-[#F1F2F4] mb-1.5"
+                    >
+                      Registered institutional email
+                    </label>
+                    <input
+                      id="recovery-email"
+                      type="email"
+                      required
+                      placeholder="e.g. administrator@institution.ac.in"
+                      value={recoveryEmail}
+                      onChange={(e) => setRecoveryEmail(e.target.value)}
+                      className="w-full h-11 px-3.5 rounded-lg bg-[#0B0C0E] border border-[#30343A] text-sm text-[#F1F2F4] placeholder:text-[#5F6672] focus:outline-none focus:border-[#D9DCE1] transition-colors duration-150"
+                    />
+                  </div>
+
+                  <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+                    <button
+                      type="submit"
+                      disabled={recoveryLoading}
+                      className="w-full sm:flex-1 h-11 rounded-lg bg-[#D9DCE1] hover:bg-white text-[#0B0C0E] text-sm font-semibold flex items-center justify-center gap-2 transition-colors duration-150 disabled:opacity-50"
+                    >
+                      {recoveryLoading ? 'Sending...' : 'Send reset instructions'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAuthMode('SIGN_IN');
+                        setRecoveryError(null);
+                        setRecoverySuccess(null);
+                      }}
+                      className="w-full sm:w-auto px-4 h-11 rounded-lg border border-[#30343A] text-[#F1F2F4] text-xs font-medium hover:bg-[#1C1F24] transition-colors duration-150"
+                    >
+                      Back to sign in
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
           </div>
 
-          {/* Form 1: LOGIN */}
-          {activeTab === 'LOGIN' && (
-            <form onSubmit={handleLoginSubmit} className="space-y-4">
-              {errorMessage && (
-                <div className="p-3.5 rounded-xl bg-red-950/40 border border-glass-border flex items-start gap-2.5 text-xs text-highlight-silver animate-in fade-in">
-                  <AlertCircle className="w-4 h-4 text-platinum flex-shrink-0 mt-0.5" />
-                  <span>{errorMessage}</span>
-                </div>
-              )}
+          {/* RIGHT SECTION — OPTIONAL DEMO ACCESS (approx 40% / 5 cols) */}
+          <div className="lg:col-span-5 bg-[#141619] border border-[#30343A] rounded-xl p-6 sm:p-7 flex flex-col justify-between shadow-sm">
+            <div>
+              {/* Header */}
+              <div className="flex items-center justify-between pb-3 border-b border-[#30343A] mb-4">
+                <span className="text-sm font-semibold text-[#F1F2F4]">
+                  Demo access
+                </span>
+                <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-[#1C1F24] text-[#9BA1AA] border border-[#30343A]">
+                  Demo environment
+                </span>
+              </div>
 
-              <div>
-                <label className="text-xs text-liquid-silver block mb-1.5 font-medium">
-                  Registered Institutional Email / Officer ID
+              <p className="text-xs text-[#9BA1AA] leading-relaxed mb-4">
+                Select an institutional persona to evaluate role-scoped workflows, compliance monitoring, and verification claims. Entering a demo role does not authenticate a live official account.
+              </p>
+
+              {/* Compact Role Selector */}
+              <div className="space-y-1.5 mb-5">
+                <label className="block text-[11px] font-medium uppercase tracking-wider text-[#9BA1AA] font-mono">
+                  Select Evaluation Role
                 </label>
                 <div className="relative">
-                  <Mail className="w-4 h-4 text-liquid-silver absolute left-3.5 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="email"
-                    required
-                    placeholder="e.g. aicte.admin@aicte-india.org"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 text-xs rounded-xl bg-obsidian border border-glass-border text-highlight-silver placeholder:text-liquid-silver/50 focus:border-platinum outline-none transition-colors"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs text-liquid-silver font-medium">
-                    Account Password
-                  </label>
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab('RECOVERY')}
-                    className="text-[11px] text-liquid-silver hover:text-platinum hover:underline"
+                  <select
+                    value={selectedDemoRole}
+                    onChange={(e) => setSelectedDemoRole(e.target.value as UserRole)}
+                    className="w-full h-11 px-3.5 pr-8 rounded-lg bg-[#0B0C0E] border border-[#30343A] text-xs font-medium text-[#F1F2F4] focus:outline-none focus:border-[#D9DCE1] transition-colors duration-150 appearance-none cursor-pointer"
                   >
-                    Forgot password?
-                  </button>
-                </div>
-                <div className="relative">
-                  <Lock className="w-4 h-4 text-liquid-silver absolute left-3.5 top-1/2 -translate-y-1/2" />
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    required
-                    placeholder="••••••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-10 pr-10 py-2.5 text-xs rounded-xl bg-obsidian border border-glass-border text-highlight-silver placeholder:text-liquid-silver/50 focus:border-platinum outline-none transition-colors"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-liquid-silver hover:text-white"
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
+                    {demoRoles.map((r) => (
+                      <option key={r.role} value={r.role} className="bg-[#141619] text-[#F1F2F4]">
+                        {r.label}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="w-4 h-4 text-[#9BA1AA] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
               </div>
 
-              <div className="flex items-center justify-between text-xs text-liquid-silver pt-1">
-                <label className="flex items-center gap-2 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    defaultChecked
-                    className="w-3.5 h-3.5 rounded bg-obsidian border-glass-border accent-platinum"
-                  />
-                  <span>Maintain 8-hour authorized session</span>
-                </label>
-                <span className="font-mono text-[10px]">TLS 1.3 / AES-256</span>
+              {/* Role Scope Description */}
+              <div className="p-3 rounded-lg bg-[#0B0C0E] border border-[#30343A] mb-5">
+                <div className="text-[10px] font-mono uppercase tracking-wider text-[#9BA1AA] mb-0.5">
+                  Authorised Scope
+                </div>
+                <div className="text-xs text-[#F1F2F4] leading-snug">
+                  {selectedRoleMeta.scope}
+                </div>
               </div>
+            </div>
 
+            {/* Explicit Action Button */}
+            <div>
               <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-3 rounded-xl bg-platinum hover:bg-white text-midnight font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-platinum-glow disabled:opacity-50 mt-4"
+                type="button"
+                onClick={handleEnterDemoRole}
+                disabled={demoLoading}
+                className="w-full h-11 rounded-lg bg-[#1C1F24] hover:bg-[#252A32] text-[#F1F2F4] border border-[#30343A] hover:border-[#D9DCE1] text-xs font-semibold flex items-center justify-center gap-2 transition-colors duration-150 disabled:opacity-50"
               >
-                {loading ? (
-                  <span>Authenticating Credentials...</span>
+                {demoLoading ? (
+                  <span>Preparing workspace...</span>
                 ) : (
                   <>
-                    <span>Sign In to Academic Governance Console</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <span>Enter as {selectedRoleMeta.label}</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-[#9BA1AA]" />
                   </>
                 )}
               </button>
-            </form>
-          )}
-
-          {/* Form 2: RECOVERY */}
-          {activeTab === 'RECOVERY' && (
-            <form onSubmit={handleRecoverySubmit} className="space-y-4">
-              <p className="text-xs text-liquid-silver leading-relaxed">
-                Enter your institutional email registered with the All India Council for Technical Education. A secure recovery OTP and cryptographic identity link will be dispatched.
-              </p>
-
-              {recoveryMessage && (
-                <div className="p-3.5 rounded-xl bg-platinum/10 border border-platinum/30 text-xs text-highlight-silver">
-                  {recoveryMessage}
-                </div>
-              )}
-
-              <div>
-                <label className="text-xs text-liquid-silver block mb-1.5 font-medium">
-                  Institutional Email Address
-                </label>
-                <div className="relative">
-                  <Mail className="w-4 h-4 text-liquid-silver absolute left-3.5 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="email"
-                    required
-                    placeholder="e.g. dean@dtu.ac.in"
-                    value={recoveryEmail}
-                    onChange={(e) => setRecoveryEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 text-xs rounded-xl bg-obsidian border border-glass-border text-highlight-silver placeholder:text-liquid-silver/50 focus:border-platinum outline-none"
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between pt-2">
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('LOGIN')}
-                  className="text-xs text-liquid-silver hover:text-white"
-                >
-                  Return to Sign In
-                </button>
-                <button
-                  type="submit"
-                  disabled={recoveryLoading || !recoveryEmail.trim()}
-                  className="px-5 py-2.5 rounded-xl bg-platinum hover:bg-white text-midnight font-bold text-xs transition-colors disabled:opacity-40"
-                >
-                  {recoveryLoading ? 'Dispatching...' : 'Dispatch Recovery Token'}
-                </button>
-              </div>
-            </form>
-          )}
-        </div>
-
-        {/* Right Column: Pre-Configured Personas for Evaluators (5 cols) */}
-        <div className="lg:col-span-5 glass-panel rounded-3xl p-6 border border-glass-border space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-glass-border">
-            <span className="text-xs font-semibold text-highlight-silver uppercase tracking-wider font-mono">
-              Evaluator 1-Click Personas
-            </span>
-            <span className="text-[10px] px-2 py-0.5 rounded bg-graphite text-platinum font-mono">
-              SIH Testing
-            </span>
-          </div>
-
-          <p className="text-xs text-liquid-silver">
-            Click any authenticated role below to test institution-scoped permissions, audit access, or intake compliance:
-          </p>
-
-          <div className="space-y-2 max-h-[380px] overflow-y-auto pr-1">
-            {demoAccounts.map((account) => {
-              const Icon = account.icon;
-              return (
-                <button
-                  key={account.role}
-                  type="button"
-                  onClick={() => handleQuickLogin(account)}
-                  className="w-full text-left p-2.5 rounded-xl bg-obsidian hover:bg-graphite/60 border border-glass-border hover:border-platinum transition-all group flex items-start gap-3"
-                >
-                  <div className="w-8 h-8 rounded-lg bg-graphite flex items-center justify-center flex-shrink-0 border border-glass-border group-hover:border-platinum transition-colors">
-                    <Icon className="w-4 h-4 text-platinum" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-xs font-bold text-highlight-silver group-hover:text-white flex items-center justify-between">
-                      <span className="truncate">{account.title}</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-liquid-silver group-hover:text-platinum group-hover:translate-x-0.5 transition-all flex-shrink-0" />
-                    </div>
-                    <div className="text-[11px] text-liquid-silver truncate mt-0.5">
-                      {account.subtitle}
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="pt-3 border-t border-glass-border text-[10px] text-liquid-silver text-center">
-            Default development password for all roles: <code className="font-mono text-platinum">CredenSecure#2024</code>
+            </div>
           </div>
         </div>
       </main>
 
       {/* Security Footer */}
-      <footer className="relative z-10 max-w-6xl w-full mx-auto pt-6 border-t border-glass-border text-center space-y-1 text-[11px] text-liquid-silver">
-        <p>
-          Official AICTE Academic Governance Platform • Under the Purview of the Ministry of Education, Government of India
-        </p>
-        <p className="text-[10px] opacity-70">
-          Compliant with Digital Personal Data Protection (DPDP) Act 2023 • All actions immutably logged with SHA-256 integrity hash
-        </p>
+      <footer className="w-full border-t border-[#30343A] bg-[#0B0C0E]">
+        <div className="max-w-[1140px] w-full mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[#9BA1AA]">
+          <p>© CREDEN Academic Data Management & Verification Portal</p>
+          <p className="text-[11px]">
+            Restricted access • Authorised educational institutions and regulatory officers only
+          </p>
+        </div>
       </footer>
     </div>
   );
