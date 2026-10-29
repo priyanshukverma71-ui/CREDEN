@@ -6,7 +6,7 @@ import { FloatingModulePod } from './FloatingModulePod';
 import { CameraController } from './CameraController';
 import { usePortal, MODULE_COORDINATES } from '../../context/PortalContext';
 import { ModuleId } from '../../types';
-import { ChevronLeft, ChevronRight, Compass } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export const MODULES_LIST: {
   id: ModuleId;
@@ -117,38 +117,39 @@ export const SpatialCanvas: React.FC = () => {
   };
 
   return (
-    <div className="absolute inset-0 pointer-events-auto bg-[#08090B] select-none">
+    <div className="absolute inset-0 pointer-events-auto bg-[#EDF2F7] select-none">
       <Canvas
         camera={{ position: [0, 0.35, 8.2], fov: 42 }}
         gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
         dpr={[1, 2]}
       >
-        {/* Liquid Glass Spatial Atmosphere & Subtle Distance Fog */}
-        <color attach="background" args={['#0A0B0E']} />
-        <fog attach="fog" args={['#0A0B0E', 18, 50]} />
+        {/* Luminous Light Mode Studio Atmosphere & Depth Fog */}
+        <color attach="background" args={['#EDF2F7']} />
+        <fog attach="fog" args={['#EDF2F7', 22, 65]} />
 
-        {/* VisionOS Style Studio Lighting: Warm Key Light & Cool Specular Rim */}
-        <ambientLight intensity={0.9} color="#F5EFEA" />
+        {/* VisionOS Style Light Studio Illumination */}
+        <ambientLight intensity={1.4} color="#FFFFFF" />
 
-        {/* Primary Warm Directional Key Light from Top Front */}
+        {/* Primary High-Key Overhead Daylight Key */}
         <directionalLight
-          position={[6, 14, 10]}
-          intensity={1.8}
-          color="#FFF6EE"
+          position={[8, 16, 12]}
+          intensity={2.2}
+          color="#FFFFFF"
+          castShadow
         />
 
-        {/* Cool Rim Lighting from Behind-Left */}
+        {/* Luminous Specular Rim Light from Behind-Left */}
         <directionalLight
-          position={[-8, 6, -6]}
-          intensity={0.9}
-          color="#C8D6EC"
+          position={[-10, 8, -6]}
+          intensity={1.2}
+          color="#E2E8F0"
         />
 
-        {/* Subtle Ambient Ground Bounce Fill */}
+        {/* Soft Studio Floor Bounce Fill */}
         <directionalLight
           position={[0, -4, 4]}
-          intensity={0.3}
-          color="#4A4550"
+          intensity={0.6}
+          color="#CBD5E1"
         />
 
         <Suspense fallback={null}>
@@ -156,7 +157,7 @@ export const SpatialCanvas: React.FC = () => {
           <InfiniteSpace />
           <ObsidianFloor />
 
-          {/* 11 Spatially Floating Charcoal Architectural Slabs */}
+          {/* 11 Spatially Floating Liquid Glass Pods with Colorful Round Symbols */}
           {MODULES_LIST.map((m) => (
             <FloatingModulePod
               key={m.id}
@@ -172,11 +173,11 @@ export const SpatialCanvas: React.FC = () => {
         </Suspense>
       </Canvas>
 
-      {/* On-Screen Horizontal Navigation Controls (Accessible on Mobile, Trackpad & Mouse) */}
-      <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none z-20">
+      {/* On-Screen Horizontal Navigation Controls in Frosted Light Glass */}
+      <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none z-20">
         <button
           onClick={handleNavLeft}
-          className="pointer-events-auto p-2.5 rounded-xl bg-[#12151B]/80 hover:bg-[#1C2028] text-[#929AA5] hover:text-white border border-[#222730] hover:border-[#D2D6DC] transition-all backdrop-blur-sm shadow-lg group"
+          className="pointer-events-auto p-3 rounded-2xl liquid-glass-pill text-slate-700 hover:text-black border border-white/90 hover:scale-105 transition-all shadow-md group"
           title="Previous Module (Left Arrow)"
           aria-label="Previous Module"
         >
@@ -184,10 +185,10 @@ export const SpatialCanvas: React.FC = () => {
         </button>
       </div>
 
-      <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none z-20">
+      <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none z-20">
         <button
           onClick={handleNavRight}
-          className="pointer-events-auto p-2.5 rounded-xl bg-[#12151B]/80 hover:bg-[#1C2028] text-[#929AA5] hover:text-white border border-[#222730] hover:border-[#D2D6DC] transition-all backdrop-blur-sm shadow-lg group"
+          className="pointer-events-auto p-3 rounded-2xl liquid-glass-pill text-slate-700 hover:text-black border border-white/90 hover:scale-105 transition-all shadow-md group"
           title="Next Module (Right Arrow)"
           aria-label="Next Module"
         >
@@ -195,13 +196,13 @@ export const SpatialCanvas: React.FC = () => {
         </button>
       </div>
 
-      {/* Subtle Floating Navigation Hint Pill above Bottom Dock */}
+      {/* Subtle Floating Navigation Hint Pill above Bottom Dock in Light Glass */}
       <div className="absolute bottom-16 left-1/2 -translate-x-1/2 pointer-events-none z-20 hidden md:block">
-        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-[#07080A]/80 border border-[#303642] text-[10px] text-[#9BA4B0] shadow-md backdrop-blur-md">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#D7DBE2]" />
-          <span>Scroll or use <kbd className="px-1 py-0.2 rounded bg-[#13161B] text-[#F2F4F7] font-mono border border-[#303642]">←</kbd> <kbd className="px-1 py-0.2 rounded bg-[#13161B] text-[#F2F4F7] font-mono border border-[#303642]">→</kbd> to explore</span>
-          <span className="text-[#475160]">•</span>
-          <span>Press <kbd className="px-1 py-0.2 rounded bg-[#13161B] text-[#F2F4F7] font-mono border border-[#303642]">Enter</kbd> to open</span>
+        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full liquid-glass-pill text-[11px] text-slate-600 shadow-md">
+          <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+          <span>Scroll trackpad / wheel or use <kbd className="px-1.5 py-0.5 rounded bg-white text-slate-900 font-mono text-[10px] border border-slate-200 shadow-sm">←</kbd> <kbd className="px-1.5 py-0.5 rounded bg-white text-slate-900 font-mono text-[10px] border border-slate-200 shadow-sm">→</kbd> to explore</span>
+          <span className="text-slate-300">•</span>
+          <span>Press <kbd className="px-1.5 py-0.5 rounded bg-white text-slate-900 font-mono text-[10px] border border-slate-200 shadow-sm">Enter</kbd> to open</span>
         </div>
       </div>
     </div>

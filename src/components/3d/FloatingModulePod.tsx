@@ -14,327 +14,257 @@ interface FloatingModulePodProps {
   isActive: boolean;
 }
 
+// VisionOS Module Vibrant Color Palette
+const MODULE_COLORS: Record<ModuleId, { primary: string; secondary: string }> = {
+  overview: { primary: '#2563EB', secondary: '#1D4ED8' },
+  institutions: { primary: '#2563EB', secondary: '#1E40AF' },
+  students: { primary: '#059669', secondary: '#047857' },
+  submissions: { primary: '#0284C7', secondary: '#0369A1' },
+  apaar: { primary: '#7C3AED', secondary: '#6D28D9' },
+  admissions: { primary: '#D97706', secondary: '#B45309' },
+  duplicates: { primary: '#E11D48', secondary: '#BE123C' },
+  compliance: { primary: '#DC2626', secondary: '#B91C1C' },
+  verification: { primary: '#0D9488', secondary: '#0F766E' },
+  reports: { primary: '#4F46E5', secondary: '#4338CA' },
+  audit: { primary: '#334155', secondary: '#1E293B' },
+  integration: { primary: '#8B5CF6', secondary: '#7C3AED' },
+  settings: { primary: '#475569', secondary: '#334155' },
+};
+
 // -------------------------------------------------------------
-// Small, carefully crafted platinum 3D symbols
-// Realistic brushed aluminium, restrained reflections, soft studio lighting.
-// Secondary to module titles. Zero giant circular rings.
+// Liquid Glass Colorful Round Symbol with 3D White Logo
 // -------------------------------------------------------------
-const ModuleSymbol: React.FC<{ id: ModuleId; hovered: boolean }> = ({ id, hovered }) => {
-  const platinumMat = (
+const ColorfulRoundSymbol: React.FC<{ id: ModuleId; hovered: boolean }> = ({ id, hovered }) => {
+  const meshRef = useRef<THREE.Group>(null);
+  const colorData = MODULE_COLORS[id] || { primary: '#2563EB', secondary: '#1D4ED8' };
+
+  // Floating gentle levitation
+  useFrame((state) => {
+    if (!meshRef.current) return;
+    const time = state.clock.getElapsedTime();
+    meshRef.current.position.y = 1.05 + (hovered ? 0.08 : 0) + Math.sin(time * 2 + 1) * 0.02;
+  });
+
+  const whiteLogoMat = (
     <meshStandardMaterial
       color="#FFFFFF"
-      metalness={0.92}
-      roughness={0.14}
-      emissive="#28222A"
-      emissiveIntensity={0.25}
+      metalness={0.9}
+      roughness={0.12}
+      emissive="#E2E8F0"
+      emissiveIntensity={0.2}
     />
   );
 
-  const darkMat = (
-    <meshStandardMaterial
-      color="#1C1820"
-      metalness={0.35}
-      roughness={0.45}
-    />
-  );
-
-  const renderSymbol = () => {
+  const renderLogoGeometry = () => {
     switch (id) {
       case 'institutions':
-        // Minimal architectural institution symbol: Neoclassical pediment & 4 slender columns
+        // Neoclassical pediment & 4 slender columns in white
         return (
-          <group scale={0.78}>
-            {/* Triangular Pediment Roof */}
-            <mesh position={[0, 0.38, 0]}>
-              <cylinderGeometry args={[0.55, 0.55, 0.08, 3]} rotation={[0, 0, Math.PI]} />
-              {platinumMat}
+          <group scale={0.72} position={[0, 0, 0.06]}>
+            <mesh position={[0, 0.36, 0]}>
+              <cylinderGeometry args={[0.5, 0.5, 0.07, 3]} rotation={[0, 0, Math.PI]} />
+              {whiteLogoMat}
             </mesh>
-            {/* Entablature Crossbeam */}
             <mesh position={[0, 0.22, 0]}>
-              <boxGeometry args={[0.92, 0.05, 0.1]} />
-              {platinumMat}
+              <boxGeometry args={[0.85, 0.04, 0.08]} />
+              {whiteLogoMat}
             </mesh>
-            {/* 4 Slender Columns */}
-            {[-0.32, -0.11, 0.11, 0.32].map((x, idx) => (
+            {[-0.28, -0.09, 0.09, 0.28].map((x, idx) => (
               <mesh key={idx} position={[x, -0.04, 0]}>
-                <cylinderGeometry args={[0.035, 0.035, 0.44, 16]} />
-                {platinumMat}
+                <cylinderGeometry args={[0.03, 0.03, 0.42, 16]} />
+                {whiteLogoMat}
               </mesh>
             ))}
-            {/* Stepped Stylobate Plinth Base */}
             <mesh position={[0, -0.28, 0]}>
-              <boxGeometry args={[0.96, 0.05, 0.12]} />
-              {platinumMat}
-            </mesh>
-            <mesh position={[0, -0.34, 0]}>
-              <boxGeometry args={[1.04, 0.05, 0.14]} />
-              {darkMat}
+              <boxGeometry args={[0.9, 0.05, 0.1]} />
+              {whiteLogoMat}
             </mesh>
           </group>
         );
 
       case 'students':
-        // Refined student registry identity credential slab
+        // Student registry ID card in white
         return (
-          <group scale={0.8}>
-            {/* Base Credential Plate */}
+          <group scale={0.75} position={[0, 0, 0.06]}>
             <mesh position={[0, 0, 0]}>
-              <boxGeometry args={[0.78, 0.55, 0.04]} />
-              {platinumMat}
+              <boxGeometry args={[0.72, 0.52, 0.04]} />
+              {whiteLogoMat}
             </mesh>
-            {/* Photo Avatar Recess */}
-            <mesh position={[-0.22, 0.06, 0.025]}>
-              <boxGeometry args={[0.22, 0.26, 0.02]} />
-              {darkMat}
+            <mesh position={[-0.2, 0.06, 0.03]}>
+              <boxGeometry args={[0.2, 0.24, 0.02]} />
+              <meshBasicMaterial color="#E2E8F0" />
             </mesh>
-            <mesh position={[-0.22, 0.1, 0.04]}>
-              <sphereGeometry args={[0.06, 16, 16]} />
-              {platinumMat}
+            <mesh position={[0.12, 0.1, 0.03]}>
+              <boxGeometry args={[0.3, 0.03, 0.01]} />
+              <meshBasicMaterial color="#E2E8F0" />
             </mesh>
-            {/* Credential Data Lines */}
-            <mesh position={[0.12, 0.12, 0.025]}>
-              <boxGeometry args={[0.34, 0.03, 0.01]} />
-              {darkMat}
-            </mesh>
-            <mesh position={[0.12, 0.03, 0.025]}>
-              <boxGeometry args={[0.34, 0.03, 0.01]} />
-              {darkMat}
-            </mesh>
-            <mesh position={[0.02, -0.12, 0.025]}>
-              <boxGeometry args={[0.54, 0.04, 0.01]} />
-              {darkMat}
+            <mesh position={[0.12, 0.02, 0.03]}>
+              <boxGeometry args={[0.3, 0.03, 0.01]} />
+              <meshBasicMaterial color="#E2E8F0" />
             </mesh>
           </group>
         );
 
       case 'submissions':
-        // Refined document & structured data ingestion symbol
+        // Layered document with upward ingestion arrow
         return (
-          <group scale={0.8}>
-            {/* Secondary Back Sheet */}
-            <mesh position={[-0.06, 0.06, -0.02]}>
-              <boxGeometry args={[0.62, 0.76, 0.025]} />
-              {darkMat}
+          <group scale={0.75} position={[0, 0, 0.06]}>
+            <mesh position={[-0.05, 0.05, -0.02]}>
+              <boxGeometry args={[0.56, 0.7, 0.02]} />
+              <meshBasicMaterial color="#E2E8F0" />
             </mesh>
-            {/* Primary Front Sheet */}
             <mesh position={[0.04, 0, 0.01]}>
-              <boxGeometry args={[0.62, 0.76, 0.03]} />
-              {platinumMat}
+              <boxGeometry args={[0.56, 0.7, 0.03]} />
+              {whiteLogoMat}
             </mesh>
-            {/* Horizontal Ingested Data Stripes */}
-            {[-0.15, -0.05, 0.05, 0.15].map((y, idx) => (
-              <mesh key={idx} position={[0.04, y, 0.03]}>
-                <boxGeometry args={[0.42, 0.03, 0.01]} />
-                {darkMat}
-              </mesh>
-            ))}
-            {/* Upward Ingestion Arrow Notch */}
-            <mesh position={[0.28, -0.16, 0.05]}>
-              <coneGeometry args={[0.08, 0.16, 16]} />
-              {platinumMat}
+            <mesh position={[0.24, -0.12, 0.04]}>
+              <coneGeometry args={[0.08, 0.18, 16]} />
+              {whiteLogoMat}
             </mesh>
           </group>
         );
 
       case 'apaar':
-        // Subtle identity verification symbol: Refined chamfered security shield with check
+        // Chamfered security shield with check
         return (
-          <group scale={0.82}>
-            {/* Upper Shield Block */}
-            <mesh position={[0, 0.12, 0]}>
-              <boxGeometry args={[0.66, 0.38, 0.06]} />
-              {platinumMat}
+          <group scale={0.78} position={[0, 0, 0.06]}>
+            <mesh position={[0, 0.1, 0]}>
+              <boxGeometry args={[0.62, 0.36, 0.05]} />
+              {whiteLogoMat}
             </mesh>
-            {/* Lower Shield Triangular Taper */}
-            <mesh position={[0, -0.18, 0]} rotation={[0, 0, Math.PI]}>
-              <cylinderGeometry args={[0.33, 0.33, 0.06, 3]} />
-              {platinumMat}
+            <mesh position={[0, -0.16, 0]} rotation={[0, 0, Math.PI]}>
+              <cylinderGeometry args={[0.31, 0.31, 0.05, 3]} />
+              {whiteLogoMat}
             </mesh>
-            {/* Inner Dark Recess */}
-            <mesh position={[0, 0.04, 0.035]}>
-              <boxGeometry args={[0.46, 0.44, 0.02]} />
-              {darkMat}
-            </mesh>
-            {/* Central Verification Checkmark / Keyhole */}
-            <mesh position={[0, 0.04, 0.05]}>
-              <boxGeometry args={[0.18, 0.18, 0.02]} rotation={[0, 0, Math.PI / 4]} />
-              {platinumMat}
+            <mesh position={[0, 0.02, 0.04]} rotation={[0, 0, Math.PI / 4]}>
+              <boxGeometry args={[0.16, 0.16, 0.02]} />
+              {whiteLogoMat}
             </mesh>
           </group>
         );
 
       case 'admissions':
-        // Refined admission & intake monitoring symbol: 3 graduated capacity bars
+        // 3 stepped intake capacity bars
         return (
-          <group scale={0.8}>
-            {/* Base Sanction Line */}
-            <mesh position={[0, -0.28, 0]}>
-              <boxGeometry args={[0.82, 0.04, 0.08]} />
-              {darkMat}
+          <group scale={0.75} position={[0, 0, 0.06]}>
+            <mesh position={[0, -0.26, 0]}>
+              <boxGeometry args={[0.76, 0.04, 0.06]} />
+              {whiteLogoMat}
             </mesh>
-            {/* Bar 1 */}
-            <mesh position={[-0.24, -0.12, 0]}>
-              <boxGeometry args={[0.14, 0.28, 0.08]} />
-              {platinumMat}
+            <mesh position={[-0.22, -0.12, 0]}>
+              <boxGeometry args={[0.13, 0.26, 0.06]} />
+              {whiteLogoMat}
             </mesh>
-            {/* Bar 2 */}
             <mesh position={[0, -0.02, 0]}>
-              <boxGeometry args={[0.14, 0.48, 0.08]} />
-              {platinumMat}
+              <boxGeometry args={[0.13, 0.44, 0.06]} />
+              {whiteLogoMat}
             </mesh>
-            {/* Bar 3 */}
-            <mesh position={[0.24, 0.1, 0]}>
-              <boxGeometry args={[0.14, 0.72, 0.08]} />
-              {platinumMat}
-            </mesh>
-            {/* Quota Sanction Line Beam */}
-            <mesh position={[0, 0.24, 0.05]} rotation={[0, 0, 0.4]}>
-              <boxGeometry args={[0.78, 0.02, 0.02]} />
-              {platinumMat}
+            <mesh position={[0.22, 0.1, 0]}>
+              <boxGeometry args={[0.13, 0.68, 0.06]} />
+              {whiteLogoMat}
             </mesh>
           </group>
         );
 
       case 'duplicates':
-        // Duplicate detection: Twin overlapping identification discs with central conflict diamond
+        // Twin overlapping record discs
         return (
-          <group scale={0.8}>
-            {/* Left Record Disc */}
-            <mesh position={[-0.14, 0, -0.01]}>
-              <cylinderGeometry args={[0.26, 0.26, 0.04, 24]} rotation={[Math.PI / 2, 0, 0]} />
-              {darkMat}
+          <group scale={0.75} position={[0, 0, 0.06]}>
+            <mesh position={[-0.14, 0, 0]}>
+              <cylinderGeometry args={[0.24, 0.24, 0.03, 24]} rotation={[Math.PI / 2, 0, 0]} />
+              {whiteLogoMat}
             </mesh>
-            {/* Right Record Disc */}
-            <mesh position={[0.14, 0, 0.01]}>
-              <cylinderGeometry args={[0.26, 0.26, 0.04, 24]} rotation={[Math.PI / 2, 0, 0]} />
-              {platinumMat}
-            </mesh>
-            {/* Conflict Intersection Diamond */}
-            <mesh position={[0, 0, 0.04]} rotation={[0, 0, Math.PI / 4]}>
-              <boxGeometry args={[0.14, 0.14, 0.02]} />
-              {platinumMat}
+            <mesh position={[0.14, 0, 0.02]}>
+              <cylinderGeometry args={[0.24, 0.24, 0.03, 24]} rotation={[Math.PI / 2, 0, 0]} />
+              {whiteLogoMat}
             </mesh>
           </group>
         );
 
       case 'compliance':
-        // Compliance action: Minimal regulatory balance scale
+        // Regulatory balance scale
         return (
-          <group scale={0.8}>
-            {/* Central Pillar */}
+          <group scale={0.75} position={[0, 0, 0.06]}>
             <mesh position={[0, 0, 0]}>
-              <cylinderGeometry args={[0.03, 0.04, 0.6, 16]} />
-              {platinumMat}
+              <cylinderGeometry args={[0.025, 0.035, 0.58, 16]} />
+              {whiteLogoMat}
             </mesh>
-            {/* Horizontal Balance Crossbeam */}
-            <mesh position={[0, 0.22, 0]}>
-              <boxGeometry args={[0.78, 0.03, 0.05]} />
-              {platinumMat}
+            <mesh position={[0, 0.2, 0]}>
+              <boxGeometry args={[0.74, 0.03, 0.04]} />
+              {whiteLogoMat}
             </mesh>
-            {/* Left Pan */}
-            <mesh position={[-0.28, 0.06, 0]}>
-              <cylinderGeometry args={[0.14, 0.02, 0.03, 16]} />
-              {platinumMat}
+            <mesh position={[-0.26, 0.06, 0]}>
+              <cylinderGeometry args={[0.12, 0.02, 0.03, 16]} />
+              {whiteLogoMat}
             </mesh>
-            {/* Right Pan */}
-            <mesh position={[0.28, 0.1, 0]}>
-              <cylinderGeometry args={[0.14, 0.02, 0.03, 16]} />
-              {platinumMat}
-            </mesh>
-            {/* Plinth Base */}
-            <mesh position={[0, -0.3, 0]}>
-              <boxGeometry args={[0.4, 0.04, 0.1]} />
-              {darkMat}
+            <mesh position={[0.26, 0.1, 0]}>
+              <cylinderGeometry args={[0.12, 0.02, 0.03, 16]} />
+              {whiteLogoMat}
             </mesh>
           </group>
         );
 
       case 'verification':
-        // Student verification: Refined diploma credential scroll with attestation seal
+        // Diploma credential scroll with seal
         return (
-          <group scale={0.78}>
-            {/* Scroll Body */}
+          <group scale={0.75} position={[0, 0, 0.06]}>
             <mesh position={[0, 0, 0]}>
-              <boxGeometry args={[0.65, 0.75, 0.04]} />
-              {platinumMat}
+              <boxGeometry args={[0.62, 0.72, 0.03]} />
+              {whiteLogoMat}
             </mesh>
-            {/* Rolled Cylinder Margins */}
-            <mesh position={[0, 0.4, 0]} rotation={[0, 0, Math.PI / 2]}>
-              <cylinderGeometry args={[0.04, 0.04, 0.72, 16]} />
-              {platinumMat}
+            <mesh position={[0, 0.38, 0]} rotation={[0, 0, Math.PI / 2]}>
+              <cylinderGeometry args={[0.035, 0.035, 0.68, 16]} />
+              {whiteLogoMat}
             </mesh>
-            <mesh position={[0, -0.4, 0]} rotation={[0, 0, Math.PI / 2]}>
-              <cylinderGeometry args={[0.04, 0.04, 0.72, 16]} />
-              {platinumMat}
+            <mesh position={[0, -0.38, 0]} rotation={[0, 0, Math.PI / 2]}>
+              <cylinderGeometry args={[0.035, 0.035, 0.68, 16]} />
+              {whiteLogoMat}
             </mesh>
-            {/* Attestation Seal */}
-            <mesh position={[0.14, -0.15, 0.04]} rotation={[Math.PI / 2, 0, 0]}>
-              <cylinderGeometry args={[0.12, 0.12, 0.04, 20]} />
-              {darkMat}
-            </mesh>
-            <mesh position={[0.14, -0.15, 0.06]} rotation={[Math.PI / 2, 0, 0]}>
-              <cylinderGeometry args={[0.07, 0.07, 0.02, 16]} />
-              {platinumMat}
+            <mesh position={[0.14, -0.15, 0.03]} rotation={[Math.PI / 2, 0, 0]}>
+              <cylinderGeometry args={[0.1, 0.1, 0.03, 20]} />
+              {whiteLogoMat}
             </mesh>
           </group>
         );
 
       case 'reports':
-        // Reports & Analytics: Precision geometric analytics prism
+        // Analytics octahedron prism
         return (
-          <group scale={0.8}>
+          <group scale={0.75} position={[0, 0, 0.06]}>
             <mesh position={[0, 0.02, 0]}>
-              <octahedronGeometry args={[0.38, 0]} />
-              {platinumMat}
-            </mesh>
-            <mesh position={[0, -0.32, 0]}>
-              <boxGeometry args={[0.48, 0.04, 0.12]} />
-              {darkMat}
+              <octahedronGeometry args={[0.36, 0]} />
+              {whiteLogoMat}
             </mesh>
           </group>
         );
 
       case 'audit':
-        // Audit & Security: Precision architectural padlock
+        // Cryptographic security padlock
         return (
-          <group scale={0.8}>
-            {/* Torus Shackle Arch */}
-            <mesh position={[0, 0.22, 0]}>
-              <torusGeometry args={[0.18, 0.04, 16, 24, Math.PI]} />
-              {platinumMat}
+          <group scale={0.75} position={[0, 0, 0.06]}>
+            <mesh position={[0, 0.2, 0]}>
+              <torusGeometry args={[0.16, 0.035, 16, 24, Math.PI]} />
+              {whiteLogoMat}
             </mesh>
-            {/* Solid Padlock Body */}
-            <mesh position={[0, -0.1, 0]}>
-              <boxGeometry args={[0.56, 0.44, 0.16]} />
-              {platinumMat}
-            </mesh>
-            {/* Micro Keyhole Slit */}
-            <mesh position={[0, -0.1, 0.09]}>
-              <boxGeometry args={[0.06, 0.12, 0.02]} />
-              {darkMat}
+            <mesh position={[0, -0.08, 0]}>
+              <boxGeometry args={[0.52, 0.4, 0.12]} />
+              {whiteLogoMat}
             </mesh>
           </group>
         );
 
       case 'integration':
       default:
-        // System Integration: Precision intermeshed gear set
+        // Interlocking gear set
         return (
-          <group scale={0.78}>
-            {/* Main Primary Gear */}
-            <mesh position={[-0.12, 0.08, 0]}>
-              <cylinderGeometry args={[0.26, 0.26, 0.06, 12]} rotation={[Math.PI / 2, 0, 0]} />
-              {platinumMat}
+          <group scale={0.75} position={[0, 0, 0.06]}>
+            <mesh position={[-0.1, 0.08, 0]}>
+              <cylinderGeometry args={[0.24, 0.24, 0.05, 12]} rotation={[Math.PI / 2, 0, 0]} />
+              {whiteLogoMat}
             </mesh>
-            {/* Secondary Gear */}
-            <mesh position={[0.22, -0.14, 0.02]}>
-              <cylinderGeometry args={[0.18, 0.18, 0.05, 10]} rotation={[Math.PI / 2, 0, 0]} />
-              {platinumMat}
-            </mesh>
-            {/* Central Axles */}
-            <mesh position={[-0.12, 0.08, 0.04]}>
-              <cylinderGeometry args={[0.08, 0.08, 0.02, 16]} rotation={[Math.PI / 2, 0, 0]} />
-              {darkMat}
+            <mesh position={[0.2, -0.12, 0.02]}>
+              <cylinderGeometry args={[0.16, 0.16, 0.04, 10]} rotation={[Math.PI / 2, 0, 0]} />
+              {whiteLogoMat}
             </mesh>
           </group>
         );
@@ -342,8 +272,25 @@ const ModuleSymbol: React.FC<{ id: ModuleId; hovered: boolean }> = ({ id, hovere
   };
 
   return (
-    <group position={[0, 1.05, 0.08]}>
-      {renderSymbol()}
+    <group ref={meshRef} position={[0, 1.05, 0.08]}>
+      {/* 1. Vibrant Colorful Round Squircle Disc */}
+      <mesh castShadow receiveShadow>
+        <cylinderGeometry args={[0.54, 0.54, 0.08, 36]} rotation={[Math.PI / 2, 0, 0]} />
+        <meshStandardMaterial
+          color={colorData.primary}
+          roughness={0.25}
+          metalness={0.15}
+        />
+      </mesh>
+
+      {/* 2. Frosted Glass Bevel Halo Rim */}
+      <mesh position={[0, 0, 0.042]} rotation={[0, 0, 0]}>
+        <ringGeometry args={[0.53, 0.58, 36]} />
+        <meshBasicMaterial color="#FFFFFF" transparent opacity={0.9} />
+      </mesh>
+
+      {/* 3. 3D White Logo Geometry */}
+      {renderLogoGeometry()}
     </group>
   );
 };
@@ -360,23 +307,19 @@ export const FloatingModulePod: React.FC<FloatingModulePodProps> = ({
   const groupRef = useRef<THREE.Group>(null);
   const [hovered, setHovered] = useState(false);
 
-  // Smooth, damped horizontal focus easing:
-  // Focused module moves gently toward the camera; adjacent modules recede into background.
+  // Smooth, damped horizontal focus easing
   useFrame((state) => {
     if (!groupRef.current) return;
     const camX = state.camera.position.x;
     const dist = Math.abs(camX - position[0]);
     const isFocused = dist < 2.0;
 
-    // Restrained Z-depth shift: focused pod glides slightly forward, outer pods recede
     const targetZ = isFocused
       ? (hovered ? 0.45 : 0.32)
       : -Math.min(1.1, (dist - 1.8) * 0.22);
 
-    // Subtle, consistent vertical alignment (no wobbling or bouncing)
     const targetY = position[1] + (hovered ? 0.06 : 0);
 
-    // Smooth lerp (damped easing)
     groupRef.current.position.z = THREE.MathUtils.lerp(
       groupRef.current.position.z,
       targetZ,
@@ -388,7 +331,6 @@ export const FloatingModulePod: React.FC<FloatingModulePodProps> = ({
       0.08
     );
 
-    // Controlled scale focus
     const targetScale = isFocused ? 1.015 : THREE.MathUtils.lerp(1.0, 0.94, Math.min(1, (dist - 1.8) / 5));
     const currentScale = groupRef.current.scale.x;
     const newScale = THREE.MathUtils.lerp(currentScale, targetScale, 0.08);
@@ -413,76 +355,60 @@ export const FloatingModulePod: React.FC<FloatingModulePodProps> = ({
         onSelect(id);
       }}
     >
-      {/* 1. Natural Soft Ambient Occlusion Contact Shadow directly below slab */}
+      {/* 1. Soft Light Studio Ambient Shadow directly below slab */}
       <mesh position={[0, -2.25, -0.04]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[3.1, 0.5]} />
-        <meshBasicMaterial color="#000000" transparent opacity={0.4} />
+        <planeGeometry args={[3.2, 0.55]} />
+        <meshBasicMaterial color="#64748B" transparent opacity={0.16} />
       </mesh>
 
-      {/* 2. Refined Liquid Glass Panel (Smoked Optical Glass with Refraction) */}
+      {/* 2. VisionOS Liquid Glass Slab (Crystal Clear Glass with High Transmission) */}
       <mesh castShadow receiveShadow position={[0, 0, 0]}>
         <boxGeometry args={[3.2, 4.4, 0.08]} />
         <meshPhysicalMaterial
-          color="#1D1A22"
-          roughness={0.16}
-          metalness={0.15}
-          transmission={0.82}
-          thickness={0.5}
-          ior={1.46}
+          color="#FFFFFF"
+          roughness={0.1}
+          metalness={0.05}
+          transmission={0.92}
+          thickness={0.7}
+          ior={1.5}
           transparent
-          opacity={0.75}
+          opacity={0.9}
           clearcoat={1.0}
-          clearcoatRoughness={0.08}
+          clearcoatRoughness={0.04}
         />
       </mesh>
 
-      {/* 3. Optical Glass Specular Rim Border */}
+      {/* 3. Pure White Specular Rim Border */}
       <group position={[0, 0, 0.042]}>
-        {/* Top edge specular highlight */}
+        {/* Top edge */}
         <mesh position={[0, 2.2, 0]}>
-          <boxGeometry args={[3.2, 0.015, 0.008]} />
-          <meshStandardMaterial
-            color={hovered || isActive ? '#FFFFFF' : '#E2E8F0'}
-            roughness={0.15}
-            metalness={0.85}
-          />
+          <boxGeometry args={[3.2, 0.016, 0.008]} />
+          <meshBasicMaterial color="#FFFFFF" />
         </mesh>
         {/* Bottom edge */}
         <mesh position={[0, -2.2, 0]}>
           <boxGeometry args={[3.2, 0.012, 0.006]} />
-          <meshStandardMaterial
-            color={hovered || isActive ? '#FFFFFF' : '#474D58'}
-            roughness={0.3}
-            metalness={0.7}
-          />
+          <meshBasicMaterial color="#E2E8F0" />
         </mesh>
         {/* Left edge */}
         <mesh position={[-1.6, 0, 0]}>
           <boxGeometry args={[0.012, 4.4, 0.006]} />
-          <meshStandardMaterial
-            color={hovered || isActive ? '#FFFFFF' : '#474D58'}
-            roughness={0.3}
-            metalness={0.7}
-          />
+          <meshBasicMaterial color="#E2E8F0" />
         </mesh>
         {/* Right edge */}
         <mesh position={[1.6, 0, 0]}>
           <boxGeometry args={[0.012, 4.4, 0.006]} />
-          <meshStandardMaterial
-            color={hovered || isActive ? '#FFFFFF' : '#474D58'}
-            roughness={0.3}
-            metalness={0.7}
-          />
+          <meshBasicMaterial color="#E2E8F0" />
         </mesh>
       </group>
 
-      {/* 4. Subtle Category Tag at Top */}
+      {/* 4. Category Tag at Top */}
       {category && (
         <Text
           position={[0, 1.82, 0.06]}
           fontSize={0.105}
           letterSpacing={0.12}
-          color="#8E95A2"
+          color="#64748B"
           anchorX="center"
           anchorY="middle"
           textAlign="center"
@@ -491,16 +417,16 @@ export const FloatingModulePod: React.FC<FloatingModulePodProps> = ({
         </Text>
       )}
 
-      {/* 5. Small, Carefully Crafted Platinum 3D Symbol (Secondary to Title) */}
-      <ModuleSymbol id={id} hovered={hovered} />
+      {/* 5. Liquid Glass Colorful Round Symbol with White Logo in Floating Style */}
+      <ColorfulRoundSymbol id={id} hovered={hovered} />
 
-      {/* 6. Module Title (High-Contrast White Inter) */}
+      {/* 6. Module Title (High-Contrast Slate Black Inter) */}
       <Text
         position={[0, -0.08, 0.06]}
         fontSize={0.21}
         maxWidth={2.8}
         lineHeight={1.2}
-        color={hovered || isActive ? '#FFFFFF' : '#F1F3F5'}
+        color={hovered || isActive ? '#0F172A' : '#1E293B'}
         anchorX="center"
         anchorY="middle"
         textAlign="center"
@@ -508,13 +434,13 @@ export const FloatingModulePod: React.FC<FloatingModulePodProps> = ({
         {title}
       </Text>
 
-      {/* 7. Module Subtitle / Functional Description (Liquid Silver) */}
+      {/* 7. Module Subtitle (Legible Slate Gray) */}
       <Text
         position={[0, -0.62, 0.06]}
         fontSize={0.12}
         maxWidth={2.7}
         lineHeight={1.4}
-        color="#9BA1AA"
+        color="#475569"
         anchorX="center"
         anchorY="middle"
         textAlign="center"
@@ -522,34 +448,27 @@ export const FloatingModulePod: React.FC<FloatingModulePodProps> = ({
         {subtitle}
       </Text>
 
-      {/* 8. Refined Liquid Glass Action Button */}
+      {/* 8. Frosted Liquid Glass Action Button */}
       <group position={[0, -1.48, 0.06]}>
-        {/* Button Glass Base */}
         <mesh>
           <boxGeometry args={[2.3, 0.44, 0.02]} />
           <meshPhysicalMaterial
-            color={hovered ? '#2D2832' : '#221E26'}
-            roughness={0.2}
-            metalness={0.1}
-            transmission={0.8}
+            color="#FFFFFF"
+            roughness={0.15}
+            transmission={0.88}
             transparent
-            opacity={0.85}
+            opacity={0.95}
           />
         </mesh>
-        {/* Button Glass Specular Rim */}
         <mesh position={[0, 0, 0.012]}>
           <boxGeometry args={[2.3, 0.44, 0.002]} />
-          <meshBasicMaterial
-            color={hovered ? '#FFFFFF' : 'rgba(255, 255, 255, 0.35)'}
-            wireframe
-          />
+          <meshBasicMaterial color="#CBD5E1" wireframe />
         </mesh>
-        {/* Button Label */}
         <Text
           position={[0, 0, 0.025]}
           fontSize={0.12}
           letterSpacing={0.06}
-          color={hovered ? '#FFFFFF' : '#F1F4F9'}
+          color={hovered ? '#000000' : '#0F172A'}
           anchorX="center"
           anchorY="middle"
         >

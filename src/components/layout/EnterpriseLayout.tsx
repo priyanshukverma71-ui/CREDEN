@@ -209,7 +209,7 @@ export const EnterpriseLayout: React.FC<EnterpriseLayoutProps> = ({ onOpenLogin 
   const is3DSpace = activeModule === 'overview' && viewMode !== 'grid';
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden spatial-ambient-bg text-[#F4F6F9] font-sans select-none">
+    <div className="relative h-screen w-screen overflow-hidden spatial-ambient-bg text-[#0F172A] font-sans select-none">
       {/* 1. Underlying Real Navigable Three.js Liquid-Glass Spatial Scene */}
       <div className="absolute inset-0 z-0 pointer-events-auto">
         {isReducedMotion ? (
@@ -219,10 +219,10 @@ export const EnterpriseLayout: React.FC<EnterpriseLayoutProps> = ({ onOpenLogin 
         )}
       </div>
 
-      {/* 2. Floating VisionOS Smoked Glass Navigation Rail (Left Pill) */}
+      {/* 2. Floating VisionOS Light Liquid Glass Navigation Rail (Left Pill) */}
       <SpatialFloatingRail />
 
-      {/* 3. Floating VisionOS Verified Address & Security Capsule (Top Pill) */}
+      {/* 3. Floating VisionOS Light Address & Security Capsule (Top Pill) */}
       <SpatialTopCapsule
         onSearchClick={() => setSearchOpen(true)}
         onOpenLogin={onOpenLogin}
@@ -230,15 +230,15 @@ export const EnterpriseLayout: React.FC<EnterpriseLayoutProps> = ({ onOpenLogin 
 
       {/* 4. Spatial Horizon Progress Flight Bar (Visible in 3D Flight) */}
       {is3DSpace && (
-        <div className="fixed bottom-0 left-0 right-0 h-1 bg-white/10 z-30 pointer-events-none">
+        <div className="fixed bottom-0 left-0 right-0 h-1.5 bg-slate-200/60 z-30 pointer-events-none">
           <div
-            className="h-full bg-gradient-to-r from-teal-400 via-white to-teal-200 transition-all duration-150 shadow-[0_0_10px_rgba(255,255,255,0.7)]"
+            className="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-teal-400 transition-all duration-150 shadow-sm"
             style={{ width: `${Math.max(0, Math.min(100, scrollProgress * 100))}%` }}
           />
         </div>
       )}
 
-      {/* 5. VisionOS Spatial Floating Workspace Window (Exact match to Reference Image) */}
+      {/* 5. VisionOS Spatial Floating Workspace Window in Light Liquid Glass */}
       {!is3DSpace && (
         <div
           className="absolute inset-0 z-10 pt-16 pb-20 px-3 sm:px-6 md:pl-24 md:pr-8 flex justify-center pointer-events-none transition-transform duration-100 ease-out"
@@ -250,37 +250,37 @@ export const EnterpriseLayout: React.FC<EnterpriseLayoutProps> = ({ onOpenLogin 
           }}
         >
           <div className="flex w-full max-w-7xl gap-4 h-full pointer-events-auto">
-            {/* Left Contextual Panel: VisionOS Navigator */}
+            {/* Left Contextual Panel: VisionOS Navigator in Light Glass */}
             <AcademicNavigatorPanel
               isOpen={navigatorOpen}
               onToggle={() => setNavigatorOpen(false)}
             />
 
-            {/* Central Primary Spatial Liquid Glass Window (Matches Reference Image) */}
+            {/* Central Primary Spatial Liquid Glass Window (Matches Reference Image in Light Mode) */}
             <div className="flex-1 flex flex-col h-full min-w-0 rounded-[32px] liquid-glass-window overflow-hidden transition-all duration-200">
               {/* Window Header Bar (Matches Webflow / VisionOS window toolbar in Reference Image) */}
-              <div className="flex items-center justify-between px-5 py-3 border-b border-white/15 bg-black/30 backdrop-blur-md flex-shrink-0">
+              <div className="flex items-center justify-between px-5 py-3 border-b border-slate-200/80 bg-white/60 backdrop-blur-md flex-shrink-0">
                 {/* Left: Window Return Button & Page Title */}
                 <div className="flex items-center gap-3 min-w-0">
                   <button
                     onClick={() => setActiveModule('overview')}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 text-xs font-semibold transition-all group flex-shrink-0 shadow-sm"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100/90 hover:bg-slate-900 text-slate-800 hover:text-white border border-slate-200 text-xs font-semibold transition-all group flex-shrink-0 shadow-xs"
                     title="Return to 3D Spatial Overview (Esc)"
                   >
                     <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
                     <span>Back to 3D Space</span>
-                    <kbd className="hidden sm:inline-block text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-black/40 text-white/70 border border-white/10">
+                    <kbd className="hidden sm:inline-block text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-white text-slate-600 border border-slate-200 group-hover:bg-slate-800 group-hover:text-white">
                       Esc
                     </kbd>
                   </button>
 
-                  <div className="h-4 w-[1px] bg-white/15 hidden sm:block" />
+                  <div className="h-4 w-[1px] bg-slate-200 hidden sm:block" />
 
                   {/* Window Title & Breadcrumb */}
                   <div className="truncate">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-white/60 font-mono hidden sm:inline">Page:</span>
-                      <h1 className="text-sm sm:text-base font-bold text-white tracking-tight truncate">
+                      <span className="text-xs text-slate-400 font-mono hidden sm:inline">Page:</span>
+                      <h1 className="text-sm sm:text-base font-bold text-slate-950 tracking-tight truncate">
                         {title}
                       </h1>
                     </div>
@@ -288,41 +288,41 @@ export const EnterpriseLayout: React.FC<EnterpriseLayoutProps> = ({ onOpenLogin 
                 </div>
 
                 {/* Center: VisionOS Device Preview Switcher (Exact match to Reference Image) */}
-                <div className="hidden lg:flex items-center gap-1 bg-white/10 rounded-full p-1 border border-white/15 text-xs text-white/70">
+                <div className="hidden lg:flex items-center gap-1 bg-slate-100/90 rounded-full p-1 border border-slate-200 text-xs text-slate-600">
                   <button
                     onClick={() => setPreviewDevice('desktop')}
-                    className={`p-1.5 rounded-full transition-colors ${previewDevice === 'desktop' ? 'bg-white text-black font-semibold shadow-sm' : 'hover:text-white'}`}
+                    className={`p-1.5 rounded-full transition-colors ${previewDevice === 'desktop' ? 'bg-white text-slate-950 font-bold shadow-xs' : 'hover:text-slate-900'}`}
                     title="Desktop Workspace"
                   >
                     <Monitor className="w-3.5 h-3.5" />
                   </button>
                   <button
                     onClick={() => setPreviewDevice('tablet')}
-                    className={`p-1.5 rounded-full transition-colors ${previewDevice === 'tablet' ? 'bg-white text-black font-semibold shadow-sm' : 'hover:text-white'}`}
+                    className={`p-1.5 rounded-full transition-colors ${previewDevice === 'tablet' ? 'bg-white text-slate-950 font-bold shadow-xs' : 'hover:text-slate-900'}`}
                     title="Tablet Responsive"
                   >
                     <Tablet className="w-3.5 h-3.5" />
                   </button>
                   <button
                     onClick={() => setPreviewDevice('mobile')}
-                    className={`p-1.5 rounded-full transition-colors ${previewDevice === 'mobile' ? 'bg-white text-black font-semibold shadow-sm' : 'hover:text-white'}`}
+                    className={`p-1.5 rounded-full transition-colors ${previewDevice === 'mobile' ? 'bg-white text-slate-950 font-bold shadow-xs' : 'hover:text-slate-900'}`}
                     title="Mobile View"
                   >
                     <Smartphone className="w-3.5 h-3.5" />
                   </button>
-                  <span className="text-[10px] font-mono px-2 text-white/60">
+                  <span className="text-[10px] font-mono px-2 text-slate-500">
                     2304 PX 100%
                   </span>
                 </div>
 
-                {/* Right: Drawer Toggles & Prominent White Action Button (Like Publish in Image) */}
+                {/* Right: Drawer Toggles & Prominent Action Button */}
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <button
                     onClick={() => setNavigatorOpen(!navigatorOpen)}
                     className={`hidden xl:flex items-center gap-1 px-3 py-1.5 rounded-full border text-xs font-mono transition-colors ${
                       navigatorOpen
-                        ? 'bg-white/20 text-white border-white/30'
-                        : 'bg-transparent text-white/60 border-white/15 hover:text-white'
+                        ? 'bg-slate-900 text-white border-slate-900 font-semibold shadow-xs'
+                        : 'bg-white/80 text-slate-600 border-slate-200 hover:text-slate-950'
                     }`}
                     title="Toggle Academic Navigator Drawer"
                   >
@@ -334,8 +334,8 @@ export const EnterpriseLayout: React.FC<EnterpriseLayoutProps> = ({ onOpenLogin 
                     onClick={() => setInspectorOpen(!inspectorOpen)}
                     className={`hidden 2xl:flex items-center gap-1 px-3 py-1.5 rounded-full border text-xs font-mono transition-colors ${
                       inspectorOpen
-                        ? 'bg-white/20 text-white border-white/30'
-                        : 'bg-transparent text-white/60 border-white/15 hover:text-white'
+                        ? 'bg-slate-900 text-white border-slate-900 font-semibold shadow-xs'
+                        : 'bg-white/80 text-slate-600 border-slate-200 hover:text-slate-950'
                     }`}
                     title="Toggle Governance Inspector Drawer"
                   >
@@ -343,28 +343,38 @@ export const EnterpriseLayout: React.FC<EnterpriseLayoutProps> = ({ onOpenLogin 
                     <span>Inspector</span>
                   </button>
 
-                  {/* Luminous White Publish / Action Pill Button (Exact match to Reference Image) */}
+                  {/* Luminous VisionOS Action Pill Button */}
                   <button
                     onClick={() => {
-                      // Trigger action or toast
+                      // Trigger contextual module primary action
                     }}
-                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white hover:bg-white/90 text-black font-semibold text-xs transition-all shadow-[0_0_20px_rgba(255,255,255,0.45)] hover:scale-102"
+                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-slate-900 hover:bg-black text-white font-semibold text-xs transition-all shadow-md hover:scale-102"
                   >
-                    <Sparkles className="w-3 h-3 text-emerald-600" />
+                    <Sparkles className="w-3 h-3 text-emerald-400" />
                     <span>{actionLabel}</span>
                   </button>
                 </div>
               </div>
 
-              {/* Internal Content Canvas: Housing Working High-Density Data Tables */}
+              {/* Subtitle Banner in Light Mode */}
+              {subtitle && (
+                <div className="px-5 py-2 bg-slate-50/70 border-b border-slate-200/80 text-xs text-slate-600 flex items-center justify-between flex-shrink-0">
+                  <span className="truncate">{subtitle}</span>
+                  <span className="font-mono text-[10px] text-slate-500 hidden md:inline ml-4 flex-shrink-0">
+                    APH Standard 2024-25
+                  </span>
+                </div>
+              )}
+
+              {/* Internal Content Canvas: Housing Working High-Density Data Tables in Light Mode */}
               <main className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
-                <div className="rounded-2xl bg-black/40 backdrop-blur-xl border border-white/10 p-4 sm:p-6 shadow-inner">
+                <div className="rounded-2xl bg-white/95 backdrop-blur-xl border border-slate-200/80 p-4 sm:p-6 shadow-sm">
                   {renderActiveModuleWorkspace()}
                 </div>
               </main>
             </div>
 
-            {/* Right Contextual Panel: VisionOS Inspector */}
+            {/* Right Contextual Panel: VisionOS Inspector in Light Glass */}
             <GovernanceInspectorPanel
               isOpen={inspectorOpen}
               onToggle={() => setInspectorOpen(false)}

@@ -236,17 +236,17 @@ export const StudentSubmissionWorkspace: React.FC = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 text-slate-900">
       {/* Workspace Header */}
-      <div className="surface-card p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="surface-card p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <UploadCloud className="w-5 h-5 text-[#D2D6DC]" />
-            <h2 className="text-base font-bold text-[#F1F3F5] tracking-tight">
+            <UploadCloud className="w-5 h-5 text-blue-600" />
+            <h2 className="text-base font-bold text-slate-950 tracking-tight">
               Student Data Submission & Ingestion Gateway
             </h2>
           </div>
-          <p className="text-xs text-[#929AA5] mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Standardised AICTE academic session ingestion, automated Verhoeff checksum validation, and statutory intake compliance checks.
           </p>
         </div>
@@ -255,40 +255,40 @@ export const StudentSubmissionWorkspace: React.FC = () => {
           <a
             href="/api/uploads/template-csv"
             download="aicte_student_upload_template.csv"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#181B22] hover:bg-[#20252E] border border-[#282E37] text-xs text-[#D2D6DC] transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-semibold text-slate-700 transition-colors shadow-2xs"
           >
             <Download className="w-3.5 h-3.5" />
             <span>CSV Template</span>
           </a>
 
           {/* Tab buttons */}
-          <div className="flex items-center p-1 rounded-lg bg-[#111317] border border-[#22262C]">
+          <div className="flex items-center p-1 rounded-xl bg-slate-100/90 border border-slate-200/80">
             <button
               onClick={() => setActiveTab('wizard')}
-              className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
+              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
                 activeTab === 'wizard'
-                  ? 'bg-[#1C2027] text-[#F1F3F5] shadow-sm'
-                  : 'text-[#929AA5] hover:text-[#D2D6DC]'
+                  ? 'bg-white text-slate-950 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Batch Wizard
             </button>
             <button
               onClick={() => setActiveTab('history')}
-              className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
+              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
                 activeTab === 'history'
-                  ? 'bg-[#1C2027] text-[#F1F3F5] shadow-sm'
-                  : 'text-[#929AA5] hover:text-[#D2D6DC]'
+                  ? 'bg-white text-slate-950 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Batch History
             </button>
             <button
               onClick={() => setActiveTab('manual')}
-              className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
+              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
                 activeTab === 'manual'
-                  ? 'bg-[#1C2027] text-[#F1F3F5] shadow-sm'
-                  : 'text-[#929AA5] hover:text-[#D2D6DC]'
+                  ? 'bg-white text-slate-950 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Single Entry
@@ -299,26 +299,26 @@ export const StudentSubmissionWorkspace: React.FC = () => {
 
       {/* Error / Success Banners */}
       {errorMessage && (
-        <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-center justify-between">
+        <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center justify-between shadow-2xs">
           <div className="flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-rose-400" />
+            <AlertTriangle className="w-4 h-4 text-rose-500" />
             <span>{errorMessage}</span>
           </div>
-          <button onClick={() => setErrorMessage('')} className="text-xs hover:underline">
+          <button onClick={() => setErrorMessage('')} className="text-xs hover:underline font-semibold">
             Dismiss
           </button>
         </div>
       )}
 
       {manualSuccessMsg && (
-        <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs flex items-center justify-between">
+        <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center justify-between shadow-2xs">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
             <span>{manualSuccessMsg}</span>
           </div>
           <button
             onClick={() => setActiveModule('students')}
-            className="text-xs underline font-mono ml-4"
+            className="text-xs underline font-mono ml-4 font-semibold text-emerald-700"
           >
             View in Student Registry
           </button>
@@ -327,9 +327,9 @@ export const StudentSubmissionWorkspace: React.FC = () => {
 
       {/* TAB 1: BATCH INGESTION WIZARD */}
       {activeTab === 'wizard' && (
-        <div className="surface-card p-5 space-y-5">
+        <div className="surface-card p-6 space-y-6">
           {/* Stepper Progress Bar */}
-          <div className="flex items-center justify-between border-b border-[#22262C] pb-4">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-4">
             {[
               { num: 1, title: 'Session & Intake' },
               { num: 2, title: 'Upload & Parse' },
@@ -340,22 +340,22 @@ export const StudentSubmissionWorkspace: React.FC = () => {
               <div
                 key={s.num}
                 className={`flex items-center gap-2 text-xs font-mono ${
-                  wizardStep >= s.num ? 'text-[#F1F3F5]' : 'text-[#5A6270]'
+                  wizardStep >= s.num ? 'text-slate-900 font-bold' : 'text-slate-400'
                 }`}
               >
                 <div
                   className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs ${
                     wizardStep === s.num
-                      ? 'bg-[#D2D6DC] text-[#08090B]'
+                      ? 'bg-slate-900 text-white'
                       : wizardStep > s.num
-                      ? 'bg-emerald-500 text-white'
-                      : 'bg-[#1A1E24] text-[#7B8390] border border-[#282E37]'
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-slate-100 text-slate-500 border border-slate-200'
                   }`}
                 >
                   {wizardStep > s.num ? '✓' : s.num}
                 </div>
                 <span className="hidden sm:inline font-medium">{s.title}</span>
-                {s.num < 5 && <div className="hidden md:block w-8 h-[1px] bg-[#22262C] ml-2" />}
+                {s.num < 5 && <div className="hidden md:block w-8 h-[1px] bg-slate-200 ml-2" />}
               </div>
             ))}
           </div>
@@ -364,23 +364,23 @@ export const StudentSubmissionWorkspace: React.FC = () => {
           {wizardStep === 1 && (
             <div className="space-y-4 max-w-xl">
               <div>
-                <h3 className="text-sm font-semibold text-[#F1F3F5]">
+                <h3 className="text-sm font-bold text-slate-950">
                   Select Academic Session & Regulatory Quota
                 </h3>
-                <p className="text-xs text-[#929AA5] mt-0.5">
+                <p className="text-xs text-slate-500 mt-0.5">
                   Records will be validated against AICTE Approved Intake for this academic session.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-[#D2D6DC] mb-1">
+                  <label className="block text-xs font-semibold text-slate-800 mb-1">
                     Academic Session
                   </label>
                   <select
                     value={selectedSession}
                     onChange={(e) => setSelectedSession(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-[#16191F] border border-[#282E37] text-xs text-[#F1F3F5] focus:outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-100 shadow-2xs"
                   >
                     <option value="2024-2025">2024-2025 (Current Enrolment)</option>
                     <option value="2023-2024">2023-2024 (Prior Session)</option>
@@ -388,10 +388,10 @@ export const StudentSubmissionWorkspace: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-[#D2D6DC] mb-1">
+                  <label className="block text-xs font-semibold text-slate-800 mb-1">
                     Regulatory Standard
                   </label>
-                  <div className="px-3 py-2 rounded-lg bg-[#111317] border border-[#22262C] text-xs text-[#929AA5] font-mono">
+                  <div className="px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 font-mono">
                     AICTE APH 2024-25 §4
                   </div>
                 </div>
@@ -400,7 +400,7 @@ export const StudentSubmissionWorkspace: React.FC = () => {
               <div className="pt-2">
                 <button
                   onClick={() => setWizardStep(2)}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#D2D6DC] hover:bg-white text-[#08090B] text-xs font-bold transition-colors"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-xs"
                 >
                   <span>Continue to Upload Data</span>
                   <ChevronRight className="w-3.5 h-3.5" />
@@ -414,19 +414,19 @@ export const StudentSubmissionWorkspace: React.FC = () => {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-semibold text-[#F1F3F5]">
+                  <h3 className="text-sm font-bold text-slate-950">
                     Upload Student Data (CSV)
                   </h3>
-                  <p className="text-xs text-[#929AA5]">
+                  <p className="text-xs text-slate-500">
                     Upload an exported CSV or paste raw comma-separated records directly.
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={handleLoadSampleData}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1A1E24] hover:bg-[#222730] border border-[#2E3541] text-xs text-[#D2D6DC] font-mono transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 border border-blue-200 text-xs text-blue-700 font-semibold font-mono transition-colors shadow-2xs"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <Sparkles className="w-3.5 h-3.5 text-blue-600" />
                   <span>Load AICTE Synthetic Test Batch</span>
                 </button>
               </div>
@@ -438,14 +438,14 @@ export const StudentSubmissionWorkspace: React.FC = () => {
                   value={csvText}
                   onChange={(e) => setCsvText(e.target.value)}
                   placeholder="Paste CSV rows here (including header row: apaarId,studentRollNumber,firstName,lastName,dateOfBirth,gender,category,courseCode)..."
-                  className="w-full p-3 rounded-xl bg-[#0D0F12] border border-[#22262C] font-mono text-xs text-[#F1F3F5] focus:outline-none focus:border-[#D2D6DC]"
+                  className="w-full p-3.5 rounded-xl bg-white border border-slate-200 font-mono text-xs text-slate-900 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-100 shadow-2xs"
                 />
               </div>
 
               <div className="flex items-center justify-between pt-2">
                 <button
                   onClick={() => setWizardStep(1)}
-                  className="flex items-center gap-1 text-xs text-[#929AA5] hover:text-[#F1F3F5]"
+                  className="flex items-center gap-1 text-xs text-slate-600 hover:text-slate-900 font-semibold"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
                   <span>Back to Session</span>
@@ -454,7 +454,7 @@ export const StudentSubmissionWorkspace: React.FC = () => {
                 <button
                   onClick={handleParseAndPreview}
                   disabled={isProcessing}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#D2D6DC] hover:bg-white text-[#08090B] text-xs font-bold transition-colors disabled:opacity-50"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-xs disabled:opacity-50"
                 >
                   {isProcessing ? (
                     <>
@@ -476,19 +476,19 @@ export const StudentSubmissionWorkspace: React.FC = () => {
           {wizardStep === 3 && previewData && (
             <div className="space-y-4">
               <div>
-                <h3 className="text-sm font-semibold text-[#F1F3F5]">
+                <h3 className="text-sm font-bold text-slate-950">
                   Automated Column Mapping Verification
                 </h3>
-                <p className="text-xs text-[#929AA5]">
+                <p className="text-xs text-slate-500">
                   Confirm that the fields in your file correspond accurately to mandatory AICTE statutory schema attributes.
                 </p>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                 {Object.entries(previewData.detectedMapping || {}).map(([expected, source]: any) => (
-                  <div key={expected} className="p-2.5 rounded-lg bg-[#111317] border border-[#22262C]">
-                    <div className="text-[10px] text-[#929AA5] uppercase font-mono">{expected}</div>
-                    <div className="text-xs font-semibold text-emerald-400 font-mono mt-0.5 truncate">
+                  <div key={expected} className="p-3 rounded-xl bg-slate-50 border border-slate-200 shadow-2xs">
+                    <div className="text-[10px] text-slate-500 uppercase font-mono">{expected}</div>
+                    <div className="text-xs font-bold text-emerald-700 font-mono mt-0.5 truncate">
                       ✓ {source}
                     </div>
                   </div>
@@ -498,7 +498,7 @@ export const StudentSubmissionWorkspace: React.FC = () => {
               <div className="flex items-center justify-between pt-2">
                 <button
                   onClick={() => setWizardStep(2)}
-                  className="flex items-center gap-1 text-xs text-[#929AA5] hover:text-[#F1F3F5]"
+                  className="flex items-center gap-1 text-xs text-slate-600 hover:text-slate-900 font-semibold"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
                   <span>Back to File</span>
@@ -506,7 +506,7 @@ export const StudentSubmissionWorkspace: React.FC = () => {
 
                 <button
                   onClick={() => setWizardStep(4)}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#D2D6DC] hover:bg-white text-[#08090B] text-xs font-bold transition-colors"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-xs"
                 >
                   <span>Review Pre-Validation Results</span>
                   <ChevronRight className="w-3.5 h-3.5" />
@@ -520,19 +520,19 @@ export const StudentSubmissionWorkspace: React.FC = () => {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-semibold text-[#F1F3F5]">
+                  <h3 className="text-sm font-bold text-slate-950">
                     Pre-Ingestion Validation Inspection
                   </h3>
-                  <p className="text-xs text-[#929AA5]">
+                  <p className="text-xs text-slate-500">
                     Inspecting {previewData.totalRows} candidate rows for Verhoeff syntax, format integrity, and duplicate flags.
                   </p>
                 </div>
                 <div className="flex items-center gap-2 font-mono text-xs">
-                  <span className="px-2 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold">
                     {previewData.validCount} Structural Valid
                   </span>
                   {previewData.errorCount > 0 && (
-                    <span className="px-2 py-1 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                    <span className="px-2.5 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200 font-semibold">
                       {previewData.errorCount} Flagged
                     </span>
                   )}
@@ -540,7 +540,7 @@ export const StudentSubmissionWorkspace: React.FC = () => {
               </div>
 
               {/* Preview Table */}
-              <div className="overflow-x-auto rounded-xl border border-[#22262C] bg-[#111317]">
+              <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-2xs">
                 <table className="w-full enterprise-table text-left">
                   <thead>
                     <tr>
@@ -558,27 +558,27 @@ export const StudentSubmissionWorkspace: React.FC = () => {
                       <tr key={idx}>
                         <td>
                           {row.isValid ? (
-                            <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 font-mono">
+                            <span className="inline-flex items-center gap-1 text-[10px] text-emerald-600 font-mono font-semibold">
                               <CheckCircle2 className="w-3 h-3" /> Valid
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 text-[10px] text-rose-400 font-mono">
+                            <span className="inline-flex items-center gap-1 text-[10px] text-rose-600 font-mono font-semibold">
                               <AlertTriangle className="w-3 h-3" /> Flagged
                             </span>
                           )}
                         </td>
-                        <td className="font-mono text-xs">{row.studentRollNumber}</td>
-                        <td className="font-medium text-[#F1F3F5]">
+                        <td className="font-mono text-xs text-slate-800">{row.studentRollNumber}</td>
+                        <td className="font-semibold text-slate-950">
                           {row.firstName} {row.lastName}
                         </td>
-                        <td className="font-mono text-xs text-[#D2D6DC]">{row.apaarId}</td>
-                        <td className="font-mono text-xs text-[#929AA5]">{row.courseCode}</td>
+                        <td className="font-mono text-xs text-slate-700">{row.apaarId}</td>
+                        <td className="font-mono text-xs text-slate-500">{row.courseCode}</td>
                         <td>
-                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#1C2027] text-[#D2D6DC] border border-[#2B313C] font-mono">
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 font-mono">
                             {row.category}
                           </span>
                         </td>
-                        <td className="text-[11px] text-[#929AA5]">
+                        <td className="text-[11px] text-slate-600">
                           {row.validationError || 'Verhoeff checksum passed'}
                         </td>
                       </tr>
@@ -588,14 +588,14 @@ export const StudentSubmissionWorkspace: React.FC = () => {
               </div>
 
               {isProcessing && (
-                <div className="space-y-1 py-2">
-                  <div className="flex justify-between text-xs text-[#929AA5] font-mono">
+                <div className="space-y-1.5 py-2">
+                  <div className="flex justify-between text-xs text-slate-600 font-mono">
                     <span>Committing Batch to Database Ledger...</span>
                     <span>{uploadProgress}%</span>
                   </div>
-                  <div className="h-1.5 w-full bg-[#1A1E24] rounded-full overflow-hidden">
+                  <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-emerald-400 transition-all duration-200"
+                      className="h-full bg-emerald-500 transition-all duration-200"
                       style={{ width: `${uploadProgress}%` }}
                     />
                   </div>
@@ -606,7 +606,7 @@ export const StudentSubmissionWorkspace: React.FC = () => {
                 <button
                   onClick={() => setWizardStep(3)}
                   disabled={isProcessing}
-                  className="flex items-center gap-1 text-xs text-[#929AA5] hover:text-[#F1F3F5]"
+                  className="flex items-center gap-1 text-xs text-slate-600 hover:text-slate-900 font-semibold"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
                   <span>Back to Mapping</span>
@@ -615,7 +615,7 @@ export const StudentSubmissionWorkspace: React.FC = () => {
                 <button
                   onClick={handleCommitBatch}
                   disabled={isProcessing}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-white text-xs font-bold transition-colors shadow-sm disabled:opacity-50"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs disabled:opacity-50"
                 >
                   <Database className="w-3.5 h-3.5" />
                   <span>Commit Batch & Register Ledger</span>
@@ -627,34 +627,34 @@ export const StudentSubmissionWorkspace: React.FC = () => {
           {/* Step 5: Batch Success & Ledger Confirmation */}
           {wizardStep === 5 && batchResult && (
             <div className="space-y-4 py-4 text-center max-w-lg mx-auto">
-              <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto">
+              <div className="w-12 h-12 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center mx-auto shadow-2xs">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-[#F1F3F5]">
+                <h3 className="text-base font-bold text-slate-950">
                   Batch Submission Confirmed & Anchored
                 </h3>
-                <p className="text-xs text-[#929AA5] mt-1 font-mono">
+                <p className="text-xs text-slate-500 mt-1 font-mono">
                   Batch Reference: {batchResult.batchNumber}
                 </p>
               </div>
 
-              <div className="surface-subtle p-3 rounded-xl border border-[#22262C] text-left space-y-1.5 font-mono text-xs">
-                <div className="flex justify-between text-[#929AA5]">
+              <div className="surface-subtle p-4 rounded-2xl border border-slate-200 text-left space-y-2 font-mono text-xs shadow-2xs">
+                <div className="flex justify-between text-slate-600">
                   <span>Total Records Ingested:</span>
-                  <span className="text-[#F1F3F5] font-bold">{batchResult.totalRecords}</span>
+                  <span className="text-slate-950 font-bold">{batchResult.totalRecords}</span>
                 </div>
-                <div className="flex justify-between text-[#929AA5]">
+                <div className="flex justify-between text-slate-600">
                   <span>Valid Records Activated:</span>
-                  <span className="text-emerald-400 font-bold">{batchResult.validRecords}</span>
+                  <span className="text-emerald-600 font-bold">{batchResult.validRecords}</span>
                 </div>
-                <div className="flex justify-between text-[#929AA5]">
+                <div className="flex justify-between text-slate-600">
                   <span>Flagged for Review:</span>
-                  <span className="text-amber-400 font-bold">{batchResult.flaggedRecords}</span>
+                  <span className="text-amber-600 font-bold">{batchResult.flaggedRecords}</span>
                 </div>
-                <div className="flex justify-between text-[#929AA5]">
+                <div className="flex justify-between text-slate-600">
                   <span>Cryptographic Ledger Hash:</span>
-                  <span className="text-[#D2D6DC] truncate max-w-[180px]">
+                  <span className="text-slate-800 truncate max-w-[180px]">
                     {batchResult.integrityHash?.slice(0, 16)}...
                   </span>
                 </div>
@@ -663,7 +663,7 @@ export const StudentSubmissionWorkspace: React.FC = () => {
               <div className="flex items-center justify-center gap-3 pt-2">
                 <button
                   onClick={() => setActiveModule('students')}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#D2D6DC] hover:bg-white text-[#08090B] text-xs font-bold transition-colors"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-xs"
                 >
                   <span>Open Student Registry</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -675,7 +675,7 @@ export const StudentSubmissionWorkspace: React.FC = () => {
                     setPreviewData(null);
                     setBatchResult(null);
                   }}
-                  className="px-4 py-2 rounded-lg bg-[#181B22] hover:bg-[#20252E] border border-[#282E37] text-xs text-[#D2D6DC] transition-colors"
+                  className="px-4 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-xs font-semibold text-slate-800 transition-colors shadow-2xs"
                 >
                   Upload Another Batch
                 </button>
@@ -687,24 +687,24 @@ export const StudentSubmissionWorkspace: React.FC = () => {
 
       {/* TAB 2: BATCH HISTORY TABLE */}
       {activeTab === 'history' && (
-        <div className="surface-card p-4 space-y-3">
-          <div className="flex items-center justify-between pb-2 border-b border-[#22262C]">
+        <div className="surface-card p-5 space-y-4">
+          <div className="flex items-center justify-between pb-2 border-b border-slate-200">
             <div className="flex items-center gap-2">
-              <History className="w-4 h-4 text-[#D2D6DC]" />
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-[#F1F3F5] font-mono">
+              <History className="w-4 h-4 text-blue-600" />
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 font-mono">
                 Historical Academic Ingestion Batches
               </h3>
             </div>
             <button
               onClick={fetchBatchHistory}
-              className="p-1 rounded text-[#929AA5] hover:text-[#F1F3F5]"
+              className="p-1.5 rounded-full text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
               title="Refresh History"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${historyLoading ? 'animate-spin' : ''}`} />
             </button>
           </div>
 
-          <div className="overflow-x-auto rounded-xl border border-[#22262C] bg-[#111317]">
+          <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-2xs">
             <table className="w-full enterprise-table text-left">
               <thead>
                 <tr>
@@ -720,32 +720,32 @@ export const StudentSubmissionWorkspace: React.FC = () => {
               <tbody>
                 {batches.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="text-center py-6 text-xs text-[#7B8390]">
+                    <td colSpan={7} className="text-center py-6 text-xs text-slate-500">
                       No historical batches recorded yet.
                     </td>
                   </tr>
                 ) : (
                   batches.map((b) => (
                     <tr key={b.id}>
-                      <td className="font-mono font-semibold text-xs text-[#D2D6DC]">
+                      <td className="font-mono font-bold text-xs text-slate-950">
                         {b.batchNumber}
                       </td>
-                      <td className="font-mono text-xs">{b.academicSession}</td>
-                      <td className="font-mono text-xs">{b.totalRecords}</td>
-                      <td className="font-mono text-xs text-emerald-400">{b.validRecords}</td>
-                      <td className="font-mono text-xs text-amber-400">{b.flaggedRecords}</td>
+                      <td className="font-mono text-xs text-slate-600">{b.academicSession}</td>
+                      <td className="font-mono text-xs text-slate-800">{b.totalRecords}</td>
+                      <td className="font-mono text-xs text-emerald-600 font-semibold">{b.validRecords}</td>
+                      <td className="font-mono text-xs text-amber-600 font-semibold">{b.flaggedRecords}</td>
                       <td>
                         <span
-                          className={`text-[9px] px-1.5 py-0.5 rounded font-mono ${
+                          className={`text-[9px] px-2 py-0.5 rounded-full font-mono font-semibold ${
                             b.status === 'VALIDATED' || b.status === 'APPROVED'
-                              ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                              : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                              : 'bg-amber-50 text-amber-700 border border-amber-200'
                           }`}
                         >
                           {b.status}
                         </span>
                       </td>
-                      <td className="text-xs text-[#929AA5] font-mono">
+                      <td className="text-xs text-slate-500 font-mono">
                         {new Date(b.createdAt).toLocaleDateString()}
                       </td>
                     </tr>
@@ -759,12 +759,12 @@ export const StudentSubmissionWorkspace: React.FC = () => {
 
       {/* TAB 3: SINGLE MANUAL ENTRY */}
       {activeTab === 'manual' && (
-        <div className="surface-card p-5 max-w-2xl mx-auto space-y-4">
-          <div className="pb-3 border-b border-[#22262C]">
-            <h3 className="text-sm font-semibold text-[#F1F3F5]">
+        <div className="surface-card p-6 max-w-2xl mx-auto space-y-5">
+          <div className="pb-3 border-b border-slate-200">
+            <h3 className="text-sm font-bold text-slate-950">
               Single Student Admission Registration
             </h3>
-            <p className="text-xs text-[#929AA5] mt-0.5">
+            <p className="text-xs text-slate-500 mt-0.5">
               Directly enrol a single student with instant Verhoeff checksum validation and intake quota verification.
             </p>
           </div>
@@ -772,7 +772,7 @@ export const StudentSubmissionWorkspace: React.FC = () => {
           <form onSubmit={handleManualSubmit} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-[#D2D6DC] mb-1">
+                <label className="block text-xs font-semibold text-slate-800 mb-1">
                   12-Digit APAAR ID *
                 </label>
                 <input
@@ -781,11 +781,11 @@ export const StudentSubmissionWorkspace: React.FC = () => {
                   placeholder="9874-5612-3450"
                   value={manualApaar}
                   onChange={(e) => setManualApaar(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-[#16191F] border border-[#282E37] text-xs font-mono text-[#F1F3F5] focus:outline-none focus:border-[#D2D6DC]"
+                  className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-mono text-slate-900 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-100 shadow-2xs"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-[#D2D6DC] mb-1">
+                <label className="block text-xs font-semibold text-slate-800 mb-1">
                   Institutional Roll Number *
                 </label>
                 <input
@@ -794,12 +794,12 @@ export const StudentSubmissionWorkspace: React.FC = () => {
                   placeholder="2024-CSE-099"
                   value={manualRoll}
                   onChange={(e) => setManualRoll(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-[#16191F] border border-[#282E37] text-xs font-mono text-[#F1F3F5] focus:outline-none focus:border-[#D2D6DC]"
+                  className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-mono text-slate-900 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-100 shadow-2xs"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-[#D2D6DC] mb-1">
+                <label className="block text-xs font-semibold text-slate-800 mb-1">
                   First Name *
                 </label>
                 <input
@@ -808,11 +808,11 @@ export const StudentSubmissionWorkspace: React.FC = () => {
                   placeholder="First name"
                   value={manualFname}
                   onChange={(e) => setManualFname(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-[#16191F] border border-[#282E37] text-xs text-[#F1F3F5] focus:outline-none focus:border-[#D2D6DC]"
+                  className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-100 shadow-2xs"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-[#D2D6DC] mb-1">
+                <label className="block text-xs font-semibold text-slate-800 mb-1">
                   Last Name *
                 </label>
                 <input
@@ -821,12 +821,12 @@ export const StudentSubmissionWorkspace: React.FC = () => {
                   placeholder="Last name"
                   value={manualLname}
                   onChange={(e) => setManualLname(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-[#16191F] border border-[#282E37] text-xs text-[#F1F3F5] focus:outline-none focus:border-[#D2D6DC]"
+                  className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-100 shadow-2xs"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-[#D2D6DC] mb-1">
+                <label className="block text-xs font-semibold text-slate-800 mb-1">
                   Date of Birth *
                 </label>
                 <input
@@ -834,17 +834,17 @@ export const StudentSubmissionWorkspace: React.FC = () => {
                   required
                   value={manualDob}
                   onChange={(e) => setManualDob(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-[#16191F] border border-[#282E37] text-xs font-mono text-[#F1F3F5] focus:outline-none focus:border-[#D2D6DC]"
+                  className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-mono text-slate-900 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-100 shadow-2xs"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-[#D2D6DC] mb-1">
+                <label className="block text-xs font-semibold text-slate-800 mb-1">
                   Gender *
                 </label>
                 <select
                   value={manualGender}
                   onChange={(e) => setManualGender(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-[#16191F] border border-[#282E37] text-xs text-[#F1F3F5] focus:outline-none"
+                  className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-100 shadow-2xs"
                 >
                   <option value="MALE">Male</option>
                   <option value="FEMALE">Female</option>
@@ -853,13 +853,13 @@ export const StudentSubmissionWorkspace: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-[#D2D6DC] mb-1">
+                <label className="block text-xs font-semibold text-slate-800 mb-1">
                   Social Category *
                 </label>
                 <select
                   value={manualCategory}
                   onChange={(e) => setManualCategory(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-[#16191F] border border-[#282E37] text-xs text-[#F1F3F5] focus:outline-none"
+                  className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-100 shadow-2xs"
                 >
                   <option value="GENERAL">General</option>
                   <option value="OBC">OBC (Non-Creamy Layer)</option>
@@ -869,7 +869,7 @@ export const StudentSubmissionWorkspace: React.FC = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-medium text-[#D2D6DC] mb-1">
+                <label className="block text-xs font-semibold text-slate-800 mb-1">
                   Approved Course Code *
                 </label>
                 <input
@@ -877,7 +877,7 @@ export const StudentSubmissionWorkspace: React.FC = () => {
                   required
                   value={manualCourseCode}
                   onChange={(e) => setManualCourseCode(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-[#16191F] border border-[#282E37] text-xs font-mono text-[#F1F3F5] focus:outline-none focus:border-[#D2D6DC]"
+                  className="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-mono text-slate-900 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-100 shadow-2xs"
                 />
               </div>
             </div>
@@ -886,7 +886,7 @@ export const StudentSubmissionWorkspace: React.FC = () => {
               <button
                 type="submit"
                 disabled={manualSubmitting}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#D2D6DC] hover:bg-white text-[#08090B] text-xs font-bold transition-colors shadow-sm disabled:opacity-50"
+                className="flex items-center gap-1.5 px-5 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-xs disabled:opacity-50"
               >
                 {manualSubmitting ? (
                   <>

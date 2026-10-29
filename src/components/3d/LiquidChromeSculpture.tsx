@@ -9,9 +9,9 @@ interface LiquidChromeSculptureProps {
 }
 
 /**
- * Sculptural Liquid-Chrome Environmental Element
- * Refined, flowing molten platinum form situated in the spatial perimeter.
- * Provides cinematic liquid-platinum identity with physically based metallic reflections.
+ * Sculptural Liquid Glass Environmental Form
+ * Crystal-clear optical glass sculpture in the spatial perimeter.
+ * Provides luminous refraction and fluid elegance in light mode.
  */
 export const LiquidChromeSculpture: React.FC<LiquidChromeSculptureProps> = ({
   position = [0, 1.2, -7.5],
@@ -32,12 +32,16 @@ export const LiquidChromeSculpture: React.FC<LiquidChromeSculptureProps> = ({
     <group position={position} scale={scale}>
       <mesh ref={meshRef} castShadow receiveShadow>
         <torusKnotGeometry args={[1.2, 0.32, 128, 32, 2, 3]} />
-        <meshStandardMaterial
-          color="#F2F5F9"
-          metalness={0.97}
-          roughness={0.11}
-          emissive="#18202A"
-          emissiveIntensity={0.25}
+        <meshPhysicalMaterial
+          color="#FFFFFF"
+          roughness={0.06}
+          metalness={0.05}
+          transmission={0.94}
+          thickness={0.8}
+          ior={1.52}
+          transparent
+          opacity={0.85}
+          clearcoat={1.0}
         />
       </mesh>
     </group>

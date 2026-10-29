@@ -90,10 +90,10 @@ export const NonWebGLFallback: React.FC = () => {
       {/* Grid of Modules */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-semibold tracking-wider text-highlight-silver uppercase font-mono">
+          <h3 className="text-sm font-bold tracking-wider text-slate-900 uppercase font-mono">
             National Technical Governance Modules
           </h3>
-          <span className="text-xs text-liquid-silver">10 Active AICTE Bureaus</span>
+          <span className="text-xs text-slate-500 font-mono">11 Active AICTE Bureaus</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -103,20 +103,20 @@ export const NonWebGLFallback: React.FC = () => {
               <div
                 key={m.id}
                 onClick={() => openWorkspace(m.id)}
-                className="glass-panel rounded-2xl p-5 border border-glass-border hover:border-platinum transition-all cursor-pointer group hover:-translate-y-1"
+                className="liquid-glass-panel rounded-3xl p-5 border border-white/80 hover:border-blue-400 transition-all cursor-pointer group hover:-translate-y-1 shadow-sm"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-graphite flex items-center justify-center border border-glass-border group-hover:border-platinum transition-colors">
-                    <Icon className="w-5 h-5 text-platinum" />
+                  <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-md">
+                    <Icon className="w-5 h-5 text-white" />
                   </div>
-                  <div className="w-7 h-7 rounded-full bg-graphite flex items-center justify-center text-liquid-silver group-hover:text-midnight group-hover:bg-platinum transition-all">
+                  <div className="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 group-hover:text-white group-hover:bg-slate-900 transition-all shadow-xs">
                     <ArrowRight className="w-3.5 h-3.5" />
                   </div>
                 </div>
-                <h4 className="text-sm font-bold text-highlight-silver group-hover:text-white transition-colors">
+                <h4 className="text-sm font-bold text-slate-950 group-hover:text-blue-600 transition-colors">
                   {m.title}
                 </h4>
-                <p className="text-xs text-liquid-silver mt-1 leading-relaxed">
+                <p className="text-xs text-slate-600 mt-1 leading-relaxed">
                   {m.subtitle}
                 </p>
               </div>

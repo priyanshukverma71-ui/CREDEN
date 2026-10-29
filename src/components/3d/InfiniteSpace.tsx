@@ -14,10 +14,10 @@ export const InfiniteSpace: React.FC = () => {
       <LiquidChromeSculpture position={[0, 2.6, -12]} scale={1.1} rotationSpeed={0.06} />
       <LiquidChromeSculpture position={[16, 2.2, -10]} scale={0.85} rotationSpeed={0.08} />
 
-      {/* Subtle silver horizon divider */}
+      {/* Subtle horizon divider in light studio mode */}
       <mesh position={[0, -2.78, -14]}>
         <boxGeometry args={[140, 0.015, 0.015]} />
-        <meshBasicMaterial color="#1E232B" transparent opacity={0.35} />
+        <meshBasicMaterial color="#CBD5E1" transparent opacity={0.4} />
       </mesh>
     </group>
   );

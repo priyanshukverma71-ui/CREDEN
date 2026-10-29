@@ -88,9 +88,9 @@ export const SpatialBottomDock: React.FC = () => {
 
   return (
     <div className="fixed bottom-3 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-1.5 pointer-events-none select-none">
-      {/* VisionOS Frosted Liquid Glass Dock Capsule */}
+      {/* VisionOS Frosted Light Liquid Glass Dock Capsule */}
       <nav
-        className="pointer-events-auto px-3 py-2 rounded-full liquid-glass-pill flex items-center gap-2 shadow-[0_25px_60px_rgba(0,0,0,0.7),inset_0_1px_1.5px_rgba(255,255,255,0.3)] transition-all"
+        className="pointer-events-auto px-3.5 py-2.5 rounded-full liquid-glass-pill flex items-center gap-2 shadow-[0_20px_45px_rgba(15,23,42,0.08),inset_0_1px_2px_rgba(255,255,255,1)] transition-all"
         aria-label="Spatial Quick Dock"
       >
         {dockItems.map((item) => {
@@ -110,7 +110,7 @@ export const SpatialBottomDock: React.FC = () => {
                 item.bgGradient
               } text-white shadow-md ${
                 isActive
-                  ? 'scale-110 ring-2 ring-white ring-offset-2 ring-offset-black/40 shadow-[0_0_20px_rgba(255,255,255,0.5)]'
+                  ? 'scale-110 ring-2 ring-slate-900 ring-offset-2 ring-offset-white shadow-lg'
                   : 'hover:scale-115 hover:-translate-y-1 opacity-90 hover:opacity-100'
               }`}
               title={item.label}
@@ -118,8 +118,8 @@ export const SpatialBottomDock: React.FC = () => {
             >
               <Icon className="w-5 h-5 drop-shadow-sm" />
 
-              {/* VisionOS Floating Tooltip Pill */}
-              <div className="absolute bottom-14 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-xl liquid-glass-panel text-white text-xs font-medium border border-white/20 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-150 pointer-events-none shadow-2xl z-50">
+              {/* VisionOS Floating Light Tooltip Pill */}
+              <div className="absolute bottom-14 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-xl liquid-glass-panel text-slate-900 text-xs font-semibold border border-white/90 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-150 pointer-events-none shadow-xl z-50">
                 {item.label}
               </div>
             </button>
@@ -127,8 +127,8 @@ export const SpatialBottomDock: React.FC = () => {
         })}
       </nav>
 
-      {/* VisionOS Spatial Grab Bar Pill (Matches Reference Image) */}
-      <div className="w-16 h-1 rounded-full bg-white/40 shadow-sm" />
+      {/* VisionOS Spatial Grab Bar Pill */}
+      <div className="w-16 h-1 rounded-full bg-slate-400/40 shadow-xs" />
     </div>
   );
 };
