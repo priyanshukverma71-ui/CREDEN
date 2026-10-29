@@ -5,7 +5,6 @@ import { UserRole } from '../../types';
 import {
   ChevronLeft,
   ChevronRight,
-  Lock,
   Search,
   Bell,
   ShieldCheck,
@@ -17,7 +16,6 @@ import {
   GraduationCap,
   LogOut,
   ChevronDown,
-  RotateCw,
 } from 'lucide-react';
 
 interface SpatialTopCapsuleProps {
@@ -140,22 +138,6 @@ export const SpatialTopCapsule: React.FC<SpatialTopCapsuleProps> = ({
               Institutional Portal
             </span>
           </div>
-        </div>
-
-        {/* Center: VisionOS Verified Address Capsule in Light Mode */}
-        <div className="hidden md:flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-slate-100/90 border border-slate-200 text-xs font-mono text-slate-600 shadow-inner max-w-md w-full justify-center">
-          <Lock className="w-3.5 h-3.5 text-emerald-600" />
-          <span className="text-slate-500 truncate">https://creden.academic-registry.in/</span>
-          <span className="text-slate-950 font-semibold truncate capitalize">
-            {activeModule}
-          </span>
-          <button
-            onClick={() => window.location.reload()}
-            className="p-1 rounded-full hover:bg-slate-200/80 text-slate-500 hover:text-slate-900 ml-auto transition-colors"
-            title="Reload Environment"
-          >
-            <RotateCw className="w-3 h-3" />
-          </button>
         </div>
 
         {/* Right Controls: Search, Persona, Notifications, Profile */}
