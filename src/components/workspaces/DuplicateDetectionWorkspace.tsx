@@ -29,14 +29,14 @@ export const DuplicateDetectionWorkspace: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
 
   const fetchCases = async () => {
-    if (!token) return;
     setLoading(true);
     try {
+      const headers: Record<string, string> = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
       let url = '/api/duplicates';
       if (statusFilter) url += `?status=${statusFilter}`;
-      const res = await fetch(url, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(url, { headers });
       if (res.ok) {
         const data = await res.json();
         setCases(data || []);

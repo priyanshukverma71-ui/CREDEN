@@ -56,14 +56,14 @@ export const StudentDataWorkspace: React.FC = () => {
   const [correctedApaar, setCorrectedApaar] = useState('');
 
   const fetchStudents = async () => {
-    if (!token) return;
     setLoading(true);
     try {
+      const headers: Record<string, string> = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
       let url = `/api/students?search=${encodeURIComponent(search)}`;
       if (statusFilter) url += `&recordStatus=${statusFilter}`;
-      const res = await fetch(url, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(url, { headers });
       if (res.ok) {
         const data = await res.json();
         setStudents(data.data || []);

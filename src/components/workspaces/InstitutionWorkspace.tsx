@@ -28,11 +28,11 @@ export const InstitutionWorkspace: React.FC = () => {
   const [approvedIntake, setApprovedIntake] = useState(60);
 
   const fetchInstitutions = async () => {
-    if (!token) return;
     try {
-      const res = await fetch(`/api/institutions?search=${encodeURIComponent(search)}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const headers: Record<string, string> = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      const res = await fetch(`/api/institutions?search=${encodeURIComponent(search)}`, { headers });
       if (res.ok) {
         const data = await res.json();
         const list = data.data || [];
