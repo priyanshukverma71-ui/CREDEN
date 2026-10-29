@@ -30,20 +30,20 @@ interface PortalContextType {
   advanceSihStep: () => void;
 }
 
-// Module coordinates mapped horizontally along X axis
+// Module coordinates mapped horizontally along X axis with generous negative space
 export const MODULE_COORDINATES: Record<ModuleId, number> = {
   overview: 0,
-  institutions: -18,
-  students: -14,
+  institutions: -20,
+  students: -16,
   submissions: -12,
-  apaar: -10,
-  admissions: -6,
-  duplicates: -2,
-  compliance: 2,
-  verification: 6,
-  reports: 10,
-  audit: 14,
-  integration: 18,
+  apaar: -8,
+  admissions: -4,
+  duplicates: 0,
+  compliance: 4,
+  verification: 8,
+  reports: 12,
+  audit: 16,
+  integration: 20,
   settings: 0,
 };
 
@@ -51,7 +51,7 @@ const PortalContext = createContext<PortalContextType | undefined>(undefined);
 
 export const PortalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [activeModule, setActiveModule] = useState<ModuleId>('overview');
-  const [isWorkspaceOpen, setIsWorkspaceOpen] = useState<boolean>(true);
+  const [isWorkspaceOpen, setIsWorkspaceOpen] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<ViewMode>('enterprise');
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
   const [scrollProgress, setScrollProgress] = useState<number>(0.5); // centered at overview initially
