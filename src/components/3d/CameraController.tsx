@@ -43,10 +43,10 @@ export const CameraController: React.FC<CameraControllerProps> = () => {
       if (activeModule !== 'overview') return;
       const rawDelta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
       const step = rawDelta * 0.012;
-      const newTarget = Math.max(-21, Math.min(21, targetX.current + step));
+      const newTarget = Math.max(-19, Math.min(19, targetX.current + step));
       targetX.current = newTarget;
       setCameraTargetX(newTarget);
-      setScrollProgress((newTarget + 21) / 42);
+      setScrollProgress((newTarget + 18) / 36);
     };
 
     // 2. Keyboard Navigation: Arrow Keys to Pan, Enter/Space to Open
@@ -54,15 +54,15 @@ export const CameraController: React.FC<CameraControllerProps> = () => {
       if (activeModule !== 'overview') return;
 
       if (e.key === 'ArrowRight') {
-        const nextTarget = Math.min(20, targetX.current + 4);
+        const nextTarget = Math.min(18, targetX.current + 4);
         targetX.current = nextTarget;
         setCameraTargetX(nextTarget);
-        setScrollProgress((nextTarget + 21) / 42);
+        setScrollProgress((nextTarget + 18) / 36);
       } else if (e.key === 'ArrowLeft') {
-        const prevTarget = Math.max(-20, targetX.current - 4);
+        const prevTarget = Math.max(-18, targetX.current - 4);
         targetX.current = prevTarget;
         setCameraTargetX(prevTarget);
-        setScrollProgress((prevTarget + 21) / 42);
+        setScrollProgress((prevTarget + 18) / 36);
       } else if (e.key === 'Enter' || e.key === ' ') {
         const entries = Object.entries(MODULE_COORDINATES) as [ModuleId, number][];
         let closestMod: ModuleId = 'institutions';
@@ -82,13 +82,13 @@ export const CameraController: React.FC<CameraControllerProps> = () => {
           openWorkspace(closestMod);
         }
       } else if (e.key === 'Home') {
-        targetX.current = -20;
-        setCameraTargetX(-20);
-        setScrollProgress(0.02);
+        targetX.current = -18;
+        setCameraTargetX(-18);
+        setScrollProgress(0);
       } else if (e.key === 'End') {
-        targetX.current = 20;
-        setCameraTargetX(20);
-        setScrollProgress(0.98);
+        targetX.current = 18;
+        setCameraTargetX(18);
+        setScrollProgress(1);
       }
     };
 

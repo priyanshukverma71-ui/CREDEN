@@ -1,9 +1,9 @@
 import React from 'react';
 
 /**
- * Luminous Light Studio Ground Plane
- * Replaces the dark floor with a soft, daylight studio floor plane.
- * Catches soft ambient shadows directly beneath floating liquid glass pods.
+ * Bright Professional Studio Ground Plane
+ * Blends seamlessly into the #F7F9FC background while receiving realistic soft contact shadows
+ * beneath the floating 3D module cards.
  */
 export const ObsidianFloor: React.FC = () => {
   return (
@@ -11,9 +11,9 @@ export const ObsidianFloor: React.FC = () => {
       <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[160, 60]} />
         <meshStandardMaterial
-          color="#E2E8F0"
-          roughness={0.78}
-          metalness={0.04}
+          color="#F7F9FC"
+          roughness={0.9}
+          metalness={0.01}
         />
       </mesh>
     </group>

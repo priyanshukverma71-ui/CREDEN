@@ -33,17 +33,17 @@ interface PortalContextType {
 // Module coordinates mapped horizontally along X axis with generous negative space
 export const MODULE_COORDINATES: Record<ModuleId, number> = {
   overview: 0,
-  institutions: -20,
-  students: -16,
-  submissions: -12,
-  apaar: -8,
-  admissions: -4,
-  duplicates: 0,
-  compliance: 4,
-  verification: 8,
-  reports: 12,
-  audit: 16,
-  integration: 20,
+  institutions: -18,
+  submissions: -14,
+  apaar: -10,
+  admissions: -6,
+  duplicates: -2,
+  compliance: 2,
+  verification: 6,
+  reports: 10,
+  audit: 14,
+  integration: 18,
+  students: -14,
   settings: 0,
 };
 
