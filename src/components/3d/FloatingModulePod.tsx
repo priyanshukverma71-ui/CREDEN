@@ -417,52 +417,52 @@ export const FloatingModulePod: React.FC<FloatingModulePodProps> = ({
         <meshBasicMaterial color="#000000" transparent opacity={0.4} />
       </mesh>
 
-      {/* 2. Refined Architectural Charcoal Slab (Deep Matte-Black & Graphite) */}
+      {/* 2. Refined Architectural Charcoal Slab (Deep Obsidian & Graphite) */}
       <mesh castShadow receiveShadow position={[0, 0, 0]}>
         <boxGeometry args={[3.2, 4.4, 0.08]} />
         <meshStandardMaterial
-          color="#0E1116"
-          roughness={0.68}
-          metalness={0.22}
+          color="#0B0E14"
+          roughness={0.65}
+          metalness={0.25}
         />
       </mesh>
 
-      {/* 3. Extremely Thin Platinum Hairline Border (1px Equivalent Precision Edge) */}
+      {/* 3. Extremely Thin Liquid Platinum Hairline Border (1px Precision Edge) */}
       <group position={[0, 0, 0.042]}>
         {/* Top hairline */}
         <mesh position={[0, 2.2, 0]}>
           <boxGeometry args={[3.2, 0.012, 0.006]} />
           <meshStandardMaterial
-            color={hovered || isActive ? '#FFFFFF' : '#8E95A2'}
-            roughness={0.3}
-            metalness={0.85}
+            color={hovered || isActive ? '#FFFFFF' : '#D7DBE2'}
+            roughness={0.25}
+            metalness={0.9}
           />
         </mesh>
         {/* Bottom hairline */}
         <mesh position={[0, -2.2, 0]}>
           <boxGeometry args={[3.2, 0.012, 0.006]} />
           <meshStandardMaterial
-            color={hovered || isActive ? '#FFFFFF' : '#5A6270'}
-            roughness={0.4}
-            metalness={0.7}
+            color={hovered || isActive ? '#FFFFFF' : '#475160'}
+            roughness={0.35}
+            metalness={0.75}
           />
         </mesh>
         {/* Left hairline */}
         <mesh position={[-1.6, 0, 0]}>
           <boxGeometry args={[0.012, 4.4, 0.006]} />
           <meshStandardMaterial
-            color={hovered || isActive ? '#FFFFFF' : '#5A6270'}
-            roughness={0.4}
-            metalness={0.7}
+            color={hovered || isActive ? '#FFFFFF' : '#475160'}
+            roughness={0.35}
+            metalness={0.75}
           />
         </mesh>
         {/* Right hairline */}
         <mesh position={[1.6, 0, 0]}>
           <boxGeometry args={[0.012, 4.4, 0.006]} />
           <meshStandardMaterial
-            color={hovered || isActive ? '#FFFFFF' : '#5A6270'}
-            roughness={0.4}
-            metalness={0.7}
+            color={hovered || isActive ? '#FFFFFF' : '#475160'}
+            roughness={0.35}
+            metalness={0.75}
           />
         </mesh>
       </group>
@@ -537,7 +537,7 @@ export const FloatingModulePod: React.FC<FloatingModulePodProps> = ({
           position={[0, 0, 0.025]}
           fontSize={0.12}
           letterSpacing={0.06}
-          color={hovered ? '#FFFFFF' : '#D2D6DC'}
+          color={hovered ? '#FFFFFF' : '#D7DBE2'}
           anchorX="center"
           anchorY="middle"
         >

@@ -25,19 +25,22 @@ export const CameraController: React.FC<CameraControllerProps> = () => {
   const startPointerX = useRef(0);
   const startTargetX = useRef(0);
 
+  // Pointer Parallax coordinates (-1 to 1)
+  const pointerX = useRef(0);
+  const pointerY = useRef(0);
+  const targetPointerX = useRef(0);
+  const targetPointerY = useRef(0);
+
   // Sync external cameraTargetX updates (e.g. from sidebar clicks or search)
   useEffect(() => {
     targetX.current = cameraTargetX;
   }, [cameraTargetX]);
 
-  // Handle Wheel, Keyboard, and Touch/Pointer Panning
+  // Handle Wheel, Keyboard, Pointer Parallax, and Touch/Pointer Panning
   useEffect(() => {
-    // Only capture 3D navigation when user is in the 3D overview scene
-    if (activeModule !== 'overview') return;
-
     // 1. Mouse Wheel & Trackpad Horizontal Navigation
     const handleWheel = (e: WheelEvent) => {
-      // Use whichever delta has greater magnitude (supports both horizontal trackpads & vertical mouse wheels)
+      if (activeModule !== 'overview') return;
       const rawDelta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
       const step = rawDelta * 0.012;
       const newTarget = Math.max(-21, Math.min(21, targetX.current + step));
@@ -61,7 +64,6 @@ export const CameraController: React.FC<CameraControllerProps> = () => {
         setCameraTargetX(prevTarget);
         setScrollProgress((prevTarget + 21) / 42);
       } else if (e.key === 'Enter' || e.key === ' ') {
-        // Open the module closest to the camera center
         const entries = Object.entries(MODULE_COORDINATES) as [ModuleId, number][];
         let closestMod: ModuleId = 'institutions';
         let minDistance = Infinity;
@@ -90,16 +92,24 @@ export const CameraController: React.FC<CameraControllerProps> = () => {
       }
     };
 
-    // 3. Pointer Drag Panning across the 3D Canvas
+    // 3. Pointer Move for Subtle Spatial Parallax
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isReducedMotion) return;
+      targetPointerX.current = (e.clientX / window.innerWidth) * 2 - 1;
+      targetPointerY.current = -(e.clientY / window.innerHeight) * 2 + 1;
+    };
+
+    // 4. Pointer Drag Panning across the 3D Canvas
     const dom = gl.domElement;
     const handlePointerDown = (e: PointerEvent) => {
+      if (activeModule !== 'overview') return;
       isDragging.current = true;
       startPointerX.current = e.clientX;
       startTargetX.current = targetX.current;
     };
 
     const handlePointerMove = (e: PointerEvent) => {
-      if (!isDragging.current) return;
+      if (!isDragging.current || activeModule !== 'overview') return;
       const delta = (e.clientX - startPointerX.current) * 0.016;
       const newTarget = Math.max(-21, Math.min(21, startTargetX.current - delta));
       targetX.current = newTarget;
@@ -113,6 +123,7 @@ export const CameraController: React.FC<CameraControllerProps> = () => {
 
     window.addEventListener('wheel', handleWheel, { passive: true });
     window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
     dom.addEventListener('pointerdown', handlePointerDown);
     window.addEventListener('pointermove', handlePointerMove);
     window.addEventListener('pointerup', handlePointerUp);
@@ -120,20 +131,29 @@ export const CameraController: React.FC<CameraControllerProps> = () => {
     return () => {
       window.removeEventListener('wheel', handleWheel);
       window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('mousemove', handleMouseMove);
       dom.removeEventListener('pointerdown', handlePointerDown);
       window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('pointerup', handlePointerUp);
     };
-  }, [gl, activeModule, setCameraTargetX, setScrollProgress, openWorkspace]);
+  }, [gl, activeModule, setCameraTargetX, setScrollProgress, openWorkspace, isReducedMotion]);
 
-  // Smooth, damped camera frame updates
+  // Smooth, damped camera frame updates with subtle pointer parallax
   useFrame(() => {
-    // In reduced motion, snap immediately without interpolation
     const lerpFactor = isReducedMotion ? 1 : 0.075;
     currentX.current = THREE.MathUtils.lerp(currentX.current, targetX.current, lerpFactor);
 
-    camera.position.x = currentX.current;
-    camera.position.y = 0.35;
+    // Damped parallax interpolation
+    if (!isReducedMotion) {
+      pointerX.current = THREE.MathUtils.lerp(pointerX.current, targetPointerX.current, 0.05);
+      pointerY.current = THREE.MathUtils.lerp(pointerY.current, targetPointerY.current, 0.05);
+    }
+
+    const parallaxOffsetX = isReducedMotion ? 0 : pointerX.current * 0.35;
+    const parallaxOffsetY = isReducedMotion ? 0 : pointerY.current * 0.18;
+
+    camera.position.x = currentX.current + parallaxOffsetX;
+    camera.position.y = 0.35 + parallaxOffsetY;
     camera.position.z = 8.2;
 
     // Direct lookahead target aligned with architectural slabs

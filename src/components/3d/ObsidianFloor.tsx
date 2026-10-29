@@ -12,7 +12,7 @@ export const ObsidianFloor: React.FC = () => {
       <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[160, 60]} />
         <meshStandardMaterial
-          color="#08090B"
+          color="#07080A"
           roughness={0.92}
           metalness={0.06}
         />

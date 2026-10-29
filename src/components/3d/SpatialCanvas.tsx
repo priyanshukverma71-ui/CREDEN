@@ -195,13 +195,13 @@ export const SpatialCanvas: React.FC = () => {
         </button>
       </div>
 
-      {/* Subtle Floating Navigation Hint Pill at Bottom */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 pointer-events-none z-20">
-        <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#12151B]/85 border border-[#242A34] text-[11px] text-[#929AA5] shadow-md backdrop-blur-md">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#CBD5E1]" />
-          <span>Scroll trackpad / wheel or use <kbd className="px-1.5 py-0.5 rounded bg-[#1C2028] text-[#F1F3F5] font-mono text-[10px] border border-[#2B3240]">←</kbd> <kbd className="px-1.5 py-0.5 rounded bg-[#1C2028] text-[#F1F3F5] font-mono text-[10px] border border-[#2B3240]">→</kbd> to explore</span>
-          <span className="text-[#4B5563] hidden sm:inline">•</span>
-          <span className="hidden sm:inline">Press <kbd className="px-1.5 py-0.5 rounded bg-[#1C2028] text-[#F1F3F5] font-mono text-[10px] border border-[#2B3240]">Enter</kbd> to open</span>
+      {/* Subtle Floating Navigation Hint Pill above Bottom Dock */}
+      <div className="absolute bottom-16 left-1/2 -translate-x-1/2 pointer-events-none z-20 hidden md:block">
+        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-[#07080A]/80 border border-[#303642] text-[10px] text-[#9BA4B0] shadow-md backdrop-blur-md">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#D7DBE2]" />
+          <span>Scroll or use <kbd className="px-1 py-0.2 rounded bg-[#13161B] text-[#F2F4F7] font-mono border border-[#303642]">←</kbd> <kbd className="px-1 py-0.2 rounded bg-[#13161B] text-[#F2F4F7] font-mono border border-[#303642]">→</kbd> to explore</span>
+          <span className="text-[#475160]">•</span>
+          <span>Press <kbd className="px-1 py-0.2 rounded bg-[#13161B] text-[#F2F4F7] font-mono border border-[#303642]">Enter</kbd> to open</span>
         </div>
       </div>
     </div>
