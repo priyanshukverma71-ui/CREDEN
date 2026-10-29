@@ -5,7 +5,6 @@ import { usePortal, CAROUSEL_MODULES_LIST } from '../../context/PortalContext';
 import { Distinct3DSymbol, MODULE_PALETTE } from './FloatingModulePod';
 import { ModuleId } from '../../types';
 
-const RADIUS = 5.2;
 const TOTAL_MODULES = CAROUSEL_MODULES_LIST.length;
 const ANGLE_STEP = (2 * Math.PI) / TOTAL_MODULES;
 
@@ -35,39 +34,54 @@ const CarouselSlot: React.FC<CarouselSlotProps> = ({
   let diff = ((rawAngle + Math.PI) % (2 * Math.PI)) - Math.PI;
   if (diff < -Math.PI) diff += 2 * Math.PI;
 
-  const isFrontActive = Math.abs(diff) < 0.28;
-  const isFacingFront = Math.abs(diff) < (Math.PI / 2) + 0.35;
+  const absDiff = Math.abs(diff);
+  const isFrontActive = absDiff < 0.22;
+  const isFacingFront = absDiff < (Math.PI / 2) + 0.35;
+
+  // Organic levitation breathing wave
+  const [currentY, setCurrentY] = useState(0.68);
 
   useFrame((state) => {
     if (!groupRef.current) return;
     const time = state.clock.getElapsedTime();
+    const sign = Math.sign(diff);
 
-    // Cylindrical arc coordinates
-    const x = RADIUS * Math.sin(diff);
-    let z = RADIUS * (Math.cos(diff) - 1);
+    // Keep the centre clear for the active module:
+    // When u = 0 (active module): x = 0, z = 0.95, scale = 1.34
+    // When u = 1 (immediate neighbor): x = ± 4.8, z = -1.2, scale = 0.72
+    // For u > 1 (distant modules): spread further into wings and receding back
+    const u = absDiff / ANGLE_STEP; // 0 for active, 1 for immediate left/right neighbor
 
-    // Active front icon gracefully steps forward
-    if (Math.abs(diff) < 0.35) {
-      const forwardBonus = (1 - Math.abs(diff) / 0.35) * 0.72;
-      z += forwardBonus;
+    let x = 0;
+    let z = 0;
+    let scale = 1.0;
+
+    if (u <= 1) {
+      // Smooth sinusoidal ease from center (0) to resting side slot (4.8)
+      const ease = Math.sin((u * Math.PI) / 2);
+      x = sign * ease * 4.8;
+      z = 0.95 - ease * 2.15; // 0.95 down to -1.2
+      scale = 1.34 - ease * 0.62; // 1.34 down to 0.72
+    } else {
+      const extra = u - 1;
+      x = sign * (4.8 + extra * 1.5);
+      z = -1.2 - extra * 0.85;
+      scale = Math.max(0.48, 0.72 - extra * 0.06);
     }
 
-    // Organic levitation breathing wave
-    const wave = Math.sin(time * 2.0 + index * 0.65) * 0.045;
-    const y = 0.50 + wave + (hovered ? 0.08 : 0);
+    const wave = Math.sin(time * 2.0 + index * 0.65) * 0.04;
+    const y = (isFrontActive ? 0.68 : 0.58) + wave + (hovered ? 0.08 : 0);
+    setCurrentY(y);
 
-    // Dynamic scale based on proximity to center
-    const proximity = Math.max(0, 1 - Math.abs(diff) / (Math.PI / 2));
-    const baseScale = 0.82 + proximity * 0.62;
     const hoverScale = hovered ? 1.08 : 1.0;
-    const s = baseScale * hoverScale;
+    const s = scale * hoverScale;
 
     groupRef.current.position.set(x, y, z);
     groupRef.current.scale.set(s, s, s);
 
-    // Soft inward facing rotation toward viewer with organic breathing
-    const rotY = -diff * 0.32 + Math.sin(time * 1.2 + index) * 0.035;
-    const rotX = Math.sin(time * 1.6 + index) * 0.02;
+    // Gentle inward facing rotation toward viewer
+    const rotY = -diff * 0.24 + Math.sin(time * 1.2 + index) * 0.025;
+    const rotX = Math.sin(time * 1.5 + index) * 0.02;
     groupRef.current.rotation.set(rotX, rotY, 0);
   });
 
@@ -88,55 +102,79 @@ const CarouselSlot: React.FC<CarouselSlotProps> = ({
         onSelect(id, index);
       }}
     >
-      {/* 1. Subtle Radiant Glow Effects for Active Front Icon (No cards, no boxes) */}
+      {/* 1. Faint Lavender and Mint Halos around Active Module (Airy & Translucent) */}
       {isFrontActive && (
-        <>
-          {/* Vibrant Point Light casting colored radiance onto the floating 3D symbol */}
+        <group position={[0, 0, -0.18]}>
+          {/* Subtle Radiant Soft Point Light */}
           <pointLight
-            position={[0, 0.1, 0.9]}
-            intensity={2.8}
-            distance={4.5}
+            position={[0, 0, 0.5]}
+            intensity={0.9}
+            distance={3.5}
             decay={2}
-            color={meta.primary}
+            color="#E0E7FF"
           />
 
-          {/* Soft pulsing aura halo behind the active model */}
-          <mesh position={[0, 0, -0.15]}>
-            <ringGeometry args={[0.55, 0.85, 36]} />
+          {/* Faint Lavender Halo Ring */}
+          <mesh position={[0, 0, -0.01]}>
+            <ringGeometry args={[0.9, 1.5, 64]} />
             <meshBasicMaterial
-              color={meta.primary}
+              color="#DDD6FE"
               transparent
-              opacity={hovered ? 0.38 : 0.24}
+              opacity={hovered ? 0.16 : 0.11}
               side={THREE.DoubleSide}
             />
           </mesh>
 
-          {/* Soft radial inner glow disc */}
-          <mesh position={[0, 0, -0.16]}>
-            <circleGeometry args={[0.62, 36]} />
+          {/* Faint Inner Lavender Halo Ring */}
+          <mesh position={[0, 0, 0]}>
+            <ringGeometry args={[0.62, 1.08, 64]} />
             <meshBasicMaterial
-              color={meta.light}
+              color="#E0E7FF"
               transparent
-              opacity={hovered ? 0.45 : 0.30}
+              opacity={hovered ? 0.14 : 0.09}
               side={THREE.DoubleSide}
             />
           </mesh>
-        </>
+
+          {/* Faint Mint Inner Halo Aura */}
+          <mesh position={[0, 0, 0.01]}>
+            <circleGeometry args={[0.78, 64]} />
+            <meshBasicMaterial
+              color="#D1FAE5"
+              transparent
+              opacity={hovered ? 0.13 : 0.08}
+              side={THREE.DoubleSide}
+            />
+          </mesh>
+        </group>
       )}
 
-      {/* 2. Soft Floor Contact Glow Tint (No metallic/grey shadows) */}
+      {/* 2. Soft Ambient Contact Shadows Beneath Floating Icons */}
       {isFacingFront && (
-        <mesh position={[0, -3.2, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <circleGeometry args={[isFrontActive ? 1.4 : 0.9, 24]} />
-          <meshBasicMaterial
-            color={meta.primary}
-            transparent
-            opacity={isFrontActive ? 0.14 : 0.06}
-          />
-        </mesh>
+        <group position={[0, -2.84 - currentY, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          {/* Diffuse Outer Ambient Drop Shadow */}
+          <mesh position={[0, 0, 0]}>
+            <ringGeometry args={[0, isFrontActive ? 1.45 : 0.85, 36]} />
+            <meshBasicMaterial
+              color="#334155"
+              transparent
+              opacity={isFrontActive ? 0.075 : 0.03}
+            />
+          </mesh>
+
+          {/* Soft Core Occlusion Shadow */}
+          <mesh position={[0, 0, 0.005]}>
+            <circleGeometry args={[isFrontActive ? 0.68 : 0.38, 32]} />
+            <meshBasicMaterial
+              color="#1E293B"
+              transparent
+              opacity={isFrontActive ? 0.08 : 0.035}
+            />
+          </mesh>
+        </group>
       )}
 
-      {/* 3. Freely Floating Heroic 3D Colourful Symbol */}
+      {/* 3. Freely Floating Colourful 3D Symbol */}
       <Distinct3DSymbol id={id} hovered={hovered} isolated={true} />
     </group>
   );

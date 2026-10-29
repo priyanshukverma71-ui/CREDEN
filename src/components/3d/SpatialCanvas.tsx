@@ -30,40 +30,44 @@ export const SpatialCanvas: React.FC = () => {
   };
 
   return (
-    <div className="absolute inset-0 pointer-events-auto bg-[#F7F9FC] select-none touch-none overflow-hidden">
+    <div
+      className="absolute inset-0 pointer-events-auto select-none touch-none overflow-hidden"
+      style={{
+        background:
+          'radial-gradient(ellipse 135% 95% at 50% 16%, #FFFFFF 0%, #F5F9FD 38%, #E2EEFA 78%, #D5E7F8 100%)',
+      }}
+    >
       {/* 3D Circular Spatial Scene */}
       <Canvas
         camera={{ position: [0, 0.42, 7.6], fov: 42 }}
-        gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
+        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
         dpr={[1, 2]}
       >
-        {/* Bright Clean Material-Inspired Spatial Atmosphere */}
-        <color attach="background" args={['#F7F9FC']} />
-        <fog attach="fog" args={['#F7F9FC', 20, 55]} />
+        {/* Soft Spatial Atmosphere Fog */}
+        <fog attach="fog" args={['#DFEDF9', 18, 48]} />
 
-        {/* Studio High-Key Daylight Illumination */}
-        <ambientLight intensity={1.4} color="#FFFFFF" />
+        {/* Subtle Ambient Light for Gentle Overall Illumination */}
+        <ambientLight intensity={1.05} color="#F8FAFC" />
 
-        {/* Primary Overhead Key Light for Crisp Architectural Shadows */}
+        {/* Soft Key Light for Crisp, Clean Architectural Form */}
         <directionalLight
-          position={[6, 14, 10]}
-          intensity={2.1}
+          position={[5, 12, 8]}
+          intensity={1.25}
           color="#FFFFFF"
-          castShadow
         />
 
-        {/* Soft Ambient Rim Light */}
+        {/* Soft Ice-Blue Ambient Rim Fill */}
         <directionalLight
-          position={[-8, 8, -6]}
-          intensity={0.85}
-          color="#D7E9FF"
+          position={[-6, 6, -4]}
+          intensity={0.55}
+          color="#BAE6FD"
         />
 
-        {/* Soft Daylight Bounce */}
+        {/* Gentle Daylight Bounce */}
         <directionalLight
-          position={[0, -4, 4]}
-          intensity={0.45}
-          color="#E2E8F0"
+          position={[0, -3, 3]}
+          intensity={0.25}
+          color="#F1F5F9"
         />
 
         <Suspense fallback={null}>
@@ -74,8 +78,8 @@ export const SpatialCanvas: React.FC = () => {
         </Suspense>
       </Canvas>
 
-      {/* Minimal Spatial HUD: Anchored Below the Floating Front 3D Active Icon */}
-      <div className="absolute top-[68%] sm:top-[70%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center text-center pointer-events-none z-20 w-full max-w-xl px-4">
+      {/* Minimal Spatial HUD: Anchored Comfortably Below the Floating Front 3D Active Icon */}
+      <div className="absolute top-[74%] sm:top-[75%] left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center text-center pointer-events-none z-20 w-full max-w-xl px-4">
         {/* Soft Pastel Category Badge */}
         <div
           className="px-3.5 py-1 rounded-full text-[11px] font-semibold tracking-wider uppercase mb-2 shadow-xs transition-colors duration-300"
