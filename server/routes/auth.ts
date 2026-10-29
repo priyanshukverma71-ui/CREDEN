@@ -79,6 +79,63 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
   }
 });
 
+// Registration endpoint
+router.post('/register', async (req: Request, res: Response): Promise<void> => {
+  const { fullName, email, password, role = 'STUDENT' } = req.body || {};
+
+  if (!email || !password || !fullName) {
+    res.status(400).json({ error: 'Full name, email, and password are required.' });
+    return;
+  }
+
+  try {
+    const existing = await prisma.user.findUnique({
+      where: { email: email.toLowerCase().trim() },
+    });
+
+    if (existing) {
+      res.status(400).json({ error: 'An account with this email address already exists. Please sign in.' });
+      return;
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+    const user = await prisma.user.create({
+      data: {
+        fullName,
+        email: email.toLowerCase().trim(),
+        passwordHash,
+        role,
+        active: true,
+      },
+    });
+
+    const token = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+        fullName: user.fullName,
+        role: user.role,
+        institutionId: user.institutionId,
+      },
+      JWT_SECRET,
+      { expiresIn: '8h' }
+    );
+
+    res.json({
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        fullName: user.fullName,
+        role: user.role,
+        institutionId: null,
+      },
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: 'Registration failed: ' + error.message });
+  }
+});
+
 // Demo Role Switcher endpoint (for seamless evaluation and SIH demonstration)
 router.post('/switch-demo-role', async (req: Request, res: Response): Promise<void> => {
   const { role, institutionCode } = req.body;

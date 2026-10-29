@@ -17,7 +17,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [token, setToken] = useState<string | null>(localStorage.getItem('creden_token'));
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Initialize session or default to AICTE_ADMIN for zero-friction evaluation
+  // Initialize session: restore existing token if present, otherwise require login
   useEffect(() => {
     const initAuth = async () => {
       const storedToken = localStorage.getItem('creden_token');
@@ -34,25 +34,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             return;
           }
         } catch (e) {
-          console.warn('Session verification fallback, re-authenticating demo account...');
+          console.warn('Session verification failed, cleared invalid token');
+          localStorage.removeItem('creden_token');
         }
       }
 
-      // If no stored token or validation failed, establish baseline authenticated session
-      try {
-        const demoRes = await fetch('/api/auth/switch-demo-role', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ role: 'AICTE_ADMIN' }),
-        });
-        if (demoRes.ok) {
-          const data = await demoRes.json();
-          login(data.token, data.user);
-        }
-      } catch (err) {
-        console.warn('Demo session init fallback');
-      }
-
+      // No stored token: require login on first open
+      setUser(null);
+      setToken(null);
       setIsLoading(false);
     };
 
